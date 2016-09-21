@@ -45,8 +45,7 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
         WebApiRepository $apiRepository,
         ConfigManager $configManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->apiRepository = $apiRepository;
         $this->configManager = $configManager;
         $this->translator = $translator;
@@ -97,7 +96,7 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
 
     /**
      * Wait for a requested status
-     * 
+     *
      * @param ProjectInterface $project
      * @param string           $status
      *
