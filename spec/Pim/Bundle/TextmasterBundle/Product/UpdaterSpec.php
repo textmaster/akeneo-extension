@@ -39,7 +39,7 @@ class UpdaterSpec extends ObjectBehavior
         $document->getTitle()->willReturn('product-sku');
         $productRepository->findOneByIdentifier('product-sku')->willReturn($product);
 
-        $document->getTranslatedContent()->willReturn([
+        $document->getSourceContent()->willReturn([
             'foo-ecommerce' => 'foo ecommerce translation',
             'foo-mobile'    => 'foo mobile translation',
             'bar-ecommerce' => 'bar ecommerce translation',

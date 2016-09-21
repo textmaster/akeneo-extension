@@ -12,6 +12,7 @@ use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
+use Psr\Log\LoggerInterface;
 use Textmaster\Model\DocumentInterface;
 
 /**
@@ -21,9 +22,9 @@ use Textmaster\Model\DocumentInterface;
  */
 class BuilderSpec extends ObjectBehavior
 {
-    function let(ConfigManager $configManager)
+    function let(ConfigManager $configManager, LoggerInterface $logger)
     {
-        $this->beConstructedWith($configManager, []);
+        $this->beConstructedWith($configManager, $logger, []);
     }
 
     function it_is_initializable()
@@ -86,6 +87,7 @@ class BuilderSpec extends ObjectBehavior
         $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
+        $attribute1->isWysiwygEnabled()->willReturn(true);
 
         $product->getValues()->willReturn([
             $productValue1,
@@ -125,6 +127,7 @@ class BuilderSpec extends ObjectBehavior
         $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
+        $attribute1->isWysiwygEnabled()->willReturn(true);
 
         $productValue2->getLocale()->willReturn($localeCode);
         $productValue2->getScope()->willReturn('mobile');
@@ -138,6 +141,7 @@ class BuilderSpec extends ObjectBehavior
         $attribute3->getAttributeType()->willReturn(AttributeTypes::BOOLEAN);
         $attribute3->isLocalizable()->willReturn(true);
         $attribute3->isScopable()->willReturn(true);
+        $attribute3->isWysiwygEnabled()->willReturn(true);
 
         $productValue4->getLocale()->willReturn($localeCode);
         $productValue4->getAttribute()->willReturn($attribute4);
@@ -145,6 +149,7 @@ class BuilderSpec extends ObjectBehavior
         $attribute4->getCode()->willReturn('att4');
         $attribute4->getAttributeType()->willReturn(AttributeTypes::TEXT);
         $attribute4->isLocalizable()->willReturn(false);
+        $attribute4->isWysiwygEnabled()->willReturn(true);
 
         $productValue5->getLocale()->willReturn($localeCode);
         $productValue5->getAttribute()->willReturn($attribute5);
@@ -154,12 +159,13 @@ class BuilderSpec extends ObjectBehavior
         $attribute5->getAttributeType()->willReturn(AttributeTypes::TEXT);
         $attribute5->isLocalizable()->willReturn(true);
         $attribute5->isScopable()->willReturn(false);
+        $attribute5->isWysiwygEnabled()->willReturn(true);
 
         $product->getValues()->willReturn([
             $productValue1,
             $productValue2,
-            $productValue3, 
-            $productValue4, 
+            $productValue3,
+            $productValue4,
             $productValue5,
         ]);
         $product->getIdentifier()->willReturn($identifier);
@@ -174,6 +180,7 @@ class BuilderSpec extends ObjectBehavior
             ],
             'perform_word_count' => true,
             'type'               => DocumentInterface::TYPE_KEY_VALUE,
+            'markup_in_content'  => true
         ];
 
         $this->createDocumentData($product, $localeCode)
@@ -204,6 +211,7 @@ class BuilderSpec extends ObjectBehavior
         $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
+        $attribute1->isWysiwygEnabled()->willReturn(false);
 
         $productValue2->getLocale()->willReturn($localeCode);
         $productValue2->getScope()->willReturn('mobile');

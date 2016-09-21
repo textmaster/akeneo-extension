@@ -41,7 +41,7 @@ class Updater implements UpdaterInterface
         $product = $this->findRelatedProduct($document);
 
         $data = [];
-        foreach ($document->getTranslatedContent() as $key => $content) {
+        foreach ($document->getSourceContent() as $key => $content) {
             list($attributeCode, $channelCode) = $this->extractAttributeAndChannel($key);
             $data[$attributeCode][] = [
                 'locale' => $localeCode,
