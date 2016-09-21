@@ -1,5 +1,7 @@
 # Textmaster extension for Akeneo PIM
 
+[![Build Status](https://travis-ci.org/textmaster/akeneo-extension.svg?branch=master)](https://travis-ci.org/textmaster/akeneo-extension)
+
 ## Description
 
 The Textmaster Akeneo extension allows you to easily translate your Akeneo product contents to a large quantity of languages with a simple mass edit process.
