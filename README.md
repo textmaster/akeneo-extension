@@ -1,5 +1,9 @@
 # Textmaster extension for Akeneo PIM
 
+## Description
+
+The Textmaster Akeneo extension allows you to easily translate your Akeneo product content using the Textmaster service.
+
 ## Installation
 
 First step is to require the sources:
