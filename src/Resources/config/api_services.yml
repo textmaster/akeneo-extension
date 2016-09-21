@@ -1,0 +1,22 @@
+services:
+    textmaster.api.httpclient_factory:
+        class: Pim\Bundle\TextmasterBundle\Api\ClientFactory
+        arguments:
+            - '@oro_config.global'
+
+    worldia.textmaster.api.httpclient:
+        class: Textmaster\HttpClient\HttpClient
+        factory: ['@textmaster.api.httpclient_factory', 'createHttpClient']
+        arguments:
+            - base_uri: 'http://api.sandbox.textmaster.com/v1'
+
+    worldia.textmaster.api.client:
+        class: Textmaster\Client
+        arguments:
+            - '@worldia.textmaster.api.httpclient'
+            - '@event_dispatcher'
+
+    worldia.textmaster.api.manager:
+        class : Textmaster\Manager
+        arguments:
+            - '@worldia.textmaster.api.client'

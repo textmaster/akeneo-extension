@@ -1,0 +1,39 @@
+<div>
+    <img style="height: 80px; margin-bottom: 1em;"
+         src="/bundles/pimtextmaster/img/TextMaster.png"/>
+    <p><a href="https://textmaster.com" target="_blank"><%- _.__('textmaster.configuration.link.label') %></a></p>
+</div>
+<div>
+    <div class="control-group">
+        <label class="control-label"
+               for="pim_textmaster___apikey"><%- _.__('textmaster.configuration.api_key.label') %></label>
+        <input class="texmaster-config input-xxlarge"
+               id="pim_textmaster___apikey" name="pim_textmaster___api_key"
+               type="text" value="<%- apikey %>"/>
+    </div>
+    <div class="control-group">
+        <label class="control-label"
+               for="pim_textmaster___apisecret"><%- _.__('textmaster.configuration.api_secret.label') %></label>
+        <input class="texmaster-config input-xxlarge"
+               id="pim_textmaster___apisecret" name="pim_textmaster___api_secret"
+               type="text" value="<%- apisecret %>"/>
+    </div>
+    <div class="control-group">
+        <label class="control-label"
+               for="pim_textmaster___attributes"><%- _.__('textmaster.configuration.attributes.label') %></label>
+        <input class="texmaster-config select-field"
+               id="pim_textmaster___attributes" name="pim_textmaster___attributes"
+               type="hidden" value="<%- attributes %>"/>
+    </div>
+    <div>
+        <label for="pim_textmaster___autolaunch"><%- _.__('textmaster.configuration.autolaunch.label') %></label>
+        <div>
+            <div class="texmaster-config switch switch-small"
+                 data-on-label="<%- _.__('pim_enrich.form.entity.switch.yes') %>"
+                 data-off-label="<%- _.__('pim_enrich.form.entity.switch.no') %>">
+                <input id="pim_textmaster___autolaunch" name="pim_textmaster___autolaunch"
+                       type="checkbox" <%- autolaunch == true ? 'checked' : '' %> />
+            </div>
+        </div>
+    </div>
+</div>

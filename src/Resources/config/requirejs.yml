@@ -1,0 +1,4 @@
+config:
+    paths:
+        textmaster/system/configuration: pimtextmaster/js/form/system
+        textmaster/template/system/group/configuration: pimtextmaster/js/templates/system/group/configuration.html

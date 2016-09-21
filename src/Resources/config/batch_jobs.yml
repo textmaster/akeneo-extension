@@ -1,0 +1,25 @@
+connector:
+    name: Textmaster Connector
+    jobs:
+        textmaster_start_projects:
+            title: Textmaster translation job
+            type:  mass_edit
+            steps:
+                create_projects:
+                    title: textmaster.step.create_projects
+                    class: "%pim_connector.step.tasklet.class%"
+                    services:
+                        tasklet: textmaster.mass_edit_tasklet.create_projects
+                add_documents:
+                    title: textmaster.step.add_documents
+                    services:
+                        reader:    pim_enrich.connector.reader.mass_edit.product
+                        processor: textmaster.mass_edit.processor.add_documents
+                        writer:    textmaster.mass_edit.writer.add_documents
+                    parameters:
+                        batch_size: 50
+                launch_projects:
+                    title: textmaster.step.finalize_projects
+                    class: "%pim_connector.step.tasklet.class%"
+                    services:
+                        tasklet: textmaster.mass_edit_tasklet.finalize_projects

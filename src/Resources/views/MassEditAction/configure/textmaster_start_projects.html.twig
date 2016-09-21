@@ -1,0 +1,11 @@
+{% extends 'PimEnrichBundle:MassEditAction:configure/layout.html.twig' %}
+
+{% block head_script %}
+    {{ parent() }}
+{% endblock %}
+
+{% block formContent %}
+    <div>
+        {{ form_widget(form.operation) }}
+    </div>
+{% endblock %}

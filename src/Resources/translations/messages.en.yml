@@ -1,0 +1,30 @@
+pim_enrich:
+    mass_edit_action:
+        textmaster_start_projects:
+            label: Translate products with TextMaster
+            description: Create a new translation project in TextMaster.
+            launched_flash: Now sending your products to the TextMaster application.
+
+textmaster:
+    create_project:
+        label: Translate product data with TextMaster
+    customer:
+        validation_link: Go to TextMaster to validate and launch your project
+        launched_link: Go to TextMaster
+    default_briefing: |
+        Dear translator,
+        Please translate the following texts so that it sounds as natural as possible in your native language.
+        Thank you in advance.
+    step:
+        create_projects: Create projects in TextMaster
+        add_documents: Add documents to projects
+        finalize_projects: Finalize projects
+    steps:
+        skipped_document.title: Skipped document
+
+job_execution.summary.projects_created: Created projects
+job_execution.summary.documents_added: Added documents
+job_execution.summary.launched: Launched projects
+job_execution.summary.not_launched: Projects ready to launch
+job_execution.summary.link: Direct link
+job_execution.summary.memory_analysis: Memory analysis

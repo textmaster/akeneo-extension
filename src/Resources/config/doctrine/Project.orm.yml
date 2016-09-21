@@ -1,0 +1,36 @@
+Pim\Bundle\TextmasterBundle\Entity\Project:
+    type: entity
+    table: textmaster_project
+    repositoryClass: Pim\Bundle\TextmasterBundle\Project\ProjectRepository
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        code:
+            type: string
+            column: code
+        name:
+            type: string
+            column: name
+        updatedAt:
+            type: datetime
+            column: updated_at
+            nullable: true
+        username:
+            type: string
+            column: username
+            nullable: true
+    manyToOne:
+        fromLocale:
+            targetEntity: Pim\Bundle\CatalogBundle\Entity\Locale
+            joinColumn:
+                name: from_locale_id
+                referencedColumnName: id
+        toLocale:
+            targetEntity: Pim\Bundle\CatalogBundle\Entity\Locale
+            joinColumn:
+                name: to_locale_id
+                referencedColumnName: id

@@ -1,0 +1,6 @@
+jobs:
+    textmaster_create_projects:
+        connector: TextMaster connector
+        alias:     textmaster_create_projects
+        label:     'Start TextMaster project'
+        type:      mass_edit

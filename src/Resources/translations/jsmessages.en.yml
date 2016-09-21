@@ -1,0 +1,14 @@
+textmaster:
+    configuration:
+        tab:
+            label: TextMaster
+        link:
+            label: Go to TextMaster
+        api_key:
+            label: API key
+        api_secret:
+            label: API secret
+        attributes:
+            label: Attributes
+        autolaunch:
+            label: Autolaunch project
