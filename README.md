@@ -1,8 +1,29 @@
 # Textmaster extension for Akeneo PIM
 
+## Requirements
+
+| Akeneo Textmaster extension | Akeneo PIM Community Edition |
+|:---------------------------:|:----------------------------:|
+| v1.0.*                      | v1.5.*                       |
+
+You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
+
+Also available on the Akeneo marketplace: _link_to_come_
+
 ## Description
 
-The Textmaster Akeneo extension allows you to easily translate your Akeneo product content using the Textmaster service.
+The Textmaster Akeneo extension allows you to easily translate your Akeneo product contents to a large quantity of languages with a simple mass edit process.
+
+### How it works
+
+The translation request is done by a very simple mass edit process:
+
+- Select your products in the grid and choose the "translate with Textmaster" mass edit operation.
+- Choose your source language and the many target languages you want translation for.
+- Send your products to Textmaster in just one click
+- You can then connect to your Textmaster client interface to choose more options, like translation memory, preferred Textmasters, etc. Your products will be translated in the PIM as soon as they are in Textmaster
+
+A live demonstration is available on this short video: _link_to_come_
 
 ## Installation
 
