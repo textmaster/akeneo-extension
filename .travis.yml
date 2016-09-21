@@ -22,4 +22,4 @@ install:
     - composer install --prefer-dist --no-interaction --no-scripts
 
 script:
-    - ./bin/php-cs-fixer --level=psr2 --dry-run -v fix .
+    - ./bin/php-cs-fixer --level=psr2 --dry-run -v fix src
