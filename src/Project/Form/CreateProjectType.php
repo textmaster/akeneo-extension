@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Project form type
- * 
+ *
  * @author    Jean-Marie Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -38,8 +38,7 @@ class CreateProjectType extends AbstractType
         LocaleRepositoryInterface $localeRepository,
         WebApiRepository $apiRepository,
         array $options
-    )
-    {
+    ) {
         $this->localeRepository = $localeRepository;
         $this->apiRepository = $apiRepository;
         $this->options = $options;
@@ -89,7 +88,7 @@ class CreateProjectType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            ['data_class' => CreateProjects::class,]
+            ['data_class' => CreateProjects::class]
         );
     }
 

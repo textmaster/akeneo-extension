@@ -27,8 +27,7 @@ class Finder
     public function __construct(
         WebApiRepository $apiRepository,
         LocaleRepositoryInterface $localeRepository
-    )
-    {
+    ) {
         $this->apiRepository = $apiRepository;
         $this->localeRepository = $localeRepository;
     }

@@ -111,7 +111,7 @@ class Builder implements BuilderInterface
 
     /**
      * Create the document key for a product value
-     * 
+     *
      * @param ProductValueInterface $productValue
      *
      * @return string

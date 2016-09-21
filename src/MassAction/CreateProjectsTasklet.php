@@ -16,7 +16,7 @@ use Pim\Component\Connector\Step\TaskletInterface;
 
 /**
  * Create the project entity and put it in job context
- * 
+ *
  * @author    Jean-Marie Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -51,8 +51,7 @@ class CreateProjectsTasklet extends AbstractConfigurableStepElement implements T
         BuilderInterface $builder,
         WebApiRepository $apiRepository,
         SaverInterface $saver
-    )
-    {
+    ) {
         $this->localeRepository = $localeRepository;
         $this->saver = $saver;
         $this->builder = $builder;
@@ -124,8 +123,7 @@ class CreateProjectsTasklet extends AbstractConfigurableStepElement implements T
         $briefing,
         $category,
         $username = null
-    )
-    {
+    ) {
         $project = new Project();
         $project->setFromLocale($fromLocale);
         $project->setToLocale($toLocale);
