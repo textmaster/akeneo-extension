@@ -8,7 +8,7 @@ services:
         class: Textmaster\HttpClient\HttpClient
         factory: ['@textmaster.api.httpclient_factory', 'createHttpClient']
         arguments:
-            - base_uri: 'http://api.sandbox.textmaster.com/v1'
+            - base_uri: '%textmaster.base_uri%'
 
     worldia.textmaster.api.client:
         class: Textmaster\Client

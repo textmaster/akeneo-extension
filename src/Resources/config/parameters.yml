@@ -2,3 +2,4 @@ parameters:
     textmaster.language_level: 'enterprise'
     textmaster.vocabulary_type: 'technical'
     textmaster.default_category: 'C019'
+    textmaster.base_uri: 'http://api.textmaster.com/v1'
