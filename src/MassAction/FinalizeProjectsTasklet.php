@@ -129,8 +129,7 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
             'project' => [
                 'options' => [
                     'language_level'     => 'enterprise',
-                    // TODO enable translation memory when ready on TextMaster side
-                    'translation_memory' => false,
+                    'translation_memory' => true,
                 ],
             ],
         ];

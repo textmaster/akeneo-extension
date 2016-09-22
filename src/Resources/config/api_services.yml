@@ -8,7 +8,10 @@ services:
         class: Textmaster\HttpClient\HttpClient
         factory: ['@textmaster.api.httpclient_factory', 'createHttpClient']
         arguments:
-            - base_uri: '%textmaster.base_uri%'
+            -
+                base_uri: '%textmaster.base_uri%'
+                headers:
+                    X-Partner-Id: 43254561-62f2-4930-858e-2e17c8a77265
 
     worldia.textmaster.api.client:
         class: Textmaster\Client
