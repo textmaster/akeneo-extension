@@ -14,7 +14,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
-Also available on the Akeneo marketplace: _link_to_come_
+Also available on the Akeneo marketplace: https://marketplace.akeneo.com/
 
 ## How it works
 
@@ -26,8 +26,6 @@ The translation request is done by a very simple mass edit process:
 - Choose your source language and the many target languages you want translation for.
 - Send your products to Textmaster in just one click
 - You can then connect to your Textmaster client interface to choose more options, like translation memory, preferred Textmasters, etc. Your products will be translated in the PIM as soon as they are in Textmaster
-
-A live demonstration is available on this short video: _link_to_come_
 
 ## Installation
 
@@ -42,11 +40,12 @@ Register your bundle in the `AppKernel.php`
 $bundles[] = new \Pim\Bundle\TextmasterBundle\TextmasterBundle();
 ```
 
-Update the database schema:
+Update the database schema and regenerate your cache and assets:
 
 ```
 rm app/cache/* -rf
 app/console doctrine:schema:update --force
+rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:assets
 ```
 
 Then we need to add a new mass edit batch job:
@@ -54,7 +53,6 @@ Then we need to add a new mass edit batch job:
 ```
 app/console akeneo:batch:create-job 'Textmaster Connector' textmaster_start_projects mass_edit textmaster_start_projects '[]' 'Start TextMaster project'
 ```
-
 
 ### Parameters
 
@@ -66,3 +64,7 @@ In this screen you will be able to set:
 
 - you API credentials : `API key` and `API secret`
 - the attributes you want to translate
+
+## Video demo
+
+A live demonstration is available on this short video: https://www.youtube.com/watch?v=9WkyQFwoWWo
