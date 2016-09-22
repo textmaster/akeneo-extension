@@ -40,11 +40,12 @@ Register your bundle in the `AppKernel.php`
 $bundles[] = new \Pim\Bundle\TextmasterBundle\TextmasterBundle();
 ```
 
-Update the database schema:
+Update the database schema and regenerate your cache and assets:
 
 ```
 rm app/cache/* -rf
 app/console doctrine:schema:update --force
+rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:assets
 ```
 
 Then we need to add a new mass edit batch job:
