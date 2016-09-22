@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/textmaster/akeneo-extension.svg?branch=master)](https://travis-ci.org/textmaster/akeneo-extension)
 
+Also available on the Akeneo marketplace: https://marketplace.akeneo.com/
+
 ## Description
 
 The Textmaster Akeneo extension allows you to easily translate your Akeneo product contents to a large quantity of languages with a simple mass edit process.
@@ -14,7 +16,9 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
-Also available on the Akeneo marketplace: https://marketplace.akeneo.com/
+#### Create a Textmaster account
+
+Creating your account on https://textmaster.com is totally free. You can access the register form by clicking on the "Login" button or by following [this link](https://textmaster.com/sign_up).
 
 ## How it works
 
