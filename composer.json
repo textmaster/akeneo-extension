@@ -15,10 +15,10 @@
     "require": {
         "php": ">=5.5",
         "akeneo/pim-community-dev": "~1.5.9",
-        "doctrine/migrations": "1.0.0-alpha3@alpha",
         "worldia/textmaster-api": "0.2.7"
     },
     "require-dev": {
+        "doctrine/migrations": "1.0.0-alpha3@alpha",
         "behat/behat": "^3.1.0",
         "fabpot/php-cs-fixer": "^1.11",
         "phpspec/phpspec": "2.4.*"
