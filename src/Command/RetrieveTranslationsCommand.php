@@ -35,6 +35,9 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        // Random delay to start to not overload TextMaster servers at the same time
+        sleep(rand(1, 300));
+        
         $this->output = $output;
         $this->writeMessage('<info>Check TextMaster projects</info>');
 
