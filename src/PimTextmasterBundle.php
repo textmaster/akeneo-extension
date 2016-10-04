@@ -13,26 +13,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class PimTextmasterBundle extends Bundle
 {
-    /** @var string */
-    protected $parentBundle;
-
-    /**
-     * @param string $parentBundle
-     * @deprecated The parentBundle parameter will be removed for PIM 1.6
-     */
-    public function __construct($parentBundle = 'PimEnrichBundle')
-    {
-        $this->parentBundle = $parentBundle;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getParent()
-    {
-        return $this->parentBundle;
-    }
-
     /**
      * {@inheritdoc}
      */

@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
@@ -12,7 +11,7 @@ use Pim\Component\Connector\Step\TaskletInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Finalize the mass actino:
+ * Finalize the mass action:
  * - translation memory
  * - autolaunch
  *
@@ -20,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements TaskletInterface
+class FinalizeProjectsTasklet implements TaskletInterface
 {
     const STATUS_MAX_TRY = 3;
 
@@ -45,7 +44,8 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
         WebApiRepository $apiRepository,
         ConfigManager $configManager,
         TranslatorInterface $translator
-    ) {
+    )
+    {
         $this->apiRepository = $apiRepository;
         $this->configManager = $configManager;
         $this->translator = $translator;
@@ -70,12 +70,12 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
     /**
      * @inheritdoc
      */
-    public function execute(array $configuration)
+    public function execute()
     {
         $autolaunch = $this->configManager->get('pim_textmaster.autolaunch');
         $projects = $this->getProjects();
 
-        foreach ($projects as $project) {
+        foreach ((array) $projects as $project) {
             $this->waitForStatus($project, \Textmaster\Model\ProjectInterface::STATUS_IN_CREATION);
             $this->startMemoryTranslation($project);
             if ($autolaunch) {
@@ -139,8 +139,6 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
 
     /**
      * @param ProjectInterface $project
-     *
-     * @return \Textmaster\Model\ProjectInterface
      */
     protected function launchProject(ProjectInterface $project)
     {

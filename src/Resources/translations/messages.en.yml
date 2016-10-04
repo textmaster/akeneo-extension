@@ -5,6 +5,12 @@ pim_enrich:
             description: Create a new translation project in TextMaster.
             launched_flash: Now sending your products to the TextMaster application.
 
+batch_jobs.textmaster_start_projects:
+    textmaster.step:
+        create_projects.label: Create projects in TextMaster
+        add_documents.label: Add documents to projects
+        finalize_projects.label: Finalize projects
+
 textmaster:
     create_project:
         label: Translate product data with TextMaster
@@ -15,10 +21,6 @@ textmaster:
         Dear translator,
         Please translate the following texts so that it sounds as natural as possible in your native language.
         Thank you in advance.
-    step:
-        create_projects: Create projects in TextMaster
-        add_documents: Add documents to projects
-        finalize_projects: Finalize projects
     steps:
         skipped_document.title: Skipped document
 

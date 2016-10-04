@@ -4,7 +4,7 @@
     "description": "Textmaster extension for Akeneo product data",
     "license": "OSL-3.0",
     "authors": [
-        {"name": "akeneo"}
+        {"name": "Akeneo", "homepage": "http://www.akeneo.com"}
     ],
     "repositories": [
         {
@@ -13,12 +13,11 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
-        "akeneo/pim-community-dev": "~1.5.9",
-        "worldia/textmaster-api": "0.2.7"
+        "php": ">=5.6",
+        "akeneo/pim-community-dev": "~1.6.0",
+        "worldia/textmaster-api": "@stable"
     },
     "require-dev": {
-        "doctrine/migrations": "1.0.0-alpha3@alpha",
         "behat/behat": "^3.1.0",
         "fabpot/php-cs-fixer": "^1.11",
         "phpspec/phpspec": "2.4.*"

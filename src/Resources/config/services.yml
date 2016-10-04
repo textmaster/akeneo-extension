@@ -1,38 +1,36 @@
 services:
-    textmaster.form.create_projects:
+    pim_textmaster.form.create_projects:
         class: Pim\Bundle\TextmasterBundle\Project\Form\CreateProjectType
         arguments:
             - '@pim_catalog.repository.locale'
-            - '@textmaster.repository.webapi'
+            - '@pim_textmaster.repository.webapi'
             -
                 default_briefing: 'textmaster.default_briefing'
                 default_category: '%textmaster.default_category%'
         tags:
             - { name: form.type, alias: textmaster_create_projects }
 
-    textmaster.saver.project:
+    pim_textmaster.saver.project:
         class: Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@akeneo_storage_utils.saver.base_options_resolver'
             - '@event_dispatcher'
             - 'Pim\Bundle\TextmasterBundle\Entity\Project'
 
-    textmaster.remover.project:
+    pim_textmaster.remover.project:
         class: Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Remover\BaseRemover
         arguments:
             - '@doctrine.orm.entity_manager'
-            - '@pim_catalog.remover.base_options_resolver'
             - '@event_dispatcher'
-            - Pim\Bundle\TextmasterBundle\Entity\Project
+            - 'Pim\Bundle\TextmasterBundle\Entity\Project'
 
-    textmaster.repository.webapi:
+    pim_textmaster.repository.webapi:
         class: Pim\Bundle\TextmasterBundle\Api\WebApiRepository
         public: false
         arguments:
             - '@worldia.textmaster.api.client'
 
-    textmaster.project.builder:
+    pim_textmaster.project.builder:
         class: Pim\Bundle\TextmasterBundle\Project\Builder
         public: false
         arguments:
@@ -42,19 +40,19 @@ services:
                 language_level: '%textmaster.language_level%'
                 vocabulary_type: '%textmaster.vocabulary_type%'
 
-    textmaster.document.updater:
+    pim_textmaster.document.updater:
         class: Pim\Bundle\TextmasterBundle\Product\Updater
         arguments:
             - '@pim_catalog.repository.product'
             - '@pim_catalog.updater.product'
 
-    textmaster.locale.finder:
+    pim_textmaster.locale.finder:
         class: Pim\Bundle\TextmasterBundle\Locale\Finder
         arguments:
-            - '@textmaster.repository.webapi'
+            - '@pim_textmaster.repository.webapi'
             - '@pim_catalog.repository.locale'
 
-    textmaster.repository.project:
+    pim_textmaster.repository.project:
         class: Pim\Bundle\TextmasterBundle\Project\ProjectRepository
         factory: ['@doctrine.orm.entity_manager', 'getRepository']
         arguments:

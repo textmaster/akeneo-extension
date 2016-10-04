@@ -2,8 +2,8 @@
 
 namespace Pim\Bundle\TextmasterBundle\Product;
 
-use Pim\Bundle\CatalogBundle\Repository\ProductRepositoryInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
 use Pim\Component\Catalog\Updater\ProductUpdater;
 use Textmaster\Exception\RuntimeException;
 use Textmaster\Model\DocumentInterface;

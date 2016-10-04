@@ -34,8 +34,13 @@ class CreateProjects extends AbstractMassEditOperation
     /** @var ContainerInterface */
     protected $container;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * @param ContainerInterface $container
+     * @param string             $jobInstanceCode
+     */
+    public function __construct(ContainerInterface $container, $jobInstanceCode)
     {
+        parent::__construct($jobInstanceCode);
         $this->container = $container;
     }
 
