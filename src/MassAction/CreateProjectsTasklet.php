@@ -50,8 +50,7 @@ class CreateProjectsTasklet implements TaskletInterface
         BuilderInterface $builder,
         WebApiRepository $apiRepository,
         SaverInterface $saver
-    )
-    {
+    ) {
         $this->localeRepository = $localeRepository;
         $this->saver = $saver;
         $this->builder = $builder;
@@ -124,8 +123,7 @@ class CreateProjectsTasklet implements TaskletInterface
         $briefing,
         $category,
         $username = null
-    )
-    {
+    ) {
         $project = new Project();
         $project->setFromLocale($fromLocale);
         $project->setToLocale($toLocale);

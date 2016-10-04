@@ -44,8 +44,7 @@ class FinalizeProjectsTasklet implements TaskletInterface
         WebApiRepository $apiRepository,
         ConfigManager $configManager,
         TranslatorInterface $translator
-    )
-    {
+    ) {
         $this->apiRepository = $apiRepository;
         $this->configManager = $configManager;
         $this->translator = $translator;
