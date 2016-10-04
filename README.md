@@ -63,7 +63,7 @@ we must put the mass edit form template at the right place:
 
 ```
 mkdir -p app/Resources/PimEnrichBundle/views/MassEditAction/product/configure
-cp vendor/akeneo-labs/textmaster-bundle/src/Resources/views/MassEditAction/configure/textmaster_start_projects.html.twig app/Resources/PimEnrichBundle/views/MassEditAction/product/configure/
+cp vendor/textmaster/akeneo-extension/src/Resources/views/MassEditAction/configure/textmaster_start_projects.html.twig app/Resources/PimEnrichBundle/views/MassEditAction/product/configure/
 ```
 
 Finally, you must set a `cron` to retrieve the translated contents from Textmaster:
