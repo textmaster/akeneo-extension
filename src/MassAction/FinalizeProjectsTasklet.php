@@ -74,7 +74,7 @@ class FinalizeProjectsTasklet implements TaskletInterface
         $autolaunch = $this->configManager->get('pim_textmaster.autolaunch');
         $projects = $this->getProjects();
 
-        foreach ((array) $projects as $project) {
+        foreach ($projects as $project) {
             $this->waitForStatus($project, \Textmaster\Model\ProjectInterface::STATUS_IN_CREATION);
             $this->startMemoryTranslation($project);
             if ($autolaunch) {
