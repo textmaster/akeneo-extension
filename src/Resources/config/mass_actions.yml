@@ -6,7 +6,8 @@ services:
         public: false
         class: '%pim_textmaster.mass_edit_action.create_projects.class%'
         arguments:
-            - '@service_container'
+            - '@security.token_storage'
+            - '@translator'
             - 'textmaster_start_projects'
         tags:
             -

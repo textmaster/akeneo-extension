@@ -6,6 +6,7 @@ use Pim\Bundle\EnrichBundle\MassEditAction\Operation\AbstractMassEditOperation;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Batch operation to send attributes to TextMaster translation
@@ -34,14 +35,22 @@ class CreateProjects extends AbstractMassEditOperation
     /** @var ContainerInterface */
     protected $container;
 
+    /** @var TokenStorageInterface */
+    protected $tokenStorage;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
     /**
-     * @param ContainerInterface $container
-     * @param string             $jobInstanceCode
+     * @param TokenStorageInterface $tokenStorage
+     * @param TranslatorInterface   $translator
+     * @param string                $jobInstanceCode
      */
-    public function __construct(ContainerInterface $container, $jobInstanceCode)
+    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator, $jobInstanceCode)
     {
         parent::__construct($jobInstanceCode);
-        $this->container = $container;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
     }
 
     /**
@@ -174,7 +183,7 @@ class CreateProjects extends AbstractMassEditOperation
             'briefing'   => !empty($this->briefing) ? $this->briefing : $this->getDefaultBriefing(),
             'fromLocale' => $this->fromLocale->getCode(),
             'category'   => $this->category,
-            'username'   => $this->getTokenStorage()->getToken()->getUsername(),
+            'username'   => $this->tokenStorage->getToken()->getUsername(),
         ];
 
         $toLocaleCodes = [];
@@ -187,20 +196,10 @@ class CreateProjects extends AbstractMassEditOperation
     }
 
     /**
-     * @return TokenStorageInterface
-     */
-    protected function getTokenStorage()
-    {
-        return $this->container->get('security.token_storage');
-    }
-
-    /**
      * @return string
      */
     protected function getDefaultBriefing()
     {
-        $translator = $this->container->get('translator');
-
-        return $translator->trans('textmaster.default_briefing');
+        return $this->translator->trans('textmaster.default_briefing');
     }
 }
