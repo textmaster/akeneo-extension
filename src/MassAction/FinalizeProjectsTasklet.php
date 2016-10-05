@@ -154,7 +154,7 @@ class FinalizeProjectsTasklet implements TaskletInterface
      */
     protected function getProjects()
     {
-        return $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
+        return (array) $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
     }
 
     /**
