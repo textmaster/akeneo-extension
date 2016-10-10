@@ -1,12 +1,12 @@
 services:
-    textmaster.api.httpclient_factory:
+    pim_textmaster.api.httpclient_factory:
         class: Pim\Bundle\TextmasterBundle\Api\ClientFactory
         arguments:
             - '@oro_config.global'
 
     worldia.textmaster.api.httpclient:
         class: Textmaster\HttpClient\HttpClient
-        factory: ['@textmaster.api.httpclient_factory', 'createHttpClient']
+        factory: ['@pim_textmaster.api.httpclient_factory', 'createHttpClient']
         arguments:
             -
                 base_uri: '%textmaster.base_uri%'

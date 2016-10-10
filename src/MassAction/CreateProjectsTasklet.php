@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\StorageUtils\Saver\SaverInterface;
@@ -21,7 +20,7 @@ use Pim\Component\Connector\Step\TaskletInterface;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class CreateProjectsTasklet extends AbstractConfigurableStepElement implements TaskletInterface
+class CreateProjectsTasklet implements TaskletInterface
 {
     const PROJECTS_CONTEXT_KEY = 'textmaster_projects';
 
@@ -77,15 +76,16 @@ class CreateProjectsTasklet extends AbstractConfigurableStepElement implements T
     /**
      * @inheritdoc
      */
-    public function execute(array $configuration)
+    public function execute()
     {
-        $fromLocale = $this->localeRepository->findOneByIdentifier($configuration['actions']['fromLocale']);
+        $actions = $this->getConfiguredActions();
+        $fromLocale = $this->localeRepository->findOneByIdentifier($actions['fromLocale']);
 
-        $projectCode = $configuration['actions']['name'];
-        $projectBriefing = $configuration['actions']['briefing'];
-        $toLocales = $configuration['actions']['toLocales'];
-        $username = $configuration['actions']['username'];
-        $category = $configuration['actions']['category'];
+        $projectCode = $actions['name'];
+        $projectBriefing = $actions['briefing'];
+        $toLocales = $actions['toLocales'];
+        $username = $actions['username'];
+        $category = $actions['category'];
 
         $projects = [];
         foreach ($toLocales as $localeCode) {
@@ -170,5 +170,15 @@ class CreateProjectsTasklet extends AbstractConfigurableStepElement implements T
         }
 
         return $context;
+    }
+
+    /**
+     * @return array|null
+     */
+    protected function getConfiguredActions()
+    {
+        $jobParameters = $this->stepExecution->getJobParameters();
+
+        return $jobParameters->get('actions');
     }
 }

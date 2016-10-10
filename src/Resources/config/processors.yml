@@ -1,0 +1,6 @@
+services:
+    pim_textmaster.mass_edit.processor.add_documents:
+        class: Pim\Bundle\TextmasterBundle\MassAction\AddDocumentsProcessor
+        arguments:
+            - '@pim_textmaster.project.builder'
+            - '@akeneo_storage_utils.doctrine.object_detacher'

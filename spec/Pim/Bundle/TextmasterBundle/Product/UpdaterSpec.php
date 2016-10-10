@@ -3,11 +3,10 @@
 namespace spec\Pim\Bundle\TextmasterBundle\Product;
 
 use PhpSpec\ObjectBehavior;
-use Pim\Bundle\CatalogBundle\Repository\ProductRepositoryInterface;
 use Pim\Bundle\TextmasterBundle\Product\UpdaterInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
 use Pim\Component\Catalog\Updater\ProductUpdater;
-use Prophecy\Argument;
 use Textmaster\Model\DocumentInterface;
 
 /**

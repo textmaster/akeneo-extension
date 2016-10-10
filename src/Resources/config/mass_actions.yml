@@ -1,41 +1,19 @@
 parameters:
-    textmaster.mass_edit_action.create_projects.class: Pim\Bundle\TextmasterBundle\MassAction\Operation\CreateProjects
+    pim_textmaster.mass_edit_action.create_projects.class: Pim\Bundle\TextmasterBundle\MassAction\Operation\CreateProjects
 
 services:
-    textmaster.mass_edit_action.create_projects:
+    pim_textmaster.mass_edit_action.create_projects:
         public: false
-        class: '%textmaster.mass_edit_action.create_projects.class%'
+        class: '%pim_textmaster.mass_edit_action.create_projects.class%'
         arguments:
-            - '@service_container'
+            - '@security.token_storage'
+            - '@translator'
+            - 'textmaster_start_projects'
         tags:
             -
                 name: pim_enrich.mass_edit_action
                 alias: textmaster_start_projects
                 datagrid: product-grid
-
-    textmaster.mass_edit_tasklet.create_projects:
-        class: Pim\Bundle\TextmasterBundle\MassAction\CreateProjectsTasklet
-        arguments:
-            - '@pim_catalog.repository.locale'
-            - '@textmaster.project.builder'
-            - '@textmaster.repository.webapi'
-            - '@textmaster.saver.project'
-
-    textmaster.mass_edit_tasklet.finalize_projects:
-        class: Pim\Bundle\TextmasterBundle\MassAction\FinalizeProjectsTasklet
-        arguments:
-            - '@textmaster.repository.webapi'
-            - '@oro_config.global'
-            - '@translator.default'
-
-    textmaster.mass_edit.processor.add_documents:
-        class: Pim\Bundle\TextmasterBundle\MassAction\AddDocumentsProcessor
-        arguments:
-            - '@pim_connector.repository.job_configuration'
-            - '@textmaster.project.builder'
-            - '@akeneo_storage_utils.doctrine.object_detacher'
-
-    textmaster.mass_edit.writer.add_documents:
-        class: Pim\Bundle\TextmasterBundle\MassAction\AddDocumentsWriter
-        arguments:
-            - '@textmaster.repository.webapi'
+                operation_group: mass-edit
+                acl: pim_enrich_product_edit_attributes
+                form_type: textmaster.form.create_projects

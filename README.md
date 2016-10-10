@@ -13,6 +13,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
 | v1.0.*                      | v1.5.*                       |
+| v1.1.*                      | v1.6.*                       |
 
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
@@ -41,7 +42,7 @@ composer require akeneo-labs/textmaster-bundle @stable
 Register your bundle in the `AppKernel.php`
 
 ```
-$bundles[] = new \Pim\Bundle\TextmasterBundle\TextmasterBundle();
+$bundles[] = new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
 ```
 
 Update the database schema and regenerate your cache and assets:
@@ -55,7 +56,14 @@ rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:as
 Then we need to add a new mass edit batch job:
 
 ```
-app/console akeneo:batch:create-job 'Textmaster Connector' textmaster_start_projects mass_edit textmaster_start_projects '[]' 'Start TextMaster project'
+app/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' 'mass_edit' 'textmaster_start_projects' '{}' 'Start TextMaster project'
+```
+
+we must put the mass edit form template at the right place:
+
+```
+mkdir -p app/Resources/PimEnrichBundle/views/MassEditAction/product/configure
+cp vendor/textmaster/akeneo-extension/src/Resources/views/MassEditAction/configure/textmaster_start_projects.html.twig app/Resources/PimEnrichBundle/views/MassEditAction/product/configure/
 ```
 
 Finally, you must set a `cron` to retrieve the translated contents from Textmaster:

@@ -2,12 +2,12 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
+use Akeneo\Component\Batch\Item\DataInvalidItem;
 use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Pim\Bundle\EnrichBundle\Connector\Processor\AbstractProcessor;
 use Pim\Bundle\TextmasterBundle\Project\BuilderInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
-use Pim\Component\Connector\Repository\JobConfigurationRepositoryInterface;
 
 /**
  * Create TextMaster document from product
@@ -26,15 +26,11 @@ class AddDocumentsProcessor extends AbstractProcessor
 
     /**
      * {@inheritdoc}
-     * @param BuilderInterface $projectBuilder
+     * @param BuilderInterface        $projectBuilder
      * @param ObjectDetacherInterface $detacher
      */
-    public function __construct(
-        JobConfigurationRepositoryInterface $jobConfigurationRepo,
-        BuilderInterface $projectBuilder,
-        ObjectDetacherInterface $detacher
-    ) {
-        parent::__construct($jobConfigurationRepo);
+    public function __construct(BuilderInterface $projectBuilder, ObjectDetacherInterface $detacher)
+    {
         $this->projectBuilder = $projectBuilder;
         $this->detacher = $detacher;
     }
@@ -56,10 +52,10 @@ class AddDocumentsProcessor extends AbstractProcessor
         $attributesToTranslate = $this->projectBuilder->createDocumentData($product, 'en_US');
 
         if (null === $attributesToTranslate) {
-            $itemDetails = [
+            $invalidItem = new DataInvalidItem([
                 'product identifier' => $product->getIdentifier()->getData(),
-            ];
-            $this->stepExecution->addWarning('skipped_document', 'no content to translate', [], $itemDetails);
+            ]);
+            $this->stepExecution->addWarning('no content to translate', [], $invalidItem);
         }
 
         $this->detacher->detach($product);

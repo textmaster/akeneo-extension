@@ -35,15 +35,18 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // Random delay to start to not overload TextMaster servers at the same time
-        sleep(rand(1, 300));
-        
         $this->output = $output;
-        $this->writeMessage('<info>Check TextMaster projects</info>');
+
+        // Random delay to start to not overload TextMaster servers at the same time
+        $sleepTime = rand(1, 300);
+        $this->writeMessage(sprintf('Sleep for %d seconds', $sleepTime));
+        sleep($sleepTime);
+        
+        $this->writeMessage('Check TextMaster projects');
 
         $projects = $this->getProjects();
         foreach ($projects as $project) {
-            $this->writeMessage(sprintf('<info>Update products for project %s</info>', $project->getCode()));
+            $this->writeMessage(sprintf('Update products for project %s', $project->getCode()));
             $this->updateProducts($project);
         }
         $this->updateProjects($projects);
@@ -57,12 +60,13 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
     protected function updateProducts(ProjectInterface $project)
     {
         $pimLocaleCode = $project->getToLocale()->getCode();
-        $webApiRepository = $this->getContainer()->get('textmaster.repository.webapi');
+        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
 
         $filters = [
             'status' => [
                 '$in' => [DocumentInterface::STATUS_IN_REVIEW, DocumentInterface::STATUS_COMPLETED],
             ],
+            'archived' => false
         ];
 
         $updatedDate = $project->getUpdatedAt();
@@ -74,7 +78,7 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         try {
             $documents = $webApiRepository->getDocuments($filters, $project->getCode());
             $project->setUpdatedAt();
-            $updater = $this->getContainer()->get('textmaster.document.updater');
+            $updater = $this->getContainer()->get('pim_textmaster.document.updater');
             $products = [];
             foreach ($documents as $document) {
                 $product = $updater->update($document, $pimLocaleCode);
@@ -102,23 +106,24 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      */
     protected function updateProjects(array $projects)
     {
-        $webApiRepository = $this->getContainer()->get('textmaster.repository.webapi');
+        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
 
         $filters = [
             "status" => [
                 '$nin' => [DocumentInterface::STATUS_CANCELED, DocumentInterface::STATUS_COMPLETED],
             ],
+            'archived' => false,
         ];
 
         $textmasterCodes = $webApiRepository->getProjectCodes($filters);
 
         foreach ($projects as $project) {
             if (in_array($project->getCode(), $textmasterCodes)) {
-                $saver = $this->getContainer()->get('textmaster.saver.project');
+                $saver = $this->getContainer()->get('pim_textmaster.saver.project');
                 $saver->save($project);
                 $this->writeMessage(sprintf('<info>Project %s was updated</info>', $project->getCode()));
             } else {
-                $remover = $this->getContainer()->get('textmaster.remover.project');
+                $remover = $this->getContainer()->get('pim_textmaster.remover.project');
                 $remover->remove($project);
                 $this->writeMessage(sprintf('<info>Project %s was removed</info>', $project->getCode()));
             }
@@ -130,7 +135,7 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      */
     protected function getProjects()
     {
-        $projectRepository = $this->getContainer()->get('textmaster.repository.project');
+        $projectRepository = $this->getContainer()->get('pim_textmaster.repository.project');
         $projects = $projectRepository->findAll();
 
         return $projects;

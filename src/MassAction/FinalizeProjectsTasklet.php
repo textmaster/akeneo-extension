@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\AbstractConfigurableStepElement;
 use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
@@ -12,7 +11,7 @@ use Pim\Component\Connector\Step\TaskletInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Finalize the mass actino:
+ * Finalize the mass action:
  * - translation memory
  * - autolaunch
  *
@@ -20,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements TaskletInterface
+class FinalizeProjectsTasklet implements TaskletInterface
 {
     const STATUS_MAX_TRY = 3;
 
@@ -70,7 +69,7 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
     /**
      * @inheritdoc
      */
-    public function execute(array $configuration)
+    public function execute()
     {
         $autolaunch = $this->configManager->get('pim_textmaster.autolaunch');
         $projects = $this->getProjects();
@@ -139,8 +138,6 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
 
     /**
      * @param ProjectInterface $project
-     *
-     * @return \Textmaster\Model\ProjectInterface
      */
     protected function launchProject(ProjectInterface $project)
     {
@@ -157,7 +154,7 @@ class FinalizeProjectsTasklet extends AbstractConfigurableStepElement implements
      */
     protected function getProjects()
     {
-        return $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
+        return (array) $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
     }
 
     /**
