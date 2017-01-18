@@ -36,7 +36,7 @@ The translation request is done by a very simple mass edit process:
 
 First step is to require the sources:
 ```
-composer require akeneo-labs/textmaster-bundle @stable
+composer require textmaster/akeneo-extension @stable
 ```
 
 Register your bundle in the `AppKernel.php`
