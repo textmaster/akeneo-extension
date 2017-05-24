@@ -66,7 +66,6 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             'status' => [
                 '$in' => [DocumentInterface::STATUS_IN_REVIEW, DocumentInterface::STATUS_COMPLETED],
             ],
-            'archived' => false
         ];
 
         $updatedDate = $project->getUpdatedAt();

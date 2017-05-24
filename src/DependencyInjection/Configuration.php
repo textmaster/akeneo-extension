@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\DependencyInjection;
 
+use Oro\Bundle\ConfigBundle\DependencyInjection\SettingsBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -19,42 +20,26 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
 
-        $root = $treeBuilder->root('textmaster');
+        $rootNode = $treeBuilder->root('textmaster');
 
-        $children = $root->children();
+        $rootNode->children()
+            ->scalarNode('api_key')->end()
+            ->scalarNode('api_secret')->end()
+            ->scalarNode('attributes')->end()
+            ->booleanNode('autolaunch')->end()
+            ->end();
 
-        $children->arrayNode('settings')
-            ->children()
-                ->arrayNode('api_key')
-                    ->children()
-                        ->scalarNode('value')->end()
-                        ->scalarNode('scope')->end()
-                    ->end()
-                ->end()
-                ->arrayNode('api_secret')
-                    ->children()
-                        ->scalarNode('value')->end()
-                        ->scalarNode('scope')->end()
-                    ->end()
-                ->end()
-                ->arrayNode('attributes')
-                    ->children()
-                        ->scalarNode('value')->end()
-                        ->scalarNode('scope')->end()
-                    ->end()
-                ->end()
-                ->arrayNode('autolaunch')
-                    ->children()
-                        ->booleanNode('value')->end()
-                        ->scalarNode('scope')->end()
-                    ->end()
-                ->end()
-            ->end()
-        ->end();
+        $rootNode->end();
 
-        $children->end();
-
-        $root->end();
+        SettingsBuilder::append(
+            $rootNode,
+            [
+                'api_key' => ['value' => null],
+                'api_secret' => ['value' => null],
+                'attributes' => ['value' => null],
+                'autolaunch' => ['value' => false],
+            ]
+        );
 
         return $treeBuilder;
     }

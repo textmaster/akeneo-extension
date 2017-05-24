@@ -54,7 +54,7 @@ class UpdaterSpec extends ObjectBehavior
             ],
         ];
 
-        $productUpdater->update($product, $data)->shouldBeCalled();
+        $productUpdater->update($product, ['values' => $data])->shouldBeCalled();
         $this->update($document, $localeCode);
     }
 }

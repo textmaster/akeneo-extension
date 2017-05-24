@@ -28,7 +28,7 @@ class OroConfigCompilerPass implements CompilerPassInterface
 
         $configControllerDefinition = $container->findDefinition('oro_config.controller.configuration');
         $arguments = $configControllerDefinition->getArguments();
-        $options = $arguments[1];
+        $options = $arguments[3];
 
         foreach ($bundleSettings as $name => $value) {
             $options[] = [
@@ -36,7 +36,7 @@ class OroConfigCompilerPass implements CompilerPassInterface
                 'name'    => $name,
             ];
         }
-        $arguments[1] = $options;
+        $arguments[3] = $options;
         $configControllerDefinition->setArguments($arguments);
     }
 }
