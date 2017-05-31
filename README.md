@@ -12,8 +12,9 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
-| v1.0.*                      | v1.5.*                       |
+| v1.2.*                      | v1.7.*                       |
 | v1.1.*                      | v1.6.*                       |
+| v1.0.*                      | v1.5.*                       |
 
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
@@ -36,7 +37,7 @@ The translation request is done by a very simple mass edit process:
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension @stable
+composer require textmaster/akeneo-extension 1.2.*
 ```
 
 Register your bundle in the `AppKernel.php`
@@ -87,3 +88,4 @@ In this screen you will be able to set:
 ## Video demo
 
 A live demonstration is available on this short video: https://www.youtube.com/watch?v=9WkyQFwoWWo
+

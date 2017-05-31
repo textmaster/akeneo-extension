@@ -19,7 +19,6 @@ define([
               initSelect2,
               template) {
         return BaseForm.extend({
-            className: 'tab-pane',
             events: {
                 'change .texmaster-config': 'updateModel'
             },

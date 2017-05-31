@@ -49,7 +49,7 @@ class Updater implements UpdaterInterface
                 'data'   => $content,
             ];
         }
-        $this->productUpdater->update($product, $data);
+        $this->productUpdater->update($product, ['values' => $data]);
 
         return $product;
     }
