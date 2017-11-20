@@ -39,7 +39,8 @@ class ListProjectsCommand extends ContainerAwareCommand
 
         $projects = $this->getProjects();
         foreach ($projects as $project) {
-            $this->writeMessage(sprintf('<info>Project %s [%s]: %s</info>',
+            $this->writeMessage(sprintf(
+                '<info>Project %s [%s]: %s</info>',
                 $project->getId(),
                 $project->getStatus(),
                 $project->getName()

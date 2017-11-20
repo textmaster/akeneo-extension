@@ -79,13 +79,19 @@ class CreateProjectsTasklet implements TaskletInterface
     public function execute()
     {
         $actions = $this->getConfiguredActions();
-        $fromLocale = $this->localeRepository->findOneByIdentifier($actions['fromLocale']);
+        if (null === $actions) {
+            $this->stepExecution->addError('No actions found.');
 
-        $projectCode = $actions['name'];
-        $projectBriefing = $actions['briefing'];
-        $toLocales = $actions['toLocales'];
-        $username = $actions['username'];
-        $category = $actions['category'];
+            return;
+        }
+        $action = $actions[0];
+        $fromLocale = $this->localeRepository->findOneByIdentifier($action['fromLocale']);
+
+        $projectCode = $action['name'];
+        $projectBriefing = $action['briefing'];
+        $toLocales = explode(',', $action['toLocales']);
+        $username = $action['username'];
+        $category = $action['category'];
 
         $projects = [];
         foreach ($toLocales as $localeCode) {

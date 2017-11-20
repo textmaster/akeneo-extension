@@ -84,12 +84,10 @@ class FinalizeProjectsTasklet implements TaskletInterface
 
         if (!$autolaunch) {
             $label = $this->translator->trans('textmaster.customer.validation_link');
-            $link = sprintf('<a href="https://www.textmaster.com/clients/projects" target="_blank">%s</a>', $label);
-            $this->stepExecution->addSummaryInfo('link', $link);
+            $this->stepExecution->addSummaryInfo('link', $label);
         } else {
             $label = $this->translator->trans('textmaster.customer.launched_link');
-            $link = sprintf('<a href="https://www.textmaster.com/clients/projects" target="_blank">%s</a>', $label);
-            $this->stepExecution->addSummaryInfo('link', $link);
+            $this->stepExecution->addSummaryInfo('link', $label);
         }
     }
 

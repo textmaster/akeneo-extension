@@ -1,4 +1,9 @@
 services:
+    pim_textmaster.controller.rest:
+        class: Pim\Bundle\TextmasterBundle\Controller\TextmasterRestController
+        arguments:
+            - '@pim_textmaster.repository.webapi'
+
     pim_textmaster.form.create_projects:
         class: Pim\Bundle\TextmasterBundle\Project\Form\CreateProjectType
         arguments:

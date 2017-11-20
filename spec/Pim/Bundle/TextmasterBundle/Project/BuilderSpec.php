@@ -11,7 +11,7 @@ use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
-use Pim\Component\Catalog\Model\ProductValueInterface;
+use Pim\Component\Catalog\Model\ValueInterface;
 use Psr\Log\LoggerInterface;
 use Textmaster\Model\DocumentInterface;
 
@@ -68,8 +68,7 @@ class BuilderSpec extends ObjectBehavior
 
     function it_checks_configuration(
         ProductInterface $product,
-        ProductValueInterface $identifier,
-        ProductValueInterface $productValue1,
+        ValueInterface $productValue1,
         AttributeInterface $attribute1,
         $configManager
     )
@@ -84,7 +83,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue1->getAttribute()->willReturn($attribute1);
 
         $attribute1->getCode()->willReturn('att1');
-        $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute1->getType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
         $attribute1->isWysiwygEnabled()->willReturn(true);
@@ -92,8 +91,7 @@ class BuilderSpec extends ObjectBehavior
         $product->getValues()->willReturn([
             $productValue1,
         ]);
-        $product->getIdentifier()->willReturn($identifier);
-        $identifier->getVarchar()->willReturn('fooSku');
+        $product->getIdentifier()->willReturn('fooSku');
 
         $this->shouldThrow(new RuntimeException('No attributes configured for translation'))
             ->during('createDocumentData', array($product, $localeCode));
@@ -101,15 +99,14 @@ class BuilderSpec extends ObjectBehavior
 
     function it_creates_document_data(
         ProductInterface $product,
-        ProductValueInterface $identifier,
-        ProductValueInterface $productValue1,
+        ValueInterface $productValue1,
         AttributeInterface $attribute1,
-        ProductValueInterface $productValue2,
-        ProductValueInterface $productValue3,
+        ValueInterface $productValue2,
+        ValueInterface $productValue3,
         AttributeInterface $attribute3,
-        ProductValueInterface $productValue4,
+        ValueInterface $productValue4,
         AttributeInterface $attribute4,
-        ProductValueInterface $productValue5,
+        ValueInterface $productValue5,
         AttributeInterface $attribute5,
         $configManager
     )
@@ -124,7 +121,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue1->getAttribute()->willReturn($attribute1);
 
         $attribute1->getCode()->willReturn('att1');
-        $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute1->getType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
         $attribute1->isWysiwygEnabled()->willReturn(true);
@@ -138,7 +135,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue3->getAttribute()->willReturn($attribute3);
 
         $attribute3->getCode()->willReturn('att3');
-        $attribute3->getAttributeType()->willReturn(AttributeTypes::BOOLEAN);
+        $attribute3->getType()->willReturn(AttributeTypes::BOOLEAN);
         $attribute3->isLocalizable()->willReturn(true);
         $attribute3->isScopable()->willReturn(true);
         $attribute3->isWysiwygEnabled()->willReturn(true);
@@ -147,7 +144,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue4->getAttribute()->willReturn($attribute4);
 
         $attribute4->getCode()->willReturn('att4');
-        $attribute4->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute4->getType()->willReturn(AttributeTypes::TEXT);
         $attribute4->isLocalizable()->willReturn(false);
         $attribute4->isWysiwygEnabled()->willReturn(true);
 
@@ -156,7 +153,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue5->getData()->willReturn('attribute5 data');
 
         $attribute5->getCode()->willReturn('att5');
-        $attribute5->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute5->getType()->willReturn(AttributeTypes::TEXT);
         $attribute5->isLocalizable()->willReturn(true);
         $attribute5->isScopable()->willReturn(false);
         $attribute5->isWysiwygEnabled()->willReturn(true);
@@ -168,8 +165,7 @@ class BuilderSpec extends ObjectBehavior
             $productValue4,
             $productValue5,
         ]);
-        $product->getIdentifier()->willReturn($identifier);
-        $identifier->getVarchar()->willReturn('fooSku');
+        $product->getIdentifier()->willReturn('fooSku');
 
         $expected = [
             'title'              => 'fooSku',
@@ -189,11 +185,10 @@ class BuilderSpec extends ObjectBehavior
 
     function it_does_not_creates_document_data_with_empty_content(
         ProductInterface $product,
-        ProductValueInterface $identifier,
-        ProductValueInterface $productValue1,
+        ValueInterface $productValue1,
         AttributeInterface $attribute1,
-        ProductValueInterface $productValue2,
-        ProductValueInterface $productValue3,
+        ValueInterface $productValue2,
+        ValueInterface $productValue3,
         AttributeInterface $attribute3,
         $configManager
     )
@@ -208,7 +203,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue1->getAttribute()->willReturn($attribute1);
 
         $attribute1->getCode()->willReturn('att1');
-        $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute1->getType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
         $attribute1->isWysiwygEnabled()->willReturn(false);
@@ -222,7 +217,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue3->getAttribute()->willReturn($attribute3);
 
         $attribute3->getCode()->willReturn('att3');
-        $attribute3->getAttributeType()->willReturn(AttributeTypes::BOOLEAN);
+        $attribute3->getType()->willReturn(AttributeTypes::BOOLEAN);
         $attribute3->isLocalizable()->willReturn(true);
         $attribute3->isScopable()->willReturn(true);
 
@@ -232,8 +227,7 @@ class BuilderSpec extends ObjectBehavior
             $productValue2,
             $productValue3,
         ]);
-        $product->getIdentifier()->willReturn($identifier);
-        $identifier->getVarchar()->willReturn('fooSku');
+        $product->getIdentifier()->willReturn('fooSku');
 
         $this->createDocumentData($product, $localeCode)
             ->shouldReturn(null);

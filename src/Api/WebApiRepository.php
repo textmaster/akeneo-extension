@@ -15,7 +15,7 @@ use Textmaster\Model\ProjectInterface;
  * @copyright 2016 Akeneo SAS (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class WebApiRepository
+class WebApiRepository implements WebApiRepositoryInterface
 {
     /** @var Client */
     protected $clientApi;

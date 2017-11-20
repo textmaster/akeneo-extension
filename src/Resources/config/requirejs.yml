@@ -2,3 +2,15 @@ config:
     paths:
         textmaster/system/configuration: pimtextmaster/js/form/system
         textmaster/template/system/group/configuration: pimtextmaster/js/templates/system/group/configuration.html
+
+        textmaster/mass_edit: pimtextmaster/js/mass_edit/textmaster_mass_edit
+        textmaster/template/mass_edit: pimtextmaster/js/templates/mass_edit/textmaster_mass_edit.html
+
+    config:
+        pim/fetcher-registry:
+            fetchers:
+                textmaster-categories:
+                    module: pim/base-fetcher
+                    options:
+                        urls:
+                            list: textmaster_rest_categories

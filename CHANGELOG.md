@@ -1,4 +1,6 @@
-## v1.1.0: PIM 1.6 compatibility
+# 2.0.0: PIM 2.0 compatibility
+
+# v1.1.0: PIM 1.6 compatibility
 
 - Drop PHP 5.5 support.
 - Use Akeneo 1.6 batch definition system.

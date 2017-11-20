@@ -3,50 +3,66 @@
          src="/bundles/pimtextmaster/img/TextMaster.png"/>
     <p><a href="https://textmaster.com" target="_blank"><%- _.__('textmaster.configuration.link.label') %></a></p>
 </div>
-<div class="AknFormContainer AknFormContainer--withPadding">
-    <div class="AknFieldContainer">
-        <div class="AknFieldContainer-header">
-            <label class="AknFieldContainer-label"
-                   for="pim_textmaster___apikey"><%- _.__('textmaster.configuration.api_key.label') %></label>
+
+<div class="AknSubsection">
+    <header class="AknSubsection-title">
+        <span class="group-label"><%- _.__('textmaster.configuration.section.credentials') %></span>
+    </header>
+    <div class="AknFormContainer AknFormContainer--withPadding">
+        <div class="AknFieldContainer">
+            <div class="AknFieldContainer-header">
+                <label class="AknFieldContainer-label"
+                       for="pim_textmaster___apikey"><%- _.__('textmaster.configuration.api_key.label') %></label>
+            </div>
+            <div class="AknFieldContainer-inputContainer">
+                <input class="AknTextField texmaster-config"
+                       id="pim_textmaster___apikey" name="pim_textmaster___api_key"
+                       type="text" value="<%- apikey %>"/>
+            </div>
         </div>
-        <div class="AknFieldContainer-inputContainer">
-            <input class="AknTextField texmaster-config"
-                   id="pim_textmaster___apikey" name="pim_textmaster___api_key"
-                   type="text" value="<%- apikey %>"/>
-        </div>
-    </div>
-    <div class="AknFieldContainer">
-        <div class="AknFieldContainer-header">
-            <label class="AknFieldContainer-header"
-                   for="pim_textmaster___apisecret"><%- _.__('textmaster.configuration.api_secret.label') %></label>
-        </div>
-        <div class="AknFieldContainer-inputContainer">
-            <input class="AknTextField texmaster-config" id="pim_textmaster___apisecret"
-                   name="pim_textmaster___api_secret"
-                   type="text" value="<%- apisecret %>"/>
-        </div>
-    </div>
-    <div class="AknFieldContainer">
-        <div class="AknFieldContainer-header">
-            <label class="AknFieldContainer-header"
-                   for="pim_textmaster___attributes"><%- _.__('textmaster.configuration.attributes.label') %></label>
-        </div>
-        <div class="AknFieldContainer-inputContainer">
-            <input class="texmaster-config select-field"
-                   id="pim_textmaster___attributes" name="pim_textmaster___attributes"
-                   type="hidden" value="<%- attributes %>"/>
+        <div class="AknFieldContainer">
+            <div class="AknFieldContainer-header">
+                <label class="AknFieldContainer-header"
+                       for="pim_textmaster___apisecret"><%- _.__('textmaster.configuration.api_secret.label') %></label>
+            </div>
+            <div class="AknFieldContainer-inputContainer">
+                <input class="AknTextField texmaster-config" id="pim_textmaster___apisecret"
+                       name="pim_textmaster___api_secret"
+                       type="text" value="<%- apisecret %>"/>
+            </div>
         </div>
     </div>
-    <div class="AknFieldContainer">
-        <div class="AknFieldContainer-header">
-            <label class="AknFieldContainer-header" for="pim_textmaster___autolaunch"><%- _.__('textmaster.configuration.autolaunch.label') %></label>
+</div>
+
+<div class="AknSubsection">
+    <header class="AknSubsection-title">
+        <span class="group-label"><%- _.__('textmaster.configuration.section.settings') %></span>
+    </header>
+    <div class="AknFormContainer AknFormContainer--withPadding">
+        <div class="AknFieldContainer">
+            <div class="AknFieldContainer-header">
+                <label class="AknFieldContainer-header"
+                       for="pim_textmaster___attributes"><%- _.__('textmaster.configuration.attributes.label')
+                    %></label>
+            </div>
+            <div class="AknFieldContainer-inputContainer">
+                <input class="texmaster-config select-field"
+                       id="pim_textmaster___attributes" name="pim_textmaster___attributes"
+                       type="hidden" value="<%- attributes %>"/>
+            </div>
         </div>
-        <div>
-            <div class="texmaster-config switch switch-small"
-                 data-on-label="<%- _.__('pim_enrich.form.entity.switch.yes') %>"
-                 data-off-label="<%- _.__('pim_enrich.form.entity.switch.no') %>">
-                <input id="pim_textmaster___autolaunch" name="pim_textmaster___autolaunch"
-                       type="checkbox" <%- autolaunch == true ? 'checked' : '' %> />
+        <div class="AknFieldContainer">
+            <div class="AknFieldContainer-header">
+                <label class="AknFieldContainer-header" for="pim_textmaster___autolaunch"><%-
+                    _.__('textmaster.configuration.autolaunch.label') %></label>
+            </div>
+            <div>
+                <div class="texmaster-config switch switch-small"
+                     data-on-label="<%- _.__('pim_enrich.form.entity.switch.yes') %>"
+                     data-off-label="<%- _.__('pim_enrich.form.entity.switch.no') %>">
+                    <input id="pim_textmaster___autolaunch" name="pim_textmaster___autolaunch"
+                           type="checkbox" <%- autolaunch == true ? 'checked' : '' %> />
+                </div>
             </div>
         </div>
     </div>

@@ -1,0 +1,4 @@
+textmaster_rest_categories:
+    path: /rest/categories
+    defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterCategories }
+    methods: [GET]

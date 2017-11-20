@@ -12,3 +12,6 @@ textmaster:
             label: Attributs
         autolaunch:
             label: Lancement automatique du projet
+        section:
+            credentials: Authentification
+            settings: Configuration

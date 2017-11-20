@@ -1,6 +1,6 @@
 extensions:
     textmaster-system-configuration:
         module: textmaster/system/configuration
-        parent: oro-system-config-system
-        targetZone: content
-        position: 120
+        parent: oro-system-config-tabs
+        targetZone: container
+        position: 130

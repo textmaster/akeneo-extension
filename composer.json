@@ -13,25 +13,23 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
-        "akeneo/pim-community-dev": "~1.7.0",
-        "worldia/textmaster-api": "0.2.7"
+        "php": ">=7.1",
+        "akeneo/pim-community-dev": "^2.0.6",
+        "worldia/textmaster-api": "^0.6.0"
     },
     "require-dev": {
         "behat/behat": "^3.1.0",
-        "friendsofphp/php-cs-fixer": "@stable",
-        "phpspec/phpspec": "2.4.*"
+        "friendsofphp/php-cs-fixer": "^2.8.2",
+        "phpspec/phpspec": "^2.5.8"
     },
     "autoload": {
         "psr-4": {
             "Pim\\Bundle\\TextmasterBundle\\": "src/"
         }
     },
-    "config": {
-        "bin-dir": "bin"
-    },
     "branch-alias": {
-        "dev-master": "1.2.x-dev",
+        "dev-master": "2.0.x-dev",
+        "dev-1.2": "1.2.x-dev",
         "dev-1.1": "1.1.x-dev",
         "dev-1.0": "1.0.x-dev"
     }

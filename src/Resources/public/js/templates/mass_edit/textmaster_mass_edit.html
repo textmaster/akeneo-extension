@@ -1,0 +1,49 @@
+<div class="AknFieldContainer">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label"for="textmaster-name">Project name</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <input class="AknTextField textmaster-field" id="textmaster-name"
+               name="name"
+               type="text" value="<%- name %>"/>
+    </div>
+</div>
+<div class="AknFieldContainer">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label"for="textmaster-briefing">Briefing</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <textarea id="textmaster-briefing" name="briefing"
+                  class="AknTextareaField textmaster-field"><%- briefing %></textarea>
+    </div>
+</div>
+<div class="AknFieldContainer">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label"for="textmaster-locale-from">From locale</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <input class="select-field simple-select textmaster-field"
+               id="textmaster-locale-from" name="fromLocale"
+               type="hidden" value="<%- fromLocale %>"/>
+    </div>
+</div>
+<div class="AknFieldContainer">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label"for="textmaster-locales-to">To locales</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <input class="select-field multi-select textmaster-field"
+               id="textmaster-locales-to" name="toLocales"
+               type="hidden" value="<%- toLocales %>"/>
+    </div>
+</div>
+<div class="AknFieldContainer">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label"for="textmaster-category">Category</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <input class="select-field textmaster-field"
+               id="textmaster-category" name="category"
+               type="hidden" value="<%- category %>"/>
+    </div>
+</div>
