@@ -1,0 +1,14 @@
+extensions:
+    textmaster-mass-edit-configure:
+        module: textmaster/mass_edit
+        parent: pim-mass-product-edit
+        position: 500
+        config:
+            title: textmaster.mass_edit.product.title
+            label: textmaster.mass_edit.product.title
+            labelCount: "{1}Translate <span class=\"AknFullPage-title--highlight\">1 product</span>|]1, Inf[Translate <span class=\"AknFullPage-title--highlight\">{{ itemsCount }} products</span>"
+            description: textmaster.mass_edit.product.description
+            code: textmaster_mass_edit
+            jobInstanceCode: textmaster_start_projects
+            icon: icon-template
+            defaultCategory: '%textmaster.default_category%'

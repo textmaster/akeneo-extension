@@ -8,7 +8,7 @@ use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\AttributeInterface;
 use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
-use Pim\Component\Catalog\Model\ProductValueInterface;
+use Pim\Component\Catalog\Model\ValueInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Textmaster\Model\DocumentInterface;
@@ -79,7 +79,7 @@ class Builder implements BuilderInterface
         $originalContent = [];
         $wysiwyg = false;
         foreach ($productValues as $productValue) {
-            /** @var ProductValueInterface $productValue */
+            /** @var ValueInterface $productValue */
             if ($this->isValidForTranslation($productValue->getAttribute()) && $localeCode === $productValue->getLocale()) {
                 $key = $this->createProductValueKey($productValue);
                 $originalPhrase = trim($productValue->getData());
@@ -97,7 +97,7 @@ class Builder implements BuilderInterface
         }
 
         $documentData = [
-            'title'              => $product->getIdentifier()->getVarchar(),
+            'title'              => $product->getIdentifier(),
             'original_content'   => $originalContent,
             'perform_word_count' => true,
             'type'               => DocumentInterface::TYPE_KEY_VALUE,
@@ -112,11 +112,11 @@ class Builder implements BuilderInterface
     /**
      * Create the document key for a product value
      *
-     * @param ProductValueInterface $productValue
+     * @param ValueInterface $productValue
      *
      * @return string
      */
-    public function createProductValueKey(ProductValueInterface $productValue)
+    public function createProductValueKey(ValueInterface $productValue)
     {
         $attribute = $productValue->getAttribute();
         $key = $attribute->getCode();
@@ -146,8 +146,8 @@ class Builder implements BuilderInterface
             return false;
         }
 
-        $isText = AttributeTypes::TEXT === $attribute->getAttributeType() ||
-            AttributeTypes::TEXTAREA === $attribute->getAttributeType();
+        $isText = AttributeTypes::TEXT === $attribute->getType() ||
+            AttributeTypes::TEXTAREA === $attribute->getType();
 
         return $isText && $attribute->isLocalizable();
     }

@@ -12,3 +12,11 @@ textmaster:
             label: Attributes
         autolaunch:
             label: Autolaunch project
+        section:
+            credentials: Credentials
+            settings: Settings
+
+    mass_edit:
+        product:
+            title: Translate with TextMaster
+            description: Translate product data with TextMaster

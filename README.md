@@ -12,6 +12,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
+| v2.0.*                      | v2.0.*                       |
 | v1.2.*                      | v1.7.*                       |
 | v1.1.*                      | v1.6.*                       |
 | v1.0.*                      | v1.5.*                       |
@@ -37,7 +38,7 @@ The translation request is done by a very simple mass edit process:
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension 1.2.*
+composer require textmaster/akeneo-extension 2.0.*
 ```
 
 Register your bundle in the `AppKernel.php`
@@ -60,13 +61,6 @@ Then we need to add a new mass edit batch job:
 app/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' 'mass_edit' 'textmaster_start_projects' '{}' 'Start TextMaster project'
 ```
 
-we must put the mass edit form template at the right place:
-
-```
-mkdir -p app/Resources/PimEnrichBundle/views/MassEditAction/product/configure
-cp vendor/textmaster/akeneo-extension/src/Resources/views/MassEditAction/configure/textmaster_start_projects.html.twig app/Resources/PimEnrichBundle/views/MassEditAction/product/configure/
-```
-
 Finally, you must set a `cron` to retrieve the translated contents from Textmaster:
 ```
 0 * * * * /home/akeno/pim/app/console pim:textmaster:retrieve-translations >> /tmp/textmaster.log
@@ -87,5 +81,5 @@ In this screen you will be able to set:
 
 ## Video demo
 
-A live demonstration is available on this short video: https://www.youtube.com/watch?v=9WkyQFwoWWo
+A live demonstration is available on this short video (TextMaster for Akeneo PIM 1.7): https://www.youtube.com/watch?v=9WkyQFwoWWo
 

@@ -43,7 +43,7 @@ services:
             - 'textmaster.step.add_documents'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
-            - '@pim_connector.reader.database.product'
+            - '@pim_enrich.reader.database.product_and_product_model'
             - '@pim_textmaster.mass_edit.processor.add_documents'
             - '@pim_textmaster.mass_edit.writer.add_documents'
 

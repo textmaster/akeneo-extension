@@ -1,6 +1,7 @@
 "use strict";
 
-define([
+define(
+    [
         'underscore',
         'oro/translator',
         'routing',
@@ -8,7 +9,7 @@ define([
         'pim/fetcher-registry',
         'pim/formatter/choices/base',
         'pim/initselect2',
-        'text!textmaster/template/system/group/configuration'
+        'textmaster/template/system/group/configuration'
     ],
     function (_,
               __,
@@ -26,10 +27,19 @@ define([
             label: __('textmaster.configuration.tab.label'),
             template: _.template(template),
 
+            configure() {
+                this.trigger('tab:register', {
+                    code: this.code,
+                    label: this.label
+                });
+
+                return BaseForm.prototype.configure.apply(this, arguments);
+            },
+
             /**
              * {@inheritdoc}
              */
-            render: function () {
+            render() {
                 this.$el.html(this.template({
                     apisecret: this.getFormData()['pim_textmaster___api_secret'] ?
                         this.getFormData()['pim_textmaster___api_secret'].value : '',
@@ -41,7 +51,7 @@ define([
                         this.getFormData()['pim_textmaster___autolaunch'].value == true : false
                 }));
 
-                var searchOptions = {
+                const searchOptions = {
                     options: {
                         types: [
                             'pim_catalog_text',
@@ -52,16 +62,12 @@ define([
 
                 FetcherRegistry.getFetcher('attribute').search(searchOptions)
                     .then(function (attributes) {
-                        var choices = _.chain(attributes)
+                        const choices = _.chain(attributes)
                             .filter(function (attribute) {
                                 return attribute.localizable;
                             })
                             .map(function (attribute) {
-                                var attributeGroup = ChoicesFormatter.formatOne(attribute.group);
-                                var attributeChoice = ChoicesFormatter.formatOne(attribute);
-                                attributeChoice.group = attributeGroup;
-
-                                return attributeChoice;
+                                return ChoicesFormatter.formatOne(attribute);
                             })
                             .value();
                         initSelect2.init(this.$('input.select-field'), {
@@ -76,17 +82,18 @@ define([
                 this.delegateEvents();
 
                 return BaseForm.prototype.render.apply(this, arguments);
-            },
+            }
+            ,
 
             /**
              * Update model after value change
              *
-             * @param {Event}
+             * @param {Event} event
              */
             updateModel: function (event) {
-                var name = event.target.name;
-                var data = this.getFormData();
-                var newValue = event.target.value;
+                const name = event.target.name;
+                const data = this.getFormData();
+                let newValue = event.target.value;
                 if ('checkbox' == $(event.target).attr('type')) {
                     newValue = $(event.target).prop('checked') ? true : false;
                 }
@@ -99,4 +106,5 @@ define([
             }
         });
     }
-);
+)
+;
