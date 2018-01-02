@@ -84,7 +84,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue1->getAttribute()->willReturn($attribute1);
 
         $attribute1->getCode()->willReturn('att1');
-        $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute1->getType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
         $attribute1->isWysiwygEnabled()->willReturn(true);
@@ -124,7 +124,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue1->getAttribute()->willReturn($attribute1);
 
         $attribute1->getCode()->willReturn('att1');
-        $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute1->getType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
         $attribute1->isWysiwygEnabled()->willReturn(true);
@@ -138,7 +138,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue3->getAttribute()->willReturn($attribute3);
 
         $attribute3->getCode()->willReturn('att3');
-        $attribute3->getAttributeType()->willReturn(AttributeTypes::BOOLEAN);
+        $attribute3->getType()->willReturn(AttributeTypes::BOOLEAN);
         $attribute3->isLocalizable()->willReturn(true);
         $attribute3->isScopable()->willReturn(true);
         $attribute3->isWysiwygEnabled()->willReturn(true);
@@ -147,7 +147,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue4->getAttribute()->willReturn($attribute4);
 
         $attribute4->getCode()->willReturn('att4');
-        $attribute4->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute4->getType()->willReturn(AttributeTypes::TEXT);
         $attribute4->isLocalizable()->willReturn(false);
         $attribute4->isWysiwygEnabled()->willReturn(true);
 
@@ -156,7 +156,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue5->getData()->willReturn('attribute5 data');
 
         $attribute5->getCode()->willReturn('att5');
-        $attribute5->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute5->getType()->willReturn(AttributeTypes::TEXT);
         $attribute5->isLocalizable()->willReturn(true);
         $attribute5->isScopable()->willReturn(false);
         $attribute5->isWysiwygEnabled()->willReturn(true);
@@ -208,7 +208,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue1->getAttribute()->willReturn($attribute1);
 
         $attribute1->getCode()->willReturn('att1');
-        $attribute1->getAttributeType()->willReturn(AttributeTypes::TEXT);
+        $attribute1->getType()->willReturn(AttributeTypes::TEXT);
         $attribute1->isLocalizable()->willReturn(true);
         $attribute1->isScopable()->willReturn(true);
         $attribute1->isWysiwygEnabled()->willReturn(false);
@@ -222,7 +222,7 @@ class BuilderSpec extends ObjectBehavior
         $productValue3->getAttribute()->willReturn($attribute3);
 
         $attribute3->getCode()->willReturn('att3');
-        $attribute3->getAttributeType()->willReturn(AttributeTypes::BOOLEAN);
+        $attribute3->getType()->willReturn(AttributeTypes::BOOLEAN);
         $attribute3->isLocalizable()->willReturn(true);
         $attribute3->isScopable()->willReturn(true);
 
