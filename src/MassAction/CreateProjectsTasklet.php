@@ -24,6 +24,12 @@ class CreateProjectsTasklet implements TaskletInterface
 {
     const PROJECTS_CONTEXT_KEY = 'textmaster_projects';
 
+    /**
+     * @since 1.2.1
+     * @var string Default category
+     */
+    const PROJECTS_DEFAULT_CATEGORY = 'C033';
+
     /** @var StepExecution */
     protected $stepExecution;
 
@@ -85,7 +91,7 @@ class CreateProjectsTasklet implements TaskletInterface
         $projectBriefing = $actions['briefing'];
         $toLocales = $actions['toLocales'];
         $username = $actions['username'];
-        $category = $actions['category'];
+        $category = self::PROJECTS_DEFAULT_CATEGORY;
 
         $projects = [];
         foreach ($toLocales as $localeCode) {

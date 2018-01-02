@@ -74,12 +74,6 @@ class CreateProjectType extends AbstractType
             'multiple' => true,
             'constraints' => new NotBlank(),
         ]);
-        $builder->add('category', 'choice', [
-            'required' => true,
-            'choices' => $this->apiRepository->getCategories(),
-            'select2' => true,
-            'data'    => $this->options['default_category'],
-        ]);
     }
 
     /**

@@ -40,18 +40,10 @@ First step is to require the sources:
 composer require textmaster/akeneo-extension 1.2.*
 ```
 
-Register your bundle in the `AppKernel.php`
+Register your bundle in the `AppKernel::registerProjectBundles`:
 
 ```
-$bundles[] = new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
-```
-
-Update the database schema and regenerate your cache and assets:
-
-```
-rm app/cache/* -rf
-app/console doctrine:schema:update --force
-rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:assets
+new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
 ```
 
 Then we need to add a new mass edit batch job:
@@ -60,11 +52,19 @@ Then we need to add a new mass edit batch job:
 app/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' 'mass_edit' 'textmaster_start_projects' '{}' 'Start TextMaster project'
 ```
 
-we must put the mass edit form template at the right place:
+We must put the mass edit form template at the right place:
 
 ```
 mkdir -p app/Resources/PimEnrichBundle/views/MassEditAction/product/configure
 cp vendor/textmaster/akeneo-extension/src/Resources/views/MassEditAction/configure/textmaster_start_projects.html.twig app/Resources/PimEnrichBundle/views/MassEditAction/product/configure/
+```
+
+Update the database schema and regenerate your cache and assets:
+
+```
+rm app/cache/* -rf
+app/console doctrine:schema:update --force
+rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:assets
 ```
 
 Finally, you must set a `cron` to retrieve the translated contents from Textmaster:

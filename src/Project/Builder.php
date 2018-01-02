@@ -146,8 +146,8 @@ class Builder implements BuilderInterface
             return false;
         }
 
-        $isText = AttributeTypes::TEXT === $attribute->getAttributeType() ||
-            AttributeTypes::TEXTAREA === $attribute->getAttributeType();
+        $isText = AttributeTypes::TEXT === $attribute->getType() ||
+            AttributeTypes::TEXTAREA === $attribute->getType();
 
         return $isText && $attribute->isLocalizable();
     }
@@ -169,7 +169,7 @@ class Builder implements BuilderInterface
     {
         $resolver->setDefaults([
             'ctype'           => 'translation',
-            'category'        => 'C019',
+            'category'        => 'C033',
             'language_level'  => 'enterprise',
             'vocabulary_type' => 'technical',
         ]);
