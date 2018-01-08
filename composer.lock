@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ce98112a3cc0f8b712ecc3d582e2ec30",
+    "content-hash": "1d5ff9a9d06e1a98d38290f1d97286b4",
     "packages": [
         {
             "name": "akeneo/pim-community-dev",
@@ -1563,21 +1563,21 @@
         },
         {
             "name": "friendsofsymfony/oauth2-php",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfSymfony/oauth2-php.git",
-                "reference": "fa2aecb1fca2a03fd5f9aca19fe9adb9dfff928c"
+                "reference": "486a6a5f70c3bfe8284a1e7e7b4b029b772d5b93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfSymfony/oauth2-php/zipball/fa2aecb1fca2a03fd5f9aca19fe9adb9dfff928c",
-                "reference": "fa2aecb1fca2a03fd5f9aca19fe9adb9dfff928c",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/oauth2-php/zipball/486a6a5f70c3bfe8284a1e7e7b4b029b772d5b93",
+                "reference": "486a6a5f70c3bfe8284a1e7e7b4b029b772d5b93",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "symfony/http-foundation": "~2.0|~3.0"
+                "symfony/http-foundation": "~2.0|~3.0|~4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
@@ -1613,7 +1613,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2016-03-31T14:24:17+00:00"
+            "time": "2018-01-05T15:20:40+00:00"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -4229,22 +4229,22 @@
         },
         {
             "name": "worldia/textmaster-api",
-            "version": "v0.2.7",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/worldia/textmaster-api.git",
-                "reference": "f5d5406071cc12448628a086f374dbdd1adb38cd"
+                "reference": "64c5340a839f1bd49f3c463458d51b8198bb4ea6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/worldia/textmaster-api/zipball/f5d5406071cc12448628a086f374dbdd1adb38cd",
-                "reference": "f5d5406071cc12448628a086f374dbdd1adb38cd",
+                "url": "https://api.github.com/repos/worldia/textmaster-api/zipball/64c5340a839f1bd49f3c463458d51b8198bb4ea6",
+                "reference": "64c5340a839f1bd49f3c463458d51b8198bb4ea6",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "guzzlehttp/guzzle": "^6.2",
-                "php": ">=5.5.0",
+                "php": ">=5.6.0",
                 "phpspec/php-diff": "^1.0"
             },
             "require-dev": {
@@ -4263,7 +4263,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2.x-dev"
+                    "dev-master": "0.4.x-dev"
                 }
             },
             "autoload": {
@@ -4292,7 +4292,7 @@
                 "textmaster",
                 "translation"
             ],
-            "time": "2016-09-19T12:02:59+00:00"
+            "time": "2017-05-19T16:17:37+00:00"
         }
     ],
     "packages-dev": [
