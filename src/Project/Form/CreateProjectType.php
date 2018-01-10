@@ -53,12 +53,6 @@ class CreateProjectType extends AbstractType
             'required' => true,
             'constraints' => new NotBlank(),
         ]);
-        $builder->add('briefing', 'textarea', [
-            'required' => false,
-            'attr'     => [
-                'placeholder' => $this->options['default_briefing'],
-            ],
-        ]);
         $builder->add('from_locale', 'entity', [
             'required' => true,
             'class'   => Locale::class,

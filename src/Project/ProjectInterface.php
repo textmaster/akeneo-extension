@@ -2,10 +2,9 @@
 
 namespace Pim\Bundle\TextmasterBundle\Project;
 
-use Pim\Component\Catalog\Model\LocaleInterface;
-
 /**
  * PIM Project entity interface
+ *
  * @author    Jean-Marie Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
@@ -33,16 +32,6 @@ interface ProjectInterface
     public function setCode($code);
 
     /**
-     * @return LocaleInterface
-     */
-    public function getFromLocale();
-
-    /**
-     * @param LocaleInterface $fromLocale
-     */
-    public function setFromLocale(LocaleInterface $fromLocale);
-
-    /**
      * @return string
      */
     public function getName();
@@ -53,24 +42,14 @@ interface ProjectInterface
     public function setName($name);
 
     /**
-     * @return LocaleInterface
-     */
-    public function getToLocale();
-
-    /**
-     * @param LocaleInterface $toLocale
-     */
-    public function setToLocale(LocaleInterface $toLocale);
-
-    /**
      * @return string
      */
-    public function getBriefing();
+    public function getApiTemplate();
 
     /**
-     * @param string $briefing
+     * @param string $templateId
      */
-    public function setBriefing($briefing);
+    public function setApiTemplate($templateId);
 
     /**
      * @return \DateTime
@@ -89,13 +68,4 @@ interface ProjectInterface
      */
     public function setUsername($username);
 
-    /**
-     * @return string
-     */
-    public function getCategory();
-
-    /**
-     * @param string $categoryCode
-     */
-    public function setCategory($categoryCode);
 }

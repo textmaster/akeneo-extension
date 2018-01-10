@@ -24,7 +24,7 @@ use Textmaster\Model\DocumentInterface;
 class Builder implements BuilderInterface
 {
     /** @var array */
-    protected $options;
+    protected $options = [];
 
     /** @var ConfigManager */
     protected $configManager;
@@ -35,13 +35,12 @@ class Builder implements BuilderInterface
     /**
      * @param ConfigManager   $configManager
      * @param LoggerInterface $logger
-     * @param string[]        $options
      */
-    public function __construct(ConfigManager $configManager, LoggerInterface $logger, array $options)
+    public function __construct(ConfigManager $configManager, LoggerInterface $logger)
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
-        $this->options = $resolver->resolve($options);
+        $this->options = $resolver->resolve([]);
         $this->configManager = $configManager;
         $this->logger = $logger;
     }
@@ -53,16 +52,8 @@ class Builder implements BuilderInterface
     {
         $data = [
             'name'                     => $project->getName(),
-            'ctype'                    => $this->options['ctype'],
             'language_from'            => $this->localeCodeForTextmaster($project->getFromLocale()),
             'language_to'              => $this->localeCodeForTextmaster($project->getToLocale()),
-            'category'                 => $project->getCategory(),
-            'vocabulary_type'          => $this->options['vocabulary_type'],
-            'project_briefing'         => $project->getBriefing(),
-            'project_briefing_is_rich' => true,
-            'options'                  => [
-                'language_level' => $this->options['language_level'],
-            ],
         ];
 
         $this->logger->debug(sprintf('Create project data: %s', json_encode($data)));
@@ -169,9 +160,6 @@ class Builder implements BuilderInterface
     {
         $resolver->setDefaults([
             'ctype'           => 'translation',
-            'category'        => 'C033',
-            'language_level'  => 'enterprise',
-            'vocabulary_type' => 'technical',
         ]);
     }
 }

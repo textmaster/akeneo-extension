@@ -23,15 +23,6 @@ class Project implements ProjectInterface
     /** @var string */
     private $name;
 
-    /** @var LocaleInterface */
-    private $fromLocale;
-
-    /** @var LocaleInterface */
-    private $toLocale;
-
-    /** @var string */
-    private $briefing;
-
     /** @var \DateTime */
     private $updatedAt;
 
@@ -39,7 +30,7 @@ class Project implements ProjectInterface
     private $username;
 
     /** @var string */
-    private $category;
+    protected $apiTemplate;
 
     /**
      * @return int
@@ -74,22 +65,6 @@ class Project implements ProjectInterface
     }
 
     /**
-     * @return LocaleInterface
-     */
-    public function getFromLocale()
-    {
-        return $this->fromLocale;
-    }
-
-    /**
-     * @param LocaleInterface $fromLocale
-     */
-    public function setFromLocale(LocaleInterface $fromLocale)
-    {
-        $this->fromLocale = $fromLocale;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -103,38 +78,6 @@ class Project implements ProjectInterface
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return LocaleInterface
-     */
-    public function getToLocale()
-    {
-        return $this->toLocale;
-    }
-
-    /**
-     * @param LocaleInterface $toLocale
-     */
-    public function setToLocale(LocaleInterface $toLocale)
-    {
-        $this->toLocale = $toLocale;
-    }
-
-    /**
-     * @return string
-     */
-    public function getBriefing()
-    {
-        return $this->briefing;
-    }
-
-    /**
-     * @param string $briefing
-     */
-    public function setBriefing($briefing)
-    {
-        $this->briefing = $briefing;
     }
 
     /**
@@ -169,16 +112,16 @@ class Project implements ProjectInterface
     /**
      * @return string
      */
-    public function getCategory()
+    public function getApiTemplate()
     {
-        return $this->category;
+        return $this->apiTemplate;
     }
 
     /**
-     * @param string $categoryCode
+     * @param string $templateId
      */
-    public function setCategory($categoryCode)
+    public function setApiTemplate($templateId)
     {
-        $this->category = $categoryCode;
+        $this->apiTemplate = $templateId;
     }
 }

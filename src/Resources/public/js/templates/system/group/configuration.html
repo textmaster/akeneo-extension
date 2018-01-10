@@ -37,17 +37,4 @@
                    type="hidden" value="<%- attributes %>"/>
         </div>
     </div>
-    <div class="AknFieldContainer">
-        <div class="AknFieldContainer-header">
-            <label class="AknFieldContainer-header" for="pim_textmaster___autolaunch"><%- _.__('textmaster.configuration.autolaunch.label') %></label>
-        </div>
-        <div>
-            <div class="texmaster-config switch switch-small"
-                 data-on-label="<%- _.__('pim_enrich.form.entity.switch.yes') %>"
-                 data-off-label="<%- _.__('pim_enrich.form.entity.switch.no') %>">
-                <input id="pim_textmaster___autolaunch" name="pim_textmaster___autolaunch"
-                       type="checkbox" <%- autolaunch == true ? 'checked' : '' %> />
-            </div>
-        </div>
-    </div>
 </div>
