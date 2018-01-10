@@ -15,7 +15,7 @@
     "require": {
         "php": ">=5.6",
         "akeneo/pim-community-dev": "1.7.*",
-        "worldia/textmaster-api": "0.6.*"
+        "worldia/textmaster-api": "dev-master@dev"
     },
     "require-dev": {
         "behat/behat": "^3.1.0",
