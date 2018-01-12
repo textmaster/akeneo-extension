@@ -31,7 +31,7 @@ Creating your account on https://textmaster.com is totally free. You can access 
 The translation request is done by a very simple mass edit process:
 
 - Select your products in the grid and choose the "translate with Textmaster" mass edit operation.
-- Choose your source language and the many target languages you want translation for.
+- Choose the API template used for this translation project. [API templates are explained in this documentation](doc/resources/API_EN_v2.pdf)
 - Send your products to Textmaster in just one click
 - You can then connect to your Textmaster client interface to choose more options, like translation memory, preferred Textmasters, etc. Your products will be translated in the PIM as soon as they are in Textmaster
 
@@ -89,5 +89,5 @@ In this screen you will be able to set:
 
 ## Video demo
 
-A live demonstration is available on this short video: https://www.youtube.com/watch?v=9WkyQFwoWWo
-
+A live demonstration for the 1.2 version of this extension is available on this short video:
+https://www.youtube.com/watch?v=9WkyQFwoWWo
