@@ -127,19 +127,6 @@ class FinalizeProjectsTasklet implements TaskletInterface
     }
 
     /**
-     * @param ProjectInterface $project
-     */
-    protected function launchProject(ProjectInterface $project)
-    {
-        try {
-            $this->apiRepository->launchProject($project->getCode());
-            $this->stepExecution->incrementSummaryInfo('launched');
-        } catch (\LogicException $e) {
-            $this->stepExecution->incrementSummaryInfo('not_launched');
-        }
-    }
-
-    /**
      * @return ProjectInterface[]
      */
     protected function getProjects()
