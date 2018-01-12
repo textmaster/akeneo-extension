@@ -12,7 +12,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
-| v2.0.*                      | v2.0.*                       |
+| v2.0.*                      | v2.*                         |
 | v1.2.*                      | v1.7.*                       |
 | v1.1.*                      | v1.6.*                       |
 | v1.0.*                      | v1.5.*                       |
