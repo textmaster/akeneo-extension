@@ -6,7 +6,6 @@ use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Pim\Bundle\TextmasterBundle\Project\Exception\RuntimeException;
 use Pim\Component\Catalog\AttributeTypes;
 use Pim\Component\Catalog\Model\AttributeInterface;
-use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Model\ProductValueInterface;
 use Psr\Log\LoggerInterface;
@@ -51,9 +50,8 @@ class Builder implements BuilderInterface
     public function createProjectData(ProjectInterface $project)
     {
         $data = [
-            'name'                     => $project->getName(),
-            'language_from'            => $this->localeCodeForTextmaster($project->getFromLocale()),
-            'language_to'              => $this->localeCodeForTextmaster($project->getToLocale()),
+            'name'            => $project->getName(),
+            'api_template_id' => $project->getApiTemplate(),
         ];
 
         $this->logger->debug(sprintf('Create project data: %s', json_encode($data)));
@@ -144,22 +142,12 @@ class Builder implements BuilderInterface
     }
 
     /**
-     * @param LocaleInterface $locale
-     *
-     * @return string
-     */
-    protected function localeCodeForTextmaster(LocaleInterface $locale)
-    {
-        return strtolower(str_replace('_', '-', $locale->getCode()));
-    }
-
-    /**
      * @param OptionsResolver $resolver
      */
     protected function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'ctype'           => 'translation',
+            'ctype' => 'translation',
         ]);
     }
 }

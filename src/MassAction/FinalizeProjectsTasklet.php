@@ -5,8 +5,8 @@ namespace Pim\Bundle\TextmasterBundle\MassAction;
 use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
-use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
+use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
 use Pim\Component\Connector\Step\TaskletInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -71,26 +71,16 @@ class FinalizeProjectsTasklet implements TaskletInterface
      */
     public function execute()
     {
-        $autolaunch = $this->configManager->get('pim_textmaster.autolaunch');
         $projects = $this->getProjects();
 
         foreach ($projects as $project) {
             $this->waitForStatus($project, \Textmaster\Model\ProjectInterface::STATUS_IN_CREATION);
-            $this->startMemoryTranslation($project);
-            if ($autolaunch) {
-                $this->launchProject($project);
-            }
+            $this->apiRepository->finalizeProject($project->getCode());
         }
 
-        if (!$autolaunch) {
-            $label = $this->translator->trans('textmaster.customer.validation_link');
-            $link = sprintf('<a href="https://www.textmaster.com/clients/projects" target="_blank">%s</a>', $label);
-            $this->stepExecution->addSummaryInfo('link', $link);
-        } else {
-            $label = $this->translator->trans('textmaster.customer.launched_link');
-            $link = sprintf('<a href="https://www.textmaster.com/clients/projects" target="_blank">%s</a>', $label);
-            $this->stepExecution->addSummaryInfo('link', $link);
-        }
+        $label = $this->translator->trans('textmaster.customer.validation_link');
+        $link = sprintf('<a href="https://www.textmaster.com/clients/projects" target="_blank">%s</a>', $label);
+        $this->stepExecution->addSummaryInfo('link', $link);
     }
 
     /**
@@ -154,7 +144,7 @@ class FinalizeProjectsTasklet implements TaskletInterface
      */
     protected function getProjects()
     {
-        return (array) $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
+        return (array)$this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
     }
 
     /**

@@ -67,5 +67,4 @@ interface ProjectInterface
      * @param string $username
      */
     public function setUsername($username);
-
 }

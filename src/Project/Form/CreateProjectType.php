@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\Project\Form;
 
-use Pim\Bundle\CatalogBundle\Entity\Locale;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\MassAction\Operation\CreateProjects;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
@@ -50,22 +49,14 @@ class CreateProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', [
-            'required' => true,
+            'required'    => true,
             'constraints' => new NotBlank(),
         ]);
-        $builder->add('from_locale', 'entity', [
-            'required' => true,
-            'class'   => Locale::class,
-            'choices' => $this->localeRepository->getActivatedLocales(),
-            'select2' => true,
-            'constraints' => new NotBlank(),
-        ]);
-        $builder->add('to_locales', 'entity', [
-            'required' => true,
-            'class'    => Locale::class,
-            'choices'  => $this->localeRepository->getActivatedLocales(),
-            'select2'  => true,
-            'multiple' => true,
+        $builder->add('api_templates', 'choice', [
+            'required'    => true,
+            'choices'     => $this->getApiTemplatesChoices(),
+            'select2'     => true,
+            'multiple'    => true,
             'constraints' => new NotBlank(),
         ]);
     }
@@ -86,5 +77,19 @@ class CreateProjectType extends AbstractType
     public function getName()
     {
         return 'textmaster_create_projects';
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getApiTemplatesChoices()
+    {
+        $apiTermplates = $this->apiRepository->getApiTemplates();
+        $choices = [];
+        foreach ($apiTermplates as $id => $data) {
+            $choices[$id] = $data['name'];
+        }
+
+        return $choices;
     }
 }

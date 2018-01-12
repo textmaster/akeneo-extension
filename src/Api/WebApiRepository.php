@@ -147,6 +147,18 @@ class WebApiRepository
     }
 
     /**
+     * @param string $projectId
+     *
+     * @return array
+     */
+    public function finalizeProject($projectId)
+    {
+        $projectApi = $this->clientApi->project();
+
+        return $projectApi->finalize($projectId);
+    }
+
+    /**
      * @param array  $filters
      * @param string $projectCode
      *
@@ -181,7 +193,8 @@ class WebApiRepository
             try {
                 $tmLocales = $this->clientApi->locales()->abilities('translation', $page);
                 foreach ($tmLocales['data'] as $data) {
-                    if (in_array($data['language_from'], $pimLocaleCodes) && in_array($data['language_to'], $pimLocaleCodes)) {
+                    if (in_array($data['language_from'], $pimLocaleCodes) && in_array($data['language_to'],
+                            $pimLocaleCodes)) {
                         $availableLocales['from'][$data['language_from']] = 1;
                         $availableLocales['to'][$data['language_to']] = 1;
                     }
@@ -191,8 +204,8 @@ class WebApiRepository
                 $tmLocales = null;
             }
         } while (count($tmLocales['data']) > 0
-            && count($availableLocales['from']) < count($pimLocaleCodes)
-            && count($availableLocales['to']) < count($pimLocaleCodes)
+        && count($availableLocales['from']) < count($pimLocaleCodes)
+        && count($availableLocales['to']) < count($pimLocaleCodes)
         );
 
         return $pimLocaleCodes;
@@ -213,5 +226,26 @@ class WebApiRepository
         asort($categories);
 
         return $categories;
+    }
+
+    /**
+     * @return array
+     */
+    public function getApiTemplates()
+    {
+        $response = $this->clientApi->apiTemplate()->all();
+
+        $apiTemplates = [];
+        foreach ($response['api_templates'] as $apiTemplate) {
+            $apiTemplates[$apiTemplate['id']] = [
+                'name'          => $apiTemplate['name'],
+                'language_from' => $apiTemplate['language_from'],
+                'language_to'   => $apiTemplate['language_to'],
+            ];
+        }
+
+        asort($apiTemplates);
+
+        return $apiTemplates;
     }
 }

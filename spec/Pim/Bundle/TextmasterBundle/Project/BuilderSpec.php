@@ -36,35 +36,21 @@ class BuilderSpec extends ObjectBehavior
         ProjectInterface $project,
         LocaleInterface $localeEn,
         LocaleInterface $localeFr
-    )
-    {
+    ) {
         $localeEn->getCode()->willReturn('en_US');
         $localeFr->getCode()->willReturn('fr_FR');
 
         $project->getName()->willReturn('fooname');
-        $project->getFromLocale()->willReturn($localeEn);
-        $project->getToLocale()->willReturn($localeFr);
-        $project->getCategory()->willReturn('C019');
-        $project->getBriefing()->willReturn('fooBriefing');
+        $project->getApiTemplate()->willReturn('api_id_01');
 
         $expected = [
-            'name'                     => 'fooname',
-            'ctype'                    => 'translation',
-            'language_from'            => 'en-us',
-            'language_to'              => 'fr-fr',
-            'category'                 => 'C019',
-            'vocabulary_type'          => 'technical',
-            'project_briefing'         => 'fooBriefing',
-            'project_briefing_is_rich' => true,
-            'options'                  => [
-                'language_level' => 'enterprise',
-            ],
+            'name'            => 'fooname',
+            'api_template_id' => 'api_id_01',
         ];
 
         $this->createProjectData($project)
             ->shouldReturnThisArray($expected);
     }
-
 
     function it_checks_configuration(
         ProductInterface $product,
@@ -72,8 +58,7 @@ class BuilderSpec extends ObjectBehavior
         ProductValueInterface $productValue1,
         AttributeInterface $attribute1,
         $configManager
-    )
-    {
+    ) {
         $configManager->get('pim_textmaster.attributes')
             ->willReturn('');
         $localeCode = 'en_US';
@@ -96,7 +81,7 @@ class BuilderSpec extends ObjectBehavior
         $identifier->getVarchar()->willReturn('fooSku');
 
         $this->shouldThrow(new RuntimeException('No attributes configured for translation'))
-            ->during('createDocumentData', array($product, $localeCode));
+            ->during('createDocumentData', [$product, $localeCode]);
     }
 
     function it_creates_document_data(
@@ -112,8 +97,7 @@ class BuilderSpec extends ObjectBehavior
         ProductValueInterface $productValue5,
         AttributeInterface $attribute5,
         $configManager
-    )
-    {
+    ) {
         $configManager->get('pim_textmaster.attributes')
             ->willReturn('att1,att2,att5');
         $localeCode = 'en_US';
@@ -180,7 +164,7 @@ class BuilderSpec extends ObjectBehavior
             ],
             'perform_word_count' => true,
             'type'               => DocumentInterface::TYPE_KEY_VALUE,
-            'markup_in_content'  => true
+            'markup_in_content'  => true,
         ];
 
         $this->createDocumentData($product, $localeCode)
@@ -196,8 +180,7 @@ class BuilderSpec extends ObjectBehavior
         ProductValueInterface $productValue3,
         AttributeInterface $attribute3,
         $configManager
-    )
-    {
+    ) {
         $configManager->get('pim_textmaster.attributes')
             ->willReturn('att1,att2,att5');
         $localeCode = 'en_US';
@@ -225,7 +208,6 @@ class BuilderSpec extends ObjectBehavior
         $attribute3->getType()->willReturn(AttributeTypes::BOOLEAN);
         $attribute3->isLocalizable()->willReturn(true);
         $attribute3->isScopable()->willReturn(true);
-
 
         $product->getValues()->willReturn([
             $productValue1,

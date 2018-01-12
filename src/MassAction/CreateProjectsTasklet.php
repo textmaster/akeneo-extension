@@ -5,11 +5,10 @@ namespace Pim\Bundle\TextmasterBundle\MassAction;
 use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\StorageUtils\Saver\SaverInterface;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\Entity\Project;
 use Pim\Bundle\TextmasterBundle\Project\BuilderInterface;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
-use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
-use Pim\Component\Catalog\Model\LocaleInterface;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
 use Pim\Component\Connector\Step\TaskletInterface;
 
@@ -25,7 +24,8 @@ class CreateProjectsTasklet implements TaskletInterface
     const PROJECTS_CONTEXT_KEY = 'textmaster_projects';
 
     /**
-     * @since 1.2.1
+     * @since      1.2.1
+     * @deprecated since 1.3
      * @var string Default category
      */
     const PROJECTS_DEFAULT_CATEGORY = 'C033';
@@ -85,23 +85,16 @@ class CreateProjectsTasklet implements TaskletInterface
     public function execute()
     {
         $actions = $this->getConfiguredActions();
-        $fromLocale = $this->localeRepository->findOneByIdentifier($actions['fromLocale']);
 
         $projectCode = $actions['name'];
-        $projectBriefing = $actions['briefing'];
-        $toLocales = $actions['toLocales'];
+        $apiTemplatesIds = $actions['apiTemplates'];
         $username = $actions['username'];
-        $category = self::PROJECTS_DEFAULT_CATEGORY;
 
         $projects = [];
-        foreach ($toLocales as $localeCode) {
-            $toLocale = $this->localeRepository->findOneByIdentifier($localeCode);
+        foreach ($apiTemplatesIds as $apiTemplateId) {
             $project = $this->createProject(
-                $fromLocale,
-                $toLocale,
                 $projectCode,
-                $projectBriefing,
-                $category,
+                $apiTemplateId,
                 $username
             );
             $this->sendProject($project);
@@ -113,29 +106,20 @@ class CreateProjectsTasklet implements TaskletInterface
     }
 
     /**
-     * @param LocaleInterface $fromLocale
-     * @param LocaleInterface $toLocale
-     * @param string          $name
-     * @param string          $briefing
-     * @param string          $category
-     * @param string|null     $username
+     * @param string      $name
+     * @param string      $apiTemplateId
+     * @param string|null $username
      *
      * @return ProjectInterface
      */
     protected function createProject(
-        LocaleInterface $fromLocale,
-        LocaleInterface $toLocale,
         $name,
-        $briefing,
-        $category,
+        $apiTemplateId,
         $username = null
     ) {
         $project = new Project();
-        $project->setFromLocale($fromLocale);
-        $project->setToLocale($toLocale);
         $project->setName($name);
-        $project->setBriefing($briefing);
-        $project->setCategory($category);
+        $project->setApiTemplate($apiTemplateId);
         $project->setUsername($username);
 
         return $project;
@@ -150,7 +134,7 @@ class CreateProjectsTasklet implements TaskletInterface
     {
         $data = $this->builder->createProjectData($project);
         $result = $this->apiRepository->createProject($data);
-        $project->setCode((string) $result['id']);
+        $project->setCode((string)$result['id']);
 
         return $result;
     }
