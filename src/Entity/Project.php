@@ -3,7 +3,6 @@
 namespace Pim\Bundle\TextmasterBundle\Entity;
 
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
-use Pim\Component\Catalog\Model\LocaleInterface;
 
 /**
  * Project entity
@@ -30,59 +29,41 @@ class Project implements ProjectInterface
     private $username;
 
     /** @var string */
-    protected $apiTemplate;
+    private $apiTemplateId;
 
-    /**
-     * @return int
-     */
+    /** @var array */
+    private $documents;
+
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     */
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getCode()
     {
         return $this->code;
     }
 
-    /**
-     * @param string $code
-     */
     public function setCode($code)
     {
         $this->code = $code;
     }
 
-    /**
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
@@ -93,35 +74,38 @@ class Project implements ProjectInterface
         $this->updatedAt = new \DateTime();
     }
 
-    /**
-     * @return string
-     */
     public function getUsername()
     {
         return $this->username;
     }
 
-    /**
-     * @param string $username
-     */
     public function setUsername($username)
     {
         $this->username = $username;
     }
 
-    /**
-     * @return string
-     */
-    public function getApiTemplate()
+    public function getApiTemplateId()
     {
-        return $this->apiTemplate;
+        return $this->apiTemplateId;
     }
 
-    /**
-     * @param string $templateId
-     */
-    public function setApiTemplate($templateId)
+    public function setApiTemplateId($templateId)
     {
-        $this->apiTemplate = $templateId;
+        $this->apiTemplateId = $templateId;
+    }
+
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+    }
+
+    public function addDocument($document)
+    {
+        $this->documents[] = $document;
     }
 }

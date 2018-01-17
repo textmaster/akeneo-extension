@@ -44,12 +44,12 @@ interface ProjectInterface
     /**
      * @return string
      */
-    public function getApiTemplate();
+    public function getApiTemplateId();
 
     /**
-     * @param string $templateId
+     * @param string $template
      */
-    public function setApiTemplate($templateId);
+    public function setApiTemplateId($template);
 
     /**
      * @return \DateTime
@@ -67,4 +67,19 @@ interface ProjectInterface
      * @param string $username
      */
     public function setUsername($username);
+
+    /**
+     * @return array
+     */
+    public function getDocuments();
+
+    /**
+     * @param array $documents
+     */
+    public function setDocuments($documents);
+
+    /**
+     * @param string[] $document
+     */
+    public function addDocument($document);
 }

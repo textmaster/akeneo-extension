@@ -188,27 +188,19 @@ class WebApiRepository
         }, $pimLocaleCodes);
 
         $availableLocales = [];
-        $page = 1;
-        do {
-            try {
-                $tmLocales = $this->clientApi->locales()->abilities('translation', $page);
-                foreach ($tmLocales['data'] as $data) {
-                    if (in_array($data['language_from'], $pimLocaleCodes) && in_array($data['language_to'],
-                            $pimLocaleCodes)) {
-                        $availableLocales['from'][$data['language_from']] = 1;
-                        $availableLocales['to'][$data['language_to']] = 1;
-                    }
+        try {
+            $tmLocales = $this->clientApi->locales()->all();
+            foreach ($tmLocales as $tmLocale) {
+                $tmLocaleCode = strtolower($tmLocale['code']);
+                if (in_array($tmLocaleCode, $pimLocaleCodes)) {
+                    $availableLocales[] = $tmLocale['code'];
                 }
-                $page = $page + 1;
-            } catch (RuntimeException $e) {
-                $tmLocales = null;
             }
-        } while (count($tmLocales['data']) > 0
-        && count($availableLocales['from']) < count($pimLocaleCodes)
-        && count($availableLocales['to']) < count($pimLocaleCodes)
-        );
+        } catch (RuntimeException $e) {
+            $tmLocales = null;
+        }
 
-        return $pimLocaleCodes;
+        return $availableLocales;
     }
 
     /**
@@ -238,6 +230,7 @@ class WebApiRepository
         $apiTemplates = [];
         foreach ($response['api_templates'] as $apiTemplate) {
             $apiTemplates[$apiTemplate['id']] = [
+                'id'            => $apiTemplate['id'],
                 'name'          => $apiTemplate['name'],
                 'language_from' => $apiTemplate['language_from'],
                 'language_to'   => $apiTemplate['language_to'],
