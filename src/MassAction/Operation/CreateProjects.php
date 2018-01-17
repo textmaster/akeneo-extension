@@ -19,7 +19,7 @@ class CreateProjects extends AbstractMassEditOperation
     /** @var string */
     protected $name;
 
-    /** @var string[] API template ids */
+    /** @var string[] API template IDs */
     protected $apiTemplates;
 
     /** @var ContainerInterface */
@@ -127,13 +127,5 @@ class CreateProjects extends AbstractMassEditOperation
         ];
 
         return parent::getActions();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDefaultBriefing()
-    {
-        return $this->translator->trans('textmaster.default_briefing');
     }
 }

@@ -51,7 +51,7 @@ class Builder implements BuilderInterface
     {
         $data = [
             'name'            => $project->getName(),
-            'api_template_id' => $project->getApiTemplate(),
+            'api_template_id' => $project->getApiTemplateId(),
         ];
 
         $this->logger->debug(sprintf('Create project data: %s', json_encode($data)));

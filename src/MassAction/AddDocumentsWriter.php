@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\Batch\Item\ItemWriterInterface;
 use Akeneo\Component\Batch\Model\StepExecution;
 use Akeneo\Component\Batch\Step\StepExecutionAwareInterface;
@@ -10,7 +9,7 @@ use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 
 /**
- * Send documents to TextMaster API
+ * Send documents to TextMaster API. It uses the projects created in the previous step.
  *
  * @author    Jean-Marie Leroux <jean-marie.leroux@akeneo.com>
  * @copyright 2016 TextMaster.com (https://textmaster.com)
@@ -33,16 +32,28 @@ class AddDocumentsWriter implements ItemWriterInterface, StepExecutionAwareInter
     }
 
     /**
-     * @param array $items
+     * @param array $items Projets processed before. Items is an array of projects arrays.
      */
     public function write(array $items)
     {
-        $projects = $this->getProjects();
+        foreach ($items as $projects) {
+            $this->writeProject($projects);
+        }
+    }
 
-        $result = null;
+    /**
+     * Add documents to existing projects.
+     *
+     * @param ProjectInterface[] projects.
+     */
+    public function writeProject(array $projects)
+    {
         foreach ($projects as $project) {
-            $this->apiRepository->sendProjectDocuments($items, $project->getCode());
-            $this->stepExecution->incrementSummaryInfo('documents_added', count($items));
+            $documents = $project->getDocuments();
+            if (null !== $documents) {
+                $this->apiRepository->sendProjectDocuments($documents, $project->getCode());
+                $this->stepExecution->incrementSummaryInfo('documents_added', count($documents));
+            }
         }
     }
 
@@ -52,21 +63,5 @@ class AddDocumentsWriter implements ItemWriterInterface, StepExecutionAwareInter
     public function setStepExecution(StepExecution $stepExecution)
     {
         $this->stepExecution = $stepExecution;
-    }
-
-    /**
-     * @return ProjectInterface[]
-     */
-    protected function getProjects()
-    {
-        return $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
-    }
-
-    /**
-     * @return ExecutionContext
-     */
-    protected function getJobContext()
-    {
-        return $this->stepExecution->getJobExecution()->getExecutionContext();
     }
 }

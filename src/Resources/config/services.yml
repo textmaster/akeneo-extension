@@ -34,6 +34,8 @@ services:
         arguments:
             - '@oro_config.global'
             - '@monolog.logger.textmaster'
+        tags:
+            - { name: monolog.logger, channel: textmaster }
 
     pim_textmaster.document.updater:
         class: Pim\Bundle\TextmasterBundle\Product\Updater
@@ -42,7 +44,7 @@ services:
             - '@pim_catalog.updater.product'
 
     pim_textmaster.locale.finder:
-        class: Pim\Bundle\TextmasterBundle\Locale\Finder
+        class: Pim\Bundle\TextmasterBundle\Locale\LocaleFinder
         arguments:
             - '@pim_textmaster.repository.webapi'
             - '@pim_catalog.repository.locale'

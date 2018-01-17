@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1d5ff9a9d06e1a98d38290f1d97286b4",
+    "content-hash": "dcf21b0610611ae4158a5b125a639826",
     "packages": [
         {
             "name": "akeneo/pim-community-dev",
-            "version": "v1.7.15",
+            "version": "v1.7.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/akeneo/pim-community-dev.git",
-                "reference": "c2fc5d356147cdcbd32406ba7776ccb4574759a1"
+                "reference": "9f90bca9a0d7d54bc4f93702ed1d5dfdf21c1ec8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/akeneo/pim-community-dev/zipball/c2fc5d356147cdcbd32406ba7776ccb4574759a1",
-                "reference": "c2fc5d356147cdcbd32406ba7776ccb4574759a1",
+                "url": "https://api.github.com/repos/akeneo/pim-community-dev/zipball/9f90bca9a0d7d54bc4f93702ed1d5dfdf21c1ec8",
+                "reference": "9f90bca9a0d7d54bc4f93702ed1d5dfdf21c1ec8",
                 "shasum": ""
             },
             "require": {
@@ -176,10 +176,10 @@
             ],
             "description": "Akeneo PIM, the future of catalog management is open!",
             "support": {
-                "source": "https://github.com/akeneo/pim-community-dev/tree/v1.7.15",
+                "source": "https://github.com/akeneo/pim-community-dev/tree/v1.7.16",
                 "issues": "https://github.com/akeneo/pim-community-dev/issues"
             },
-            "time": "2017-12-18T08:57:16+00:00"
+            "time": "2018-01-11T13:30:41+00:00"
         },
         {
             "name": "apy/jsfv-bundle",
@@ -4229,16 +4229,16 @@
         },
         {
             "name": "worldia/textmaster-api",
-            "version": "v0.6.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/worldia/textmaster-api.git",
-                "reference": "64c5340a839f1bd49f3c463458d51b8198bb4ea6"
+                "reference": "37c4f821b5eb87da88c3da018a9f2c3d47aa070a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/worldia/textmaster-api/zipball/64c5340a839f1bd49f3c463458d51b8198bb4ea6",
-                "reference": "64c5340a839f1bd49f3c463458d51b8198bb4ea6",
+                "url": "https://api.github.com/repos/worldia/textmaster-api/zipball/37c4f821b5eb87da88c3da018a9f2c3d47aa070a",
+                "reference": "37c4f821b5eb87da88c3da018a9f2c3d47aa070a",
                 "shasum": ""
             },
             "require": {
@@ -4249,7 +4249,7 @@
             },
             "require-dev": {
                 "doctrine/orm": "^2.3",
-                "fabpot/php-cs-fixer": "^1.11",
+                "friendsofphp/php-cs-fixer": "^1.11",
                 "gedmo/doctrine-extensions": "^2.4",
                 "pagerfanta/pagerfanta": "^1.0",
                 "phpunit/phpunit": "~4.0",
@@ -4263,7 +4263,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.4.x-dev"
+                    "dev-master": "0.6.x-dev"
                 }
             },
             "autoload": {
@@ -4292,7 +4292,7 @@
                 "textmaster",
                 "translation"
             ],
-            "time": "2017-05-19T16:17:37+00:00"
+            "time": "2018-01-17T16:00:11+00:00"
         }
     ],
     "packages-dev": [
@@ -4533,16 +4533,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.2.13",
+            "version": "v2.2.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "669e2327a17b94e47454c3d2e00c6f96203646f0"
+                "reference": "dcf644315abc557e006ce068d299f85d17ec2157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/669e2327a17b94e47454c3d2e00c6f96203646f0",
-                "reference": "669e2327a17b94e47454c3d2e00c6f96203646f0",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/dcf644315abc557e006ce068d299f85d17ec2157",
+                "reference": "dcf644315abc557e006ce068d299f85d17ec2157",
                 "shasum": ""
             },
             "require": {
@@ -4571,6 +4571,7 @@
             "require-dev": {
                 "johnkary/phpunit-speedtrap": "^1.0.1",
                 "justinrainbow/json-schema": "^5.0",
+                "keradus/cli-executor": "^1.0",
                 "mikey179/vfsstream": "^1.6",
                 "php-coveralls/php-coveralls": "^1.0.2",
                 "phpunit/phpunit": "^4.8.35 || ^5.4.3",
@@ -4594,6 +4595,7 @@
                     "PhpCsFixer\\": "src/"
                 },
                 "classmap": [
+                    "tests/TestCase.php",
                     "tests/Test/AbstractFixerTestCase.php",
                     "tests/Test/AbstractIntegrationTestCase.php",
                     "tests/Test/IntegrationCase.php",
@@ -4615,7 +4617,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2017-12-08T15:17:14+00:00"
+            "time": "2018-01-10T16:43:26+00:00"
         },
         {
             "name": "gecko-packages/gecko-php-unit",

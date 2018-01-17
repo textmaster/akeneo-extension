@@ -87,11 +87,11 @@ class CreateProjectsTasklet implements TaskletInterface
         $actions = $this->getConfiguredActions();
 
         $projectCode = $actions['name'];
-        $apiTemplatesIds = $actions['apiTemplates'];
+        $apiTemplateIds = $actions['apiTemplates'];
         $username = $actions['username'];
 
         $projects = [];
-        foreach ($apiTemplatesIds as $apiTemplateId) {
+        foreach ($apiTemplateIds as $apiTemplateId) {
             $project = $this->createProject(
                 $projectCode,
                 $apiTemplateId,
@@ -119,7 +119,7 @@ class CreateProjectsTasklet implements TaskletInterface
     ) {
         $project = new Project();
         $project->setName($name);
-        $project->setApiTemplate($apiTemplateId);
+        $project->setApiTemplateId($apiTemplateId);
         $project->setUsername($username);
 
         return $project;

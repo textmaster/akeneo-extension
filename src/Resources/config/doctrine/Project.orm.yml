@@ -15,9 +15,9 @@ Pim\Bundle\TextmasterBundle\Entity\Project:
         name:
             type: string
             column: name
-        apiTemplate:
+        apiTemplateId:
             type: string
-            column: api_template
+            column: api_template_id
         updatedAt:
             type: datetime
             column: updated_at

@@ -41,7 +41,7 @@ class BuilderSpec extends ObjectBehavior
         $localeFr->getCode()->willReturn('fr_FR');
 
         $project->getName()->willReturn('fooname');
-        $project->getApiTemplate()->willReturn('api_id_01');
+        $project->getApiTemplateId()->willReturn('api_id_01');
 
         $expected = [
             'name'            => 'fooname',
