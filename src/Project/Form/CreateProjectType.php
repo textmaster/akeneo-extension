@@ -52,6 +52,23 @@ class CreateProjectType extends AbstractType
             'required'    => true,
             'constraints' => new NotBlank(),
         ]);
+
+        $activatedLocaleCodes = $this->localeRepository->getActivatedLocaleCodes();
+        $builder->add('from_locale', 'choice', [
+            'required'    => true,
+            'choices'     => array_combine($activatedLocaleCodes, $activatedLocaleCodes),
+            'select2'     => true,
+            'attr'        => ['class' => 'AknLocale'],
+            'constraints' => new NotBlank(),
+        ]);
+        $builder->add('to_locales', 'choice', [
+            'required' => true,
+            'choices'  => array_combine($activatedLocaleCodes, $activatedLocaleCodes),
+            'select2'  => true,
+            'multiple' => true,
+            'attr'     => ['class' => 'AknLocale'],
+        ]);
+
         $builder->add('api_templates', 'choice', [
             'required'    => true,
             'choices'     => $this->getApiTemplatesChoices(),

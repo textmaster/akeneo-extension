@@ -3,6 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle\MassAction\Operation;
 
 use Pim\Bundle\EnrichBundle\MassEditAction\Operation\AbstractMassEditOperation;
+use Pim\Component\Catalog\Model\LocaleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -18,6 +19,12 @@ class CreateProjects extends AbstractMassEditOperation
 {
     /** @var string */
     protected $name;
+
+    /** @var LocaleInterface */
+    protected $fromLocale;
+
+    /** @var LocaleInterface[] */
+    protected $toLocales;
 
     /** @var string[] API template IDs */
     protected $apiTemplates;
@@ -57,6 +64,38 @@ class CreateProjects extends AbstractMassEditOperation
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return LocaleInterface
+     */
+    public function getFromLocale()
+    {
+        return $this->fromLocale;
+    }
+
+    /**
+     * @param LocaleInterface $fromLocale
+     */
+    public function setFromLocale($fromLocale)
+    {
+        $this->fromLocale = $fromLocale;
+    }
+
+    /**
+     * @return LocaleInterface[]
+     */
+    public function getToLocales()
+    {
+        return $this->toLocales;
+    }
+
+    /**
+     * @param LocaleInterface[] $toLocales
+     */
+    public function setToLocales($toLocales)
+    {
+        $this->toLocales = $toLocales;
     }
 
     /**
