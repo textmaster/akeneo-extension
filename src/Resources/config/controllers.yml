@@ -1,0 +1,5 @@
+services:
+    pim_textmaster.controller.rest.api_templates:
+        class: Pim\Bundle\TextmasterBundle\Controller\Rest\ApiTemplatesController
+        arguments:
+            - '@pim_textmaster.repository.webapi'
