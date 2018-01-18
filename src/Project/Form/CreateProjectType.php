@@ -53,22 +53,6 @@ class CreateProjectType extends AbstractType
             'constraints' => new NotBlank(),
         ]);
 
-        $activatedLocaleCodes = $this->localeRepository->getActivatedLocaleCodes();
-        $builder->add('from_locale', 'choice', [
-            'required'    => true,
-            'choices'     => array_combine($activatedLocaleCodes, $activatedLocaleCodes),
-            'select2'     => true,
-            'attr'        => ['class' => 'AknLocale'],
-            'constraints' => new NotBlank(),
-        ]);
-        $builder->add('to_locales', 'choice', [
-            'required' => true,
-            'choices'  => array_combine($activatedLocaleCodes, $activatedLocaleCodes),
-            'select2'  => true,
-            'multiple' => true,
-            'attr'     => ['class' => 'AknLocale'],
-        ]);
-
         $builder->add('api_templates', 'choice', [
             'required'    => true,
             'choices'     => $this->getApiTemplatesChoices(),
@@ -104,7 +88,12 @@ class CreateProjectType extends AbstractType
         $apiTermplates = $this->apiRepository->getApiTemplates();
         $choices = [];
         foreach ($apiTermplates as $id => $data) {
-            $choices[$id] = $data['name'];
+            $choices[$id] = sprintf(
+                '%s [from "%s" to "%s"]',
+                $data['name'],
+                $data['language_from'],
+                $data['language_to']
+            );
         }
 
         return $choices;
