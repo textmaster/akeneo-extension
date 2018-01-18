@@ -89,7 +89,7 @@ class CreateProjectType extends AbstractType
         $choices = [];
         foreach ($apiTermplates as $id => $data) {
             $choices[$id] = sprintf(
-                '%s [from "%s" to "%s"]',
+                '%s ["%s" to "%s"]',
                 $data['name'],
                 $data['language_from'],
                 $data['language_to']
