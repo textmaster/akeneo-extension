@@ -11,10 +11,6 @@ textmaster:
     customer:
         validation_link: Aller sur TextMaster pour valider et lancer les projets
         launched_link: Aller sur TextMaster
-    default_briefing: |
-        Cher traducteur,
-        Merci de traduire le texte suivant de la façon la plus naturelle.
-        Cordialement.
     step:
         create_projects: Creation de projets dans TextMaster
         add_documents: Ajout de documents aux projets

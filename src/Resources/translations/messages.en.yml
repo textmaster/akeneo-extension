@@ -15,12 +15,8 @@ textmaster:
     create_project:
         label: Translate product data with TextMaster
     customer:
-        validation_link: Go to TextMaster to validate and launch your project
-        launched_link: Go to TextMaster
-    default_briefing: |
-        Dear translator,
-        Please translate the following texts so that it sounds as natural as possible in your native language.
-        Thank you in advance.
+        validation_link: See project in TextMaster
+        launched_link: See project in TextMaster
     steps:
         skipped_document.title: Skipped document
 
