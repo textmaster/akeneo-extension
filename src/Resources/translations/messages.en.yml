@@ -8,7 +8,8 @@ pim_enrich:
 batch_jobs.textmaster_start_projects:
     textmaster.step:
         create_projects.label: Create projects in TextMaster
-        add_documents.label: Add documents to projects
+        add_documents.label: Add products to projects
+        send_projects.label: Send projects to Textmaster
         finalize_projects.label: Finalize projects
 
 textmaster:
@@ -22,7 +23,7 @@ textmaster:
 
 job_execution.summary.projects_created: Created projects
 job_execution.summary.documents_added: Added documents
-job_execution.summary.launched: Launched projects
+job_execution.summary.projects_sent: Processed projects
 job_execution.summary.not_launched: Projects ready to launch
 job_execution.summary.link: Direct link
 job_execution.summary.memory_analysis: Memory analysis

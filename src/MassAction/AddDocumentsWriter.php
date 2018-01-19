@@ -51,8 +51,7 @@ class AddDocumentsWriter implements ItemWriterInterface, StepExecutionAwareInter
         foreach ($projects as $project) {
             $documents = $project->getDocuments();
             if (null !== $documents) {
-                $this->apiRepository->sendProjectDocuments($documents, $project->getCode());
-                $this->stepExecution->incrementSummaryInfo('documents_added', count($documents));
+//                $this->apiRepository->sendProjectDocuments($documents, $project->getCode());
             }
         }
     }
