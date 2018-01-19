@@ -1,4 +1,0 @@
-pim_textmaster_api_templates_list:
-    path: /textmaster/rest/api_templates
-    defaults: { _controller: pim_textmaster.controller.rest.api_templates:fetchApiTemplatesAction }
-    methods: [GET]
