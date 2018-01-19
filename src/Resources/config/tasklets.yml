@@ -7,6 +7,13 @@ services:
             - '@pim_textmaster.repository.webapi'
             - '@pim_textmaster.saver.project'
 
+    pim_textmaster.tasklet.send_projects:
+        class: Pim\Bundle\TextmasterBundle\MassAction\SendProjectsTasklet
+        arguments:
+            - '@pim_textmaster.repository.webapi'
+            - '@oro_config.global'
+            - '@translator.default'
+
     pim_textmaster.tasklet.finalize_projects:
         class: Pim\Bundle\TextmasterBundle\MassAction\FinalizeProjectsTasklet
         arguments:

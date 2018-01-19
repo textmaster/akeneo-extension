@@ -1,5 +1,0 @@
-services:
-    pim_textmaster.mass_edit.writer.add_documents:
-        class: Pim\Bundle\TextmasterBundle\MassAction\AddDocumentsWriter
-        arguments:
-            - '@pim_textmaster.repository.webapi'

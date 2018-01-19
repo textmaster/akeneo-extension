@@ -52,6 +52,7 @@ class CreateProjectType extends AbstractType
             'required'    => true,
             'constraints' => new NotBlank(),
         ]);
+
         $builder->add('api_templates', 'choice', [
             'required'    => true,
             'choices'     => $this->getApiTemplatesChoices(),
@@ -87,7 +88,12 @@ class CreateProjectType extends AbstractType
         $apiTermplates = $this->apiRepository->getApiTemplates();
         $choices = [];
         foreach ($apiTermplates as $id => $data) {
-            $choices[$id] = $data['name'];
+            $choices[$id] = sprintf(
+                '%s ["%s" to "%s"]',
+                $data['name'],
+                $data['language_from'],
+                $data['language_to']
+            );
         }
 
         return $choices;

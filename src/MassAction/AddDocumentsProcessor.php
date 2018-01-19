@@ -84,6 +84,7 @@ class AddDocumentsProcessor extends AbstractProcessor
                 $this->stepExecution->addWarning('No content to translate for product', [], $invalidItem);
             } else {
                 $project->addDocument($attributesToTranslate);
+                $this->stepExecution->incrementSummaryInfo('documents_added', 1);
             }
             $this->logger->debug(
                 sprintf('Add %d documents to project %s', count($project->getDocuments()), $project->getCode())
@@ -108,6 +109,6 @@ class AddDocumentsProcessor extends AbstractProcessor
      */
     protected function getProjects()
     {
-        return $this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
+        return (array)$this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
     }
 }
