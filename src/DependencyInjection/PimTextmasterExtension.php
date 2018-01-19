@@ -37,7 +37,6 @@ class PimTextmasterExtension extends Extension implements PrependExtensionInterf
         $loader->load('api_services.yml');
         $loader->load('mass_actions.yml');
         $loader->load('processors.yml');
-        $loader->load('writers.yml');
         $loader->load('tasklets.yml');
         $loader->load('jobs.yml');
     }
