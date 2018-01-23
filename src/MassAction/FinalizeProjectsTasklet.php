@@ -75,6 +75,7 @@ class FinalizeProjectsTasklet implements TaskletInterface
 
         foreach ($projects as $project) {
             $this->waitForStatus($project, \Textmaster\Model\ProjectInterface::STATUS_IN_CREATION);
+            $this->waitForDocumentsCounted($project);
             $this->apiRepository->finalizeProject($project->getCode());
         }
 
@@ -108,22 +109,27 @@ class FinalizeProjectsTasklet implements TaskletInterface
     }
 
     /**
+     * Wait for documents counted
+     *
      * @param ProjectInterface $project
      *
-     * @return array
+     * @return bool
      */
-    protected function startMemoryTranslation(ProjectInterface $project)
+    protected function waitForDocumentsCounted(ProjectInterface $project)
     {
-        $data = [
-            'project' => [
-                'options' => [
-                    'language_level'     => 'enterprise',
-                    'translation_memory' => true,
-                ],
-            ],
-        ];
+        $retry = 0;
 
-        return $this->apiRepository->updateProject($data, $project->getCode());
+        while ($retry <= self::STATUS_MAX_TRY) {
+            $textMasterproject = $this->apiRepository->getProject($project->getCode());
+            $statuses = $textMasterproject->getDocumentsStatuses();
+            if (0 === $statuses['in_creation'] && 0 == $statuses['counting_words']) {
+                return true;
+            }
+            sleep(5);
+            $retry++;
+        }
+
+        return false;
     }
 
     /**
