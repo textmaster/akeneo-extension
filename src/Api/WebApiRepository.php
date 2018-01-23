@@ -2,11 +2,11 @@
 
 namespace Pim\Bundle\TextmasterBundle\Api;
 
+use Pim\Bundle\TextmasterBundle\Project\Model\Project;
+use Pim\Bundle\TextmasterBundle\Project\Model\ProjectInterface;
 use Textmaster\Client;
 use Textmaster\Exception\RuntimeException;
 use Textmaster\Model\Document;
-use Textmaster\Model\Project;
-use Textmaster\Model\ProjectInterface;
 
 /**
  * Calls to TextMaster php API
