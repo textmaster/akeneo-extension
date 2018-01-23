@@ -10,9 +10,6 @@ pim_textmaster:
         attributes:
             value: ~
             scope: app
-        autolaunch:
-            value: false
-            scope: app
 
 monolog:
     channels: ['textmaster']

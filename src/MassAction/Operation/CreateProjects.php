@@ -3,7 +3,6 @@
 namespace Pim\Bundle\TextmasterBundle\MassAction\Operation;
 
 use Pim\Bundle\EnrichBundle\MassEditAction\Operation\AbstractMassEditOperation;
-use Pim\Component\Catalog\Model\LocaleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -20,17 +19,8 @@ class CreateProjects extends AbstractMassEditOperation
     /** @var string */
     protected $name;
 
-    /** @var string */
-    protected $briefing;
-
-    /** @var LocaleInterface */
-    protected $fromLocale;
-
-    /** @var LocaleInterface[] */
-    protected $toLocales;
-
-    /** @var string */
-    protected $category;
+    /** @var string[] API template IDs */
+    protected $apiTemplates;
 
     /** @var ContainerInterface */
     protected $container;
@@ -70,67 +60,19 @@ class CreateProjects extends AbstractMassEditOperation
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getBriefing()
+    public function getApiTemplates()
     {
-        return $this->briefing;
+        return $this->apiTemplates;
     }
 
     /**
-     * @param string $briefing
+     * @param string[] $apiTemplates
      */
-    public function setBriefing($briefing)
+    public function setApiTemplates($apiTemplates)
     {
-        $this->briefing = $briefing;
-    }
-
-    /**
-     * @return LocaleInterface
-     */
-    public function getFromLocale()
-    {
-        return $this->fromLocale;
-    }
-
-    /**
-     * @param LocaleInterface $fromLocale
-     */
-    public function setFromLocale($fromLocale)
-    {
-        $this->fromLocale = $fromLocale;
-    }
-
-    /**
-     * @return LocaleInterface[]
-     */
-    public function getToLocales()
-    {
-        return $this->toLocales;
-    }
-
-    /**
-     * @param LocaleInterface[] $toLocales
-     */
-    public function setToLocales($toLocales)
-    {
-        $this->toLocales = $toLocales;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @param string $category
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
+        $this->apiTemplates = $apiTemplates;
     }
 
     /**
@@ -179,27 +121,11 @@ class CreateProjects extends AbstractMassEditOperation
     public function getActions()
     {
         $this->actions = [
-            'name'       => $this->name,
-            'briefing'   => !empty($this->briefing) ? $this->briefing : $this->getDefaultBriefing(),
-            'fromLocale' => $this->fromLocale->getCode(),
-            'category'   => $this->category,
-            'username'   => $this->tokenStorage->getToken()->getUsername(),
+            'name'         => $this->name,
+            'apiTemplates' => $this->apiTemplates,
+            'username'     => $this->tokenStorage->getToken()->getUsername(),
         ];
 
-        $toLocaleCodes = [];
-        foreach ($this->toLocales as $locale) {
-            $toLocaleCodes[] = $locale->getCode();
-        }
-        $this->actions['toLocales'] = $toLocaleCodes;
-
         return parent::getActions();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getDefaultBriefing()
-    {
-        return $this->translator->trans('textmaster.default_briefing');
     }
 }

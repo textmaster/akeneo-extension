@@ -8,6 +8,7 @@ services:
             -
                 - '@pim_textmaster.mass_edit.step.create_projects'
                 - '@pim_textmaster.mass_edit.step.add_documents'
+                - '@pim_textmaster.mass_edit.step.send_projects'
                 - '@pim_textmaster.mass_edit.step.launch_projects'
         tags:
             -
@@ -45,7 +46,15 @@ services:
             - '@akeneo_batch.job_repository'
             - '@pim_enrich.reader.database.product_and_product_model'
             - '@pim_textmaster.mass_edit.processor.add_documents'
-            - '@pim_textmaster.mass_edit.writer.add_documents'
+            - '@pim_connector.writer.dummy_item'
+
+    pim_textmaster.mass_edit.step.send_projects:
+        class: '%pim_connector.step.tasklet.class%'
+        arguments:
+            - 'textmaster.step.send_projects'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_textmaster.tasklet.send_projects'
 
     pim_textmaster.mass_edit.step.launch_projects:
         class: '%pim_connector.step.tasklet.class%'

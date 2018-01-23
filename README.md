@@ -12,7 +12,8 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
-| v2.0.*                      | v2.*                         |
+| v2.0.*                      | v2.*   + API template        |
+| v1.3.*                      | v1.7.* + API template        |
 | v1.2.*                      | v1.7.*                       |
 | v1.1.*                      | v1.6.*                       |
 | v1.0.*                      | v1.5.*                       |
@@ -30,7 +31,7 @@ Creating your account on https://textmaster.com is totally free. You can access 
 The translation request is done by a very simple mass edit process:
 
 - Select your products in the grid and choose the "translate with Textmaster" mass edit operation.
-- Choose your source language and the many target languages you want translation for.
+- Choose the API template used for this translation project. [API templates are explained in this documentation](doc/resources/API_EN_v2.pdf)
 - Send your products to Textmaster in just one click
 - You can then connect to your Textmaster client interface to choose more options, like translation memory, preferred Textmasters, etc. Your products will be translated in the PIM as soon as they are in Textmaster
 
@@ -41,10 +42,16 @@ First step is to require the sources:
 composer require textmaster/akeneo-extension 2.0.*
 ```
 
-Register your bundle in the `AppKernel.php`
+Register your bundle in the `AppKernel::registerProjectBundles`:
 
 ```
-$bundles[] = new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
+new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
+```
+
+Then we need to add a new mass edit batch job:
+
+```
+app/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' 'mass_edit' 'textmaster_start_projects' '{}' 'Start TextMaster project'
 ```
 
 Update the database schema and regenerate your cache and assets:
@@ -53,12 +60,6 @@ Update the database schema and regenerate your cache and assets:
 rm app/cache/* -rf
 app/console doctrine:schema:update --force
 rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:assets
-```
-
-Then we need to add a new mass edit batch job:
-
-```
-app/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' 'mass_edit' 'textmaster_start_projects' '{}' 'Start TextMaster project'
 ```
 
 Finally, you must set a `cron` to retrieve the translated contents from Textmaster:
@@ -81,5 +82,5 @@ In this screen you will be able to set:
 
 ## Video demo
 
-A live demonstration is available on this short video (TextMaster for Akeneo PIM 1.7): https://www.youtube.com/watch?v=9WkyQFwoWWo
-
+A live demonstration for the 1.2 version of this extension is available on this short video:
+https://www.youtube.com/watch?v=9WkyQFwoWWo
