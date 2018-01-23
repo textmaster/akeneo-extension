@@ -85,8 +85,11 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             $products = [];
             foreach ($documents as $document) {
                 $product = $updater->update($document, $pimLocaleCode);
-                $this->writeMessage(sprintf('Updated document %s for locale %s', $document->getTitle(),
-                    $pimLocaleCode));
+                $this->writeMessage(sprintf(
+                    'Updated document %s for locale %s',
+                    $document->getTitle(),
+                    $pimLocaleCode
+                ));
                 $products[] = $product;
             }
 

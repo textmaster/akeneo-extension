@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "28247137cf2bce83ed8d734b0eb8361b",
+    "content-hash": "2ec415d7a6a36a8f7e9ba44ca41d3838",
     "packages": [
         {
             "name": "akeneo/pim-community-dev",
@@ -5362,16 +5362,16 @@
         },
         {
             "name": "worldia/textmaster-api",
-            "version": "v0.6.0",
+            "version": "v0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/worldia/textmaster-api.git",
-                "reference": "64c5340a839f1bd49f3c463458d51b8198bb4ea6"
+                "reference": "37c4f821b5eb87da88c3da018a9f2c3d47aa070a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/worldia/textmaster-api/zipball/64c5340a839f1bd49f3c463458d51b8198bb4ea6",
-                "reference": "64c5340a839f1bd49f3c463458d51b8198bb4ea6",
+                "url": "https://api.github.com/repos/worldia/textmaster-api/zipball/37c4f821b5eb87da88c3da018a9f2c3d47aa070a",
+                "reference": "37c4f821b5eb87da88c3da018a9f2c3d47aa070a",
                 "shasum": ""
             },
             "require": {
@@ -5382,7 +5382,7 @@
             },
             "require-dev": {
                 "doctrine/orm": "^2.3",
-                "fabpot/php-cs-fixer": "^1.11",
+                "friendsofphp/php-cs-fixer": "^1.11",
                 "gedmo/doctrine-extensions": "^2.4",
                 "pagerfanta/pagerfanta": "^1.0",
                 "phpunit/phpunit": "~4.0",
@@ -5396,7 +5396,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.4.x-dev"
+                    "dev-master": "0.6.x-dev"
                 }
             },
             "autoload": {
@@ -5425,7 +5425,7 @@
                 "textmaster",
                 "translation"
             ],
-            "time": "2017-05-19T16:17:37+00:00"
+            "time": "2018-01-17T16:00:11+00:00"
         },
         {
             "name": "zendframework/zend-code",
