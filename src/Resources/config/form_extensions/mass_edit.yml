@@ -11,4 +11,3 @@ extensions:
             code: textmaster_mass_edit
             jobInstanceCode: textmaster_start_projects
             icon: icon-template
-            defaultCategory: '%textmaster.default_category%'

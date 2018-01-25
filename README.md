@@ -51,7 +51,7 @@ new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
 Then we need to add a new mass edit batch job:
 
 ```
-app/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' 'mass_edit' 'textmaster_start_projects' '{}' 'Start TextMaster project'
+bin/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' "mass_edit" 'textmaster_start_projects'
 ```
 
 Update the database schema and regenerate your cache and assets:

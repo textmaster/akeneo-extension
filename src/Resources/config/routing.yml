@@ -2,3 +2,8 @@ textmaster_rest_categories:
     path: /rest/categories
     defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterCategories }
     methods: [GET]
+
+textmaster_rest_api-templates:
+    path: /rest/api-templates
+    defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterApiTemplates }
+    methods: [GET]

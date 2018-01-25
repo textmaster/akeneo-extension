@@ -9,8 +9,8 @@ config:
     config:
         pim/fetcher-registry:
             fetchers:
-                textmaster-categories:
+                textmaster-api-templates:
                     module: pim/base-fetcher
                     options:
                         urls:
-                            list: textmaster_rest_categories
+                            list: textmaster_rest_api-templates

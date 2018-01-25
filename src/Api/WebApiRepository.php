@@ -237,8 +237,6 @@ class WebApiRepository implements WebApiRepositoryInterface
             ];
         }
 
-        asort($apiTemplates);
-
         return $apiTemplates;
     }
 }

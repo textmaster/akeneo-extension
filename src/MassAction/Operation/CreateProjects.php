@@ -2,7 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction\Operation;
 
-use Pim\Bundle\EnrichBundle\MassEditAction\Operation\AbstractMassEditOperation;
+use Pim\Bundle\EnrichBundle\MassEditAction\Operation\MassEditOperation;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class CreateProjects extends AbstractMassEditOperation
+class CreateProjects extends MassEditOperation
 {
     /** @var string */
     protected $name;

@@ -97,4 +97,9 @@ interface WebApiRepositoryInterface
      * @return array
      */
     public function getCategories();
+
+    /**
+     * @return array
+     */
+    public function getApiTemplates();
 }
