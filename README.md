@@ -12,7 +12,8 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
-| v2.0.*                      | v2.*   + API template        |
+| v2.1.*                      | v2.1.* + API template        |
+| v2.0.*                      | v2.0.* + API template        |
 | v1.3.*                      | v1.7.* + API template        |
 | v1.2.*                      | v1.7.*                       |
 | v1.1.*                      | v1.6.*                       |
@@ -57,14 +58,14 @@ bin/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_pro
 Update the database schema and regenerate your cache and assets:
 
 ```
-rm app/cache/* -rf
-app/console doctrine:schema:update --force
-rm -rf app/cache/* web/bundles/* web/css/* web/js/* ; app/console pim:install:assets
+rm bin/cache/* -rf
+bin/console doctrine:schema:update --force
+rm -rf web/bundles/* web/css/* web/js/* ; bin/console pim:install:assets
 ```
 
 Finally, you must set a `cron` to retrieve the translated contents from Textmaster:
 ```
-0 * * * * /home/akeno/pim/app/console pim:textmaster:retrieve-translations >> /tmp/textmaster.log
+0 * * * * /home/akeno/pim/bin/console pim:textmaster:retrieve-translations >> /tmp/textmaster.log
 ```
 
 This command checks for translated content once every hour. We do not recommend to check more often than every hour to not overload the Textmaster servers.
@@ -79,6 +80,16 @@ In this screen you will be able to set:
 
 - you API credentials : `API key` and `API secret`
 - the attributes you want to translate
+
+## Screenshots
+
+![Select products](doc/img/01-select-products.png)
+
+![Select Textmaster action](doc/img/02-select-action.png)
+
+![Configure the project](doc/img/03-configure-project.png)
+
+![Execution details](doc/img/04-execution-details.png)
 
 ## Video demo
 

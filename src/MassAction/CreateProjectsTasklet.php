@@ -91,9 +91,9 @@ class CreateProjectsTasklet implements TaskletInterface
             return;
         }
 
-        $projectCode = $actions['name'];
-        $apiTemplateIds = $actions['apiTemplates'];
-        $username = $actions['username'];
+        $projectCode = $actions[0]['name'];
+        $apiTemplateIds = explode(',', $actions[0]['apiTemplates']);
+        $username = $actions[0]['username'];
 
         $projects = [];
         foreach ($apiTemplateIds as $apiTemplateId) {
