@@ -26,4 +26,11 @@ class TextmasterRestController
 
         return new JsonResponse($categories);
     }
+
+    public function fetchTextmasterApiTemplates(): JsonResponse
+    {
+        $apiTemplates = $this->apiRepository->getApiTemplates();
+
+        return new JsonResponse($apiTemplates);
+    }
 }

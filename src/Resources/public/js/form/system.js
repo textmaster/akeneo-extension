@@ -46,9 +46,7 @@ define(
                     apikey: this.getFormData()['pim_textmaster___api_key'] ?
                         this.getFormData()['pim_textmaster___api_key'].value : '',
                     attributes: this.getFormData()['pim_textmaster___attributes'] ?
-                        this.getFormData()['pim_textmaster___attributes'].value : '',
-                    autolaunch: this.getFormData()['pim_textmaster___autolaunch'] ?
-                        this.getFormData()['pim_textmaster___autolaunch'].value == true : false
+                        this.getFormData()['pim_textmaster___attributes'].value : ''
                 }));
 
                 const searchOptions = {

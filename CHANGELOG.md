@@ -1,5 +1,11 @@
 # 2.0.0: PIM 2.0 compatibility
 
+# v1.3.0: API templates
+
+- Translations projects now use the API template feature
+
+# v1.1.0: PIM 1.6 compatibility
+
 # v1.1.0: PIM 1.6 compatibility
 
 - Drop PHP 5.5 support.

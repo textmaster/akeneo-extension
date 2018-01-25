@@ -15,6 +15,9 @@ Pim\Bundle\TextmasterBundle\Entity\Project:
         name:
             type: string
             column: name
+        apiTemplateId:
+            type: string
+            column: api_template_id
         updatedAt:
             type: datetime
             column: updated_at
@@ -23,14 +26,3 @@ Pim\Bundle\TextmasterBundle\Entity\Project:
             type: string
             column: username
             nullable: true
-    manyToOne:
-        fromLocale:
-            targetEntity: Pim\Bundle\CatalogBundle\Entity\Locale
-            joinColumn:
-                name: from_locale_id
-                referencedColumnName: id
-        toLocale:
-            targetEntity: Pim\Bundle\CatalogBundle\Entity\Locale
-            joinColumn:
-                name: to_locale_id
-                referencedColumnName: id

@@ -26,7 +26,6 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('api_key')->end()
             ->scalarNode('api_secret')->end()
             ->scalarNode('attributes')->end()
-            ->booleanNode('autolaunch')->end()
             ->end();
 
         $rootNode->end();
@@ -37,7 +36,6 @@ class Configuration implements ConfigurationInterface
                 'api_key' => ['value' => null],
                 'api_secret' => ['value' => null],
                 'attributes' => ['value' => null],
-                'autolaunch' => ['value' => false],
             ]
         );
 

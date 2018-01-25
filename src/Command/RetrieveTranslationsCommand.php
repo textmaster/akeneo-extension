@@ -41,15 +41,15 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         $sleepTime = rand(1, 300);
         $this->writeMessage(sprintf('Sleep for %d seconds', $sleepTime));
         sleep($sleepTime);
-        
+
         $this->writeMessage('Check TextMaster projects');
 
-        $projects = $this->getProjects();
-        foreach ($projects as $project) {
+        $pimProjects = $this->getPimProjects();
+        foreach ($pimProjects as $project) {
             $this->writeMessage(sprintf('Update products for project %s', $project->getCode()));
             $this->updateProducts($project);
         }
-        $this->updateProjects($projects);
+        $this->updatePimProjects($pimProjects);
     }
 
     /**
@@ -59,8 +59,12 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      */
     protected function updateProducts(ProjectInterface $project)
     {
-        $pimLocaleCode = $project->getToLocale()->getCode();
         $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
+        $localeFinder = $this->getContainer()->get('pim_textmaster.locale.finder');
+
+        $apiTemplate = $webApiRepository->getApiTemplates()[$project->getApiTemplateId()];
+        $tmLocaleCode = $apiTemplate['language_to'];
+        $pimLocaleCode = $localeFinder->getPimLocaleCode($tmLocaleCode);
 
         $filters = [
             'status' => [
@@ -81,7 +85,11 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             $products = [];
             foreach ($documents as $document) {
                 $product = $updater->update($document, $pimLocaleCode);
-                $this->writeMessage(sprintf('Updated document %s for locale %s', $document->getTitle(), $pimLocaleCode));
+                $this->writeMessage(sprintf(
+                    'Updated document %s for locale %s',
+                    $document->getTitle(),
+                    $pimLocaleCode
+                ));
                 $products[] = $product;
             }
 
@@ -103,12 +111,12 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
     /**
      * @param ProjectInterface[] $projects
      */
-    protected function updateProjects(array $projects)
+    protected function updatePimProjects(array $projects)
     {
         $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
 
         $filters = [
-            "status" => [
+            "status"   => [
                 '$nin' => [DocumentInterface::STATUS_CANCELED, DocumentInterface::STATUS_COMPLETED],
             ],
             'archived' => false,
@@ -130,9 +138,11 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
     }
 
     /**
+     * Retrieve PIM translation projects
+     *
      * @return ProjectInterface[]
      */
-    protected function getProjects()
+    protected function getPimProjects()
     {
         $projectRepository = $this->getContainer()->get('pim_textmaster.repository.project');
         $projects = $projectRepository->findAll();

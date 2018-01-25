@@ -4,3 +4,6 @@ services:
         arguments:
             - '@pim_textmaster.project.builder'
             - '@akeneo_storage_utils.doctrine.object_detacher'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.locale.finder'
+            - '@monolog.logger.textmaster'

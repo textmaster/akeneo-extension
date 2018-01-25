@@ -3,11 +3,16 @@
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
 use Akeneo\Component\Batch\Item\DataInvalidItem;
+use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Pim\Bundle\EnrichBundle\Connector\Processor\AbstractProcessor;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
+use Pim\Bundle\TextmasterBundle\Locale\LocaleFinderInterface;
 use Pim\Bundle\TextmasterBundle\Project\BuilderInterface;
+use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Create TextMaster document from product
@@ -24,15 +29,27 @@ class AddDocumentsProcessor extends AbstractProcessor
     /** @var ObjectDetacherInterface */
     protected $detacher;
 
-    /**
-     * {@inheritdoc}
-     * @param BuilderInterface        $projectBuilder
-     * @param ObjectDetacherInterface $detacher
-     */
-    public function __construct(BuilderInterface $projectBuilder, ObjectDetacherInterface $detacher)
-    {
+    /** @var WebApiRepository */
+    protected $apiRepository;
+
+    /** @var LocaleFinderInterface */
+    protected $localeFinder;
+
+    /** @var LoggerInterface */
+    protected $logger;
+
+    public function __construct(
+        BuilderInterface $projectBuilder,
+        ObjectDetacherInterface $detacher,
+        WebApiRepository $apiRepository,
+        LocaleFinderInterface $localeFinder,
+        LoggerInterface $logger
+    ) {
         $this->projectBuilder = $projectBuilder;
         $this->detacher = $detacher;
+        $this->apiRepository = $apiRepository;
+        $this->logger = $logger;
+        $this->localeFinder = $localeFinder;
     }
 
     /**
@@ -49,17 +66,49 @@ class AddDocumentsProcessor extends AbstractProcessor
             );
         }
 
-        $attributesToTranslate = $this->projectBuilder->createDocumentData($product, 'en_US');
+        $projects = $this->getProjects();
+        $apiTemmplates = $this->apiRepository->getApiTemplates();
 
-        if (null === $attributesToTranslate) {
-            $invalidItem = new DataInvalidItem([
-                'product identifier' => $product->getIdentifier()->getData(),
-            ]);
-            $this->stepExecution->addWarning('no content to translate', [], $invalidItem);
+        foreach ($projects as $project) {
+            $this->logger->debug(sprintf('Processing project %s', $project->getCode()));
+            $apiTemplate = $apiTemmplates[$project->getApiTemplateId()];
+            $fromLocale = $this->localeFinder->getPimLocaleCode($apiTemplate['language_from']);
+            $this->logger->debug(sprintf('API template: %s', json_encode($apiTemplate)));
+            $this->logger->debug(sprintf('PIM locale code: %s', $fromLocale));
+            $attributesToTranslate = $this->projectBuilder->createDocumentData($product, $fromLocale);
+
+            if (null === $attributesToTranslate) {
+                $invalidItem = new DataInvalidItem([
+                    'product identifier' => $product->getIdentifier()->getData(),
+                ]);
+                $this->stepExecution->addWarning('No content to translate for product', [], $invalidItem);
+            } else {
+                $project->addDocument($attributesToTranslate);
+                $this->stepExecution->incrementSummaryInfo('documents_added', 1);
+            }
+            $this->logger->debug(
+                sprintf('Add %d documents to project %s', count($project->getDocuments()), $project->getCode())
+            );
         }
 
         $this->detacher->detach($product);
 
-        return $attributesToTranslate;
+        return $projects;
+    }
+
+    /**
+     * @return ExecutionContext
+     */
+    protected function getJobContext()
+    {
+        return $this->stepExecution->getJobExecution()->getExecutionContext();
+    }
+
+    /**
+     * @return ProjectInterface[]
+     */
+    protected function getProjects()
+    {
+        return (array)$this->getJobContext()->get(CreateProjectsTasklet::PROJECTS_CONTEXT_KEY);
     }
 }

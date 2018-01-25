@@ -37,18 +37,13 @@ define(
                     {},
                     {
                         name: '',
-                        briefing: '',
-                        attributes: [],
-                        fromLocale: UserContext.get('catalogLocale'),
-                        toLocales: [],
-                        category: null
+                        apiTemplates: []
                     },
                     this.getFormData().actions[0]
                 );
 
                 this.$el.html(this.template(data));
-                this.initLocales(data.fromLocale);
-                this.initCategories();
+                this.initApiTemplates();
 
                 return this;
             },
@@ -74,10 +69,7 @@ define(
                     {},
                     {
                         name: '',
-                        briefing: '',
-                        fromLocale: UserContext.get('catalogLocale'),
-                        toLocales: [],
-                        category: null,
+                        apiTemplates: [],
                         username: UserContext.get('username')
                     },
                     data.actions[0],
@@ -86,54 +78,24 @@ define(
                 this.setData(data);
             },
 
-            /**
-             * @param {String} fromLocale
-             */
-            initLocales(fromLocale) {
-                const localeFetcher = FetcherRegistry.getFetcher('locale');
+            initApiTemplates: function () {
+                const fetcher = FetcherRegistry.getFetcher('textmaster-api-templates');
 
-                localeFetcher.fetchActivated()
-                    .then(locales => {
-                        const choices = _.chain(locales)
-                            .map(function (locale) {
+                fetcher.fetchAll()
+                    .then(apiTemplates => {
+                        const choices = _.chain(apiTemplates)
+                            .map(apiTemplate => {
                                 return {
-                                    id: locale.code,
-                                    text: locale.label
+                                    id: apiTemplate.id,
+                                    text: `[${apiTemplate.language_from} to ${apiTemplate.language_to}] ${apiTemplate.name}`
                                 };
                             })
                             .value();
-                        initSelect2.init(this.$('#textmaster-locale-from'), {
-                            data: choices,
-                            multiple: false,
-                            containerCssClass: 'input-xxlarge'
-                        }).select2('val', fromLocale);
-                        initSelect2.init(this.$('#textmaster-locales-to'), {
+                        initSelect2.init(this.$('#textmaster-api-templates'), {
                             data: choices,
                             multiple: true,
                             containerCssClass: 'input-xxlarge'
                         });
-                    });
-            },
-
-            initCategories() {
-                const fetcher = FetcherRegistry.getFetcher('textmaster-categories');
-                const defaultCategory = this.config.defaultCategory;
-
-                fetcher.fetchAll()
-                    .then(categories => {
-                        const choices = _.chain(categories)
-                            .map((label, code) => {
-                                return {
-                                    id: code,
-                                    text: `${code} - ${label}`
-                                };
-                            })
-                            .value();
-                        initSelect2.init(this.$('#textmaster-category'), {
-                            data: choices,
-                            multiple: false,
-                            containerCssClass: 'input-xxlarge'
-                        }).select2('val', defaultCategory);
                     });
             }
         });

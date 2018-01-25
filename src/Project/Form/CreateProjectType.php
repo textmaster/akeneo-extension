@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\Project\Form;
 
-use Pim\Bundle\CatalogBundle\Entity\Locale;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\MassAction\Operation\CreateProjects;
 use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
@@ -50,35 +49,16 @@ class CreateProjectType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', [
-            'required' => true,
+            'required'    => true,
             'constraints' => new NotBlank(),
         ]);
-        $builder->add('briefing', 'textarea', [
-            'required' => false,
-            'attr'     => [
-                'placeholder' => $this->options['default_briefing'],
-            ],
-        ]);
-        $builder->add('from_locale', 'entity', [
-            'required' => true,
-            'class'   => Locale::class,
-            'choices' => $this->localeRepository->getActivatedLocales(),
-            'select2' => true,
+
+        $builder->add('api_templates', 'choice', [
+            'required'    => true,
+            'choices'     => $this->getApiTemplatesChoices(),
+            'select2'     => true,
+            'multiple'    => true,
             'constraints' => new NotBlank(),
-        ]);
-        $builder->add('to_locales', 'entity', [
-            'required' => true,
-            'class'    => Locale::class,
-            'choices'  => $this->localeRepository->getActivatedLocales(),
-            'select2'  => true,
-            'multiple' => true,
-            'constraints' => new NotBlank(),
-        ]);
-        $builder->add('category', 'choice', [
-            'required' => true,
-            'choices' => $this->apiRepository->getCategories(),
-            'select2' => true,
-            'data'    => $this->options['default_category'],
         ]);
     }
 
@@ -98,5 +78,24 @@ class CreateProjectType extends AbstractType
     public function getName()
     {
         return 'textmaster_create_projects';
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getApiTemplatesChoices()
+    {
+        $apiTermplates = $this->apiRepository->getApiTemplates();
+        $choices = [];
+        foreach ($apiTermplates as $id => $data) {
+            $choices[$id] = sprintf(
+                '%s ["%s" to "%s"]',
+                $data['name'],
+                $data['language_from'],
+                $data['language_to']
+            );
+        }
+
+        return $choices;
     }
 }

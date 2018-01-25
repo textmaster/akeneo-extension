@@ -11,15 +11,13 @@ use Pim\Component\Connector\Step\TaskletInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Finalize the mass action:
- * - translation memory
- * - autolaunch
+ * Send previously built projects
  *
  * @author    Jean-Marie Leroux <jean-marie.leroux@akeneo.com>
- * @copyright 2016 TextMaster.com (https://textmaster.com)
+ * @copyright 2018 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class FinalizeProjectsTasklet implements TaskletInterface
+class SendProjectsTasklet implements TaskletInterface
 {
     const STATUS_MAX_TRY = 3;
 
@@ -74,13 +72,13 @@ class FinalizeProjectsTasklet implements TaskletInterface
         $projects = $this->getProjects();
 
         foreach ($projects as $project) {
-            $this->waitForStatus($project, \Textmaster\Model\ProjectInterface::STATUS_IN_CREATION);
-            $this->waitForDocumentsCounted($project);
-            $this->apiRepository->finalizeProject($project->getCode());
+            $documents = $project->getDocuments();
+            if (null !== $documents) {
+                $this->apiRepository->sendProjectDocuments($documents, $project->getCode());
+                $this->stepExecution->incrementSummaryInfo('projects_sent', 1);
+                $this->stepExecution->incrementSummaryInfo('documents_added', count($documents));
+            }
         }
-
-        $label = $this->translator->trans('textmaster.customer.validation_link');
-        $this->stepExecution->addSummaryInfo('link', $label);
     }
 
     /**
@@ -108,27 +106,22 @@ class FinalizeProjectsTasklet implements TaskletInterface
     }
 
     /**
-     * Wait for documents counted
-     *
      * @param ProjectInterface $project
      *
-     * @return bool
+     * @return array
      */
-    protected function waitForDocumentsCounted(ProjectInterface $project)
+    protected function startMemoryTranslation(ProjectInterface $project)
     {
-        $retry = 0;
+        $data = [
+            'project' => [
+                'options' => [
+                    'language_level'     => 'enterprise',
+                    'translation_memory' => true,
+                ],
+            ],
+        ];
 
-        while ($retry <= self::STATUS_MAX_TRY) {
-            $textMasterproject = $this->apiRepository->getProject($project->getCode());
-            $statuses = $textMasterproject->getDocumentsStatuses();
-            if (0 === $statuses['in_creation'] && 0 == $statuses['counting_words']) {
-                return true;
-            }
-            sleep(5);
-            $retry++;
-        }
-
-        return false;
+        return $this->apiRepository->updateProject($data, $project->getCode());
     }
 
     /**
