@@ -46,7 +46,7 @@ composer require textmaster/akeneo-extension 2.0.*
 Register your bundle in the `AppKernel::registerProjectBundles`:
 
 ```
-new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
+new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle(),
 ```
 
 Then we need to add a new mass edit batch job:
