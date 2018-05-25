@@ -21,9 +21,14 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
-#### Create a Textmaster account
+### Create a Textmaster account
 
 Creating your account on https://textmaster.com is totally free. You can access the register form by clicking on the "Login" button or by following [this link](https://textmaster.com/sign_up).
+
+### Create one or more API templates
+
+The 2.1 version of this extension uses Textmaster API templates.
+You must have at least one API template before using this extension.
 
 ## How it works
 
@@ -46,13 +51,20 @@ composer require textmaster/akeneo-extension 2.1
 Register your bundle in the `AppKernel::registerProjectBundles`:
 
 ```
-new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle();
+new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle(),
 ```
 
 Then we need to add a new mass edit batch job:
 
 ```
 bin/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' "mass_edit" 'textmaster_start_projects'
+```
+
+Add the new routes used by the extension to the global router. Add the following lines at the end of `app/config/routing.yml`:
+
+```
+textmaster:
+    resource: "@PimTextmasterBundle/Resources/config/routing.yml"
 ```
 
 Update the database schema and regenerate your cache and assets:
