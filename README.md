@@ -40,7 +40,7 @@ The translation request is done by a very simple mass edit process:
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension 2.0.*
+composer require textmaster/akeneo-extension 2.1
 ```
 
 Register your bundle in the `AppKernel::registerProjectBundles`:
