@@ -41,7 +41,7 @@ class CancelProjectsCommand extends ContainerAwareCommand
 
         $filters = [
             'status' => [
-                '$nin' => [ApiProjectInterface::STATUS_CANCELED, ApiProjectInterface::STATUS_COMPLETED],
+                '$in' => [ApiProjectInterface::STATUS_IN_CREATION],
             ],
             'archived' => false,
         ];

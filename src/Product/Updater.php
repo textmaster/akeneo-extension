@@ -2,9 +2,9 @@
 
 namespace Pim\Bundle\TextmasterBundle\Product;
 
+use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
 use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
-use Pim\Component\Catalog\Updater\ProductUpdater;
 use Textmaster\Exception\RuntimeException;
 use Textmaster\Model\DocumentInterface;
 
@@ -20,17 +20,17 @@ class Updater implements UpdaterInterface
     /** @var ProductRepositoryInterface */
     protected $productRepository;
 
-    /** @var ProductUpdater */
+    /** @var ObjectUpdaterInterface */
     protected $productUpdater;
 
     /**
      * @param ProductRepositoryInterface $productRepository
-     * @param ProductUpdater             $productUpdater
+     * @param ObjectUpdaterInterface     $productUpdater
      */
-    public function __construct(ProductRepositoryInterface $productRepository, ProductUpdater $productUpdater)
+    public function __construct(ProductRepositoryInterface $productRepository, ObjectUpdaterInterface $productUpdater)
     {
         $this->productRepository = $productRepository;
-        $this->productUpdater = $productUpdater;
+        $this->productUpdater    = $productUpdater;
     }
 
     /**
@@ -63,7 +63,7 @@ class Updater implements UpdaterInterface
      */
     protected function findRelatedProduct(DocumentInterface $document)
     {
-        $sku = $this->extractIdentifier($document);
+        $sku  = $this->extractIdentifier($document);
         $repo = $this->productRepository;
 
         return $repo->findOneByIdentifier($sku);
@@ -96,7 +96,7 @@ class Updater implements UpdaterInterface
             );
         }
         $attributeCode = $matches[1];
-        $channelCode = isset($matches[2]) ? $matches[2] : null;
+        $channelCode   = isset($matches[2]) ? $matches[2] : null;
 
         return [
             $attributeCode,
