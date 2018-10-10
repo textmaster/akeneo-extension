@@ -1,0 +1,8 @@
+parameters:
+    pim_textmaster.manager.dashboard.class: Pim\Bundle\TextmasterBundle\Manager\DashboardManager
+
+services:
+    pim_textmaster.manager.dashboard:
+        class: '%pim_textmaster.manager.dashboard.class%'
+        arguments:
+            - '@pim_textmaster.repository.document'

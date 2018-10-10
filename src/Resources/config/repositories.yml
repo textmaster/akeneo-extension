@@ -1,0 +1,27 @@
+parameters:
+    pim_textmaster.repository.webapi.class:   Pim\Bundle\TextmasterBundle\Api\WebApiRepository
+    pim_textmaster.repository.project.class:  Pim\Bundle\TextmasterBundle\Project\ProjectRepository
+    pim_textmaster.repository.document.class: Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository
+
+services:
+    pim_textmaster.repository.webapi:
+        class: '%pim_textmaster.repository.webapi.class%'
+        public: false
+        arguments:
+            - '@worldia.textmaster.api.client'
+
+    pim_textmaster.repository.project:
+        class: '%pim_textmaster.repository.project.class%'
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments:
+            - '%pim_textmaster.entity.project.class%'
+        tags:
+            - { name: 'pim_repository' }
+
+    pim_textmaster.repository.document:
+        class: '%pim_textmaster.repository.document.class%'
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments:
+            - '%pim_textmaster.entity.document.class%'
+        tags:
+            - { name: 'pim_repository' }

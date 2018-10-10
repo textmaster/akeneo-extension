@@ -1,0 +1,38 @@
+extensions:
+    pim-textmaster-dashboard-index:
+        module: pim/common/simple-view
+        config:
+            template: pim/template/common/default-template
+
+    pim-textmaster-dashboard-index-status:
+        module: textmaster/form/dashboard
+        parent: pim-textmaster-dashboard-index
+        targetZone: content
+
+    pim-textmaster-dashboard-index-user-navigation:
+        module: pim/menu/user-navigation
+        parent: pim-textmaster-dashboard-index
+        targetZone: user-menu
+        config:
+            userAccount: pim_menu.user.user_account
+            logout: pim_menu.user.logout
+
+    pim-textmaster-dashboard-index-breadcrumbs:
+        module: pim/common/breadcrumbs
+        parent: pim-textmaster-dashboard-index
+        targetZone: breadcrumbs
+        config:
+            tab: pim-menu-settings
+            item: pim-menu-settings-textmaster
+
+    pim-textmaster-dashboard-index-create-button:
+        module: pim/common/redirect
+        parent: pim-textmaster-dashboard-index
+        targetZone: buttons
+        position: 100
+        aclResourceId: pim_enrich_product_index
+        config:
+           iconName:    plus
+           label:       textmaster.index.project.create_btn
+           buttonClass: AknButton AknButton--apply AknButtonList-item
+           route:       pim_enrich_product_index

@@ -24,3 +24,19 @@ job_execution.summary.launched: Projects lancés
 job_execution.summary.not_launched: Projets prêts à lancer
 job_execution.summary.link: Lien direct
 job_execution.summary.memory_analysis: Mémoire de traduction
+
+pim_textmaster:
+    field:
+        label:
+            project_identifier: Identifiant projet
+            product_identifier: Identifiant produit
+            product_label:      Produit
+            language:           Langage
+            status:             Statut
+            updated_at:         Updated at
+    acl_group:
+        dashboard: Textmaster
+    acl:
+        dashboard:
+            index: Dashboard
+        system_configuration: Configuration système

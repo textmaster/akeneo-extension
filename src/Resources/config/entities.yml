@@ -1,0 +1,3 @@
+parameters:
+    pim_textmaster.entity.project.class:  Pim\Bundle\TextmasterBundle\Entity\Project
+    pim_textmaster.entity.document.class: Pim\Bundle\TextmasterBundle\Entity\Document

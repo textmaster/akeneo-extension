@@ -15,3 +15,22 @@ textmaster:
         section:
             credentials: Authentification
             settings: Configuration
+
+    mass_edit:
+        product:
+            title: Traduire avec TextMaster
+            description: Traduire les données produit avec TextMaster
+
+pim_menu.item.textmaster_dashboard:   Textmaster dashboard
+page_title.textmaster_rest_dashboard: Textmaster dashboard
+textmaster.index.project.create_btn:  Créer un projet
+
+pim_textmaster:
+    field:
+        label:
+            project_identifier: Identifiant projet
+            product_identifier: Identifiant produit
+            product_label:      Produit
+            language:           Langage
+            status:             Statut
+            updated_at:         Updated at

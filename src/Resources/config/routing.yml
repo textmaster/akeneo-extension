@@ -1,3 +1,11 @@
+textmaster_rest_dashboard:
+    path: /textmaster/dashboard
+
+textmaster_rest_dashboard_status_data:
+    path: /rest/dashboard/data
+    defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterStatusData }
+    methods: [GET]
+
 textmaster_rest_categories:
     path: /rest/categories
     defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterCategories }

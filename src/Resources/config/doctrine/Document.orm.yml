@@ -1,0 +1,29 @@
+Pim\Bundle\TextmasterBundle\Entity\Document:
+    type: entity
+    table: textmaster_document
+    repositoryClass: Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository
+    changeTrackingPolicy: DEFERRED_EXPLICIT
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        projectIdentifier:
+            type: string
+            column: project_identifier
+        productIdentifier:
+            type: string
+            column: product_identifier
+        productLabel:
+            type: string
+            column: product_label
+        language:
+            type: string
+            column: language
+        status:
+            type: string
+            column: status
+        updatedAt:
+            type: datetime
+            column: updated_at

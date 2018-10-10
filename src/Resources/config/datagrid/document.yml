@@ -1,0 +1,58 @@
+datagrid:
+    document-grid:
+        options:
+            entityHint: document
+            manageFilters: false
+        source:
+            type:               pim_datasource_default
+            entity:             Pim\Bundle\TextmasterBundle\Entity\Document
+            repository_method:  createDatagridQueryBuilder
+        columns:
+            productIdentifier:
+                label: pim_textmaster.field.label.product_identifier
+            productLabel:
+                label: pim_textmaster.field.label.product_label
+            language:
+                label: pim_textmaster.field.label.language
+            status:
+                label: pim_textmaster.field.label.status
+            updatedAt:
+                label: pim_textmaster.field.label.updated_at
+                frontend_type: date
+        sorters:
+            columns:
+                productIdentifier:
+                    data_name: d.productIdentifier
+                productLabel:
+                    data_name: d.productLabel
+                language:
+                    data_name: d.language
+                status:
+                    data_name: d.status
+                updatedAt:
+                    data_name: d.updatedAt
+            default:
+                label: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_ASC'
+        filters:
+            columns:
+                productIdentifier:
+                    type:      string
+                    label:     pim_textmaster.field.label.product_identifier
+                    data_name: d.productIdentifier
+                productLabel:
+                    type:      string
+                    label:     pim_textmaster.field.label.product_label
+                    data_name: d.productLabel
+                language:
+                    type:      string
+                    label:     pim_textmaster.field.label.language
+                    data_name: d.language
+                status:
+                    type:      string
+                    label:     pim_textmaster.field.label.status
+                    data_name: d.status
+                updatedAt:
+                    type:             date
+                    label:            pim_textmaster.field.label.updated_at
+                    data_name:        d.updatedAt
+                    filter_by_having: true

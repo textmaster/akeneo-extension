@@ -1,0 +1,16 @@
+<div class="AknCompletenessPanel-block completeness-block">
+    <header class="AknCompletenessPanel-header">
+        <span class="AknCompletenessPanel-headerLocale channel"><%- name %></span>
+    </header>
+    <div class="AknCompletenessPanel-content content">
+
+        <div class="AknCompletenessPanel-channel">
+            <div class="AknCompletenessPanel-progressContainer">
+                <span class="AknCompletenessPanel-progressRatio literal-progress"><%- rate %>%</span>
+            </div>
+            <div class="AknCompletenessPanel-progress AknProgress AknProgress--micro progress AknProgress--warning">
+                <div class="AknProgress-bar bar" style="width: <%- rate %>%;"></div>
+            </div>
+        </div>
+    </div>
+</div>

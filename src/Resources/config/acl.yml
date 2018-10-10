@@ -1,0 +1,9 @@
+pim_textmaster_system_configuration:
+    type: action
+    label: pim_textmaster.acl.system_configuration
+    group_name: pim_textmaster.acl_group.dashboard
+
+pim_textmaster_dashboard_index:
+    type: action
+    label: pim_textmaster.acl.dashboard.index
+    group_name: pim_textmaster.acl_group.dashboard

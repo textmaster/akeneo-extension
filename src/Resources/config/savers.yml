@@ -1,0 +1,14 @@
+services:
+    pim_textmaster.saver.project:
+        class: '%akeneo_storage_utils.saver.base.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '%pim_textmaster.entity.project.class%'
+
+    pim_textmaster.saver.document:
+        class: '%akeneo_storage_utils.saver.base.class%'
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+            - '%pim_textmaster.entity.document.class%'

@@ -32,11 +32,15 @@ class PimTextmasterExtension extends Extension implements PrependExtensionInterf
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('parameters.yml');
-        $loader->load('services.yml');
         $loader->load('api_services.yml');
-        $loader->load('processors.yml');
-        $loader->load('tasklets.yml');
+        $loader->load('entities.yml');
         $loader->load('jobs.yml');
+        $loader->load('managers.yml');
+        $loader->load('parameters.yml');
+        $loader->load('processors.yml');
+        $loader->load('repositories.yml');
+        $loader->load('savers.yml');
+        $loader->load('services.yml');
+        $loader->load('tasklets.yml');
     }
 }

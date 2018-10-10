@@ -3,4 +3,5 @@ extensions:
         module: textmaster/system/configuration
         parent: oro-system-config-tabs
         targetZone: container
+        aclResourceId: pim_textmaster_system_configuration
         position: 130

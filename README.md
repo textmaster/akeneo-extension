@@ -43,6 +43,10 @@ The translation request is done by a very simple mass edit process:
 - Send your products to Textmaster in just one click
 - You can then connect to your Textmaster client interface to choose more options, like translation memory, preferred Textmasters, etc. Your products will be translated in the PIM as soon as they are in Textmaster
 
+You can check translation progress with the dashboard :
+
+![dashboard screen](doc/img/dashboard-01.png)
+
 ## Installation
 
 First step is to require the sources:
@@ -77,12 +81,19 @@ bin/console doctrine:schema:update --force
 rm -rf web/bundles/* web/css/* web/js/* ; bin/console pim:install:assets
 ```
 
-Finally, you must set a `cron` to retrieve the translated contents from Textmaster:
+Set a `cron` to retrieve the translated contents from Textmaster:
 ```
 0 * * * * /home/akeno/pim/bin/console pim:textmaster:retrieve-translations >> /tmp/textmaster.log
 ```
 
 This command checks for translated content once every hour. We do not recommend to check more often than every hour to not overload the Textmaster servers.
+
+Finally, you must set a `cron` to synchronize translation progress from Textmaster:
+```
+0 0 0/4 1/1 * ? * /home/akeno/pim/bin/console pim:textmaster:update-dashboard >> /tmp/textmaster.log
+```
+
+This command retrieve translation progress from textmaster to supply datagrid dashboard once every 4 hours.
 
 ### Parameters
 

@@ -27,3 +27,20 @@ job_execution.summary.projects_sent: Processed projects
 job_execution.summary.not_launched: Projects ready to launch
 job_execution.summary.link: Direct link
 job_execution.summary.memory_analysis: Memory analysis
+
+pim_textmaster:
+    field:
+        label:
+            project_identifier: Project identifier
+            product_identifier: Product identifier
+            product_label:      Product label
+            language:           Language
+            status:             Status
+            updated_at:         Updated at
+    acl_group:
+        dashboard: Textmaster
+    acl:
+        dashboard:
+            index: Dashboard
+        system_configuration: System configuration
+

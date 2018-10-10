@@ -6,6 +6,12 @@ config:
         textmaster/mass_edit: pimtextmaster/js/mass_edit/textmaster_mass_edit
         textmaster/template/mass_edit: pimtextmaster/js/templates/mass_edit/textmaster_mass_edit.html
 
+        textmaster/controller/dashboard: pimtextmaster/js/controller/dashboard
+        textmaster/form/dashboard: pimtextmaster/js/form/dashboard-view
+        textmaster/template/form/dashboard: pimtextmaster/js/templates/form/dashboard-view.html
+        textmaster/form/dashboard/status: pimtextmaster/js/form/dashboard/status
+        textmaster/template/form/dashboard/status: pimtextmaster/js/templates/form/dashboard/status.html
+
     config:
         pim/fetcher-registry:
             fetchers:
@@ -14,3 +20,14 @@ config:
                     options:
                         urls:
                             list: textmaster_rest_api-templates
+                textmaster-dashboard-status-data:
+                    module: pim/base-fetcher
+                    options:
+                        urls:
+                            list: textmaster_rest_dashboard_status_data
+        pim/controller-registry:
+            controllers:
+                textmaster_rest_dashboard:
+                    module: textmaster/controller/dashboard
+                    config:
+                        entity: project

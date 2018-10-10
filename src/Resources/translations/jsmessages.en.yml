@@ -20,3 +20,17 @@ textmaster:
         product:
             title: Translate with TextMaster
             description: Translate product data with TextMaster
+
+pim_menu.item.textmaster_dashboard:   Textmaster dashboard
+page_title.textmaster_rest_dashboard: Textmaster dashboard
+textmaster.index.project.create_btn:  Create project
+
+pim_textmaster:
+    field:
+        label:
+            project_identifier: Project identifier
+            product_identifier: Product identifier
+            product_label:      Product label
+            language:           Language
+            status:             Status
+            updated_at:         Updated at
