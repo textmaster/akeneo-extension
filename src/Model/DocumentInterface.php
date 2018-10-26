@@ -30,6 +30,30 @@ interface DocumentInterface
     /**
      * @return string
      */
+    public function getDocumentIdentifier(): string;
+
+    /**
+     * @param string $documentIdentifier
+     *
+     * @return DocumentInterface
+     */
+    public function setDocumentIdentifier(string $documentIdentifier): DocumentInterface;
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int;
+
+    /**
+     * @param int $productId
+     *
+     * @return DocumentInterface
+     */
+    public function setProductId(int $productId): DocumentInterface;
+
+    /**
+     * @return string
+     */
     public function getProductIdentifier(): string;
 
     /**

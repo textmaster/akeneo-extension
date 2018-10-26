@@ -34,3 +34,5 @@ pim_textmaster:
             language:           Langage
             status:             Statut
             updated_at:         Updated at
+    action:
+        show_on_textmaster: Voir le produit sur textmaster

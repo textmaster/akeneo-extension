@@ -19,6 +19,12 @@ class Document implements DocumentInterface
     protected $projectIdentifier;
 
     /** @var string */
+    protected $documentIdentifier;
+
+    /** @var int */
+    protected $productId;
+
+    /** @var string */
     protected $productIdentifier;
 
     /** @var string */
@@ -57,6 +63,46 @@ class Document implements DocumentInterface
     public function setProjectIdentifier(string $projectIdentifier): DocumentInterface
     {
         $this->projectIdentifier = $projectIdentifier;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDocumentIdentifier(): string
+    {
+        return $this->documentIdentifier;
+    }
+
+    /**
+     * @param string $documentIdentifier
+     *
+     * @return DocumentInterface
+     */
+    public function setDocumentIdentifier(string $documentIdentifier): DocumentInterface
+    {
+        $this->documentIdentifier = $documentIdentifier;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProductId(): int
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return DocumentInterface
+     */
+    public function setProductId(int $productId): DocumentInterface
+    {
+        $this->productId = $productId;
 
         return $this;
     }

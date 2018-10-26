@@ -3,8 +3,6 @@
 namespace Pim\Bundle\TextmasterBundle\Manager;
 
 use Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository;
-use Psr\Log\LoggerInterface;
-use Textmaster\Model\Document;
 
 class DashboardManager
 {

@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Translation\Translator;
 use Textmaster\Model\DocumentInterface;
 
 /**
@@ -46,6 +47,9 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     /** @var ObjectDetacher */
     protected $objectDetacher;
 
+    /** @var Translator */
+    protected $translator;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -76,7 +80,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
         $this->output = $output;
 
         // Random delay to start to not overload TextMaster servers at the same time
-        $sleepTime = rand(1, 150);
+        $sleepTime = random_int(1, 60);
         $this->writeMessage(sprintf('Sleep for %d seconds', $sleepTime));
         sleep($sleepTime);
 
@@ -91,7 +95,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
 
         $this->saveDocuments($documents);
         $this->detachObjects($documents);
-        $this->documentRepository->removeCompletedDocuments($projectIds);
+        $this->getDocumentRepository()->removeCompletedDocuments($projectIds);
     }
 
     /**
@@ -105,38 +109,44 @@ class UpdateDashboardCommand extends ContainerAwareCommand
 //            'archived' => false,
         ];
 
-        return $this->getWebApiRepository()->getProjects($filters);
+        return $this->getWebApiRepository()->getAllProjects($filters);
     }
 
     /**
      * @param Project $projectModel
      *
      * @return Document[]
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function getProjectDocuments(Project $projectModel): array
     {
-        $documents = [];
+        $documents    = [];
         $apiDocuments = $this->getWebApiRepository()->getDocuments(
             $this->getDocumentsFilters(), $projectModel->getId()
         );
+
 
         /** @var DocumentInterface $documentModel */
         foreach ($apiDocuments as $documentModel) {
             $productIdentifier = $documentModel->getTitle();
 
-            if (false === $this->isProductExist($productIdentifier)) {
+            $productData       = $this->getProductData(
+                $productIdentifier,
+                $this->getLocaleSourceCode($projectModel->getLanguageFromCode())
+            );
+
+            if (null === $productData) {
                 continue;
             }
 
-            $pimDocument = $this->findOrCreateDocument($projectModel->getId(), $documentModel->getTitle());
-            $pimDocument->setProjectIdentifier($projectModel->getId());
-            $pimDocument->setProductIdentifier($documentModel->getTitle());
-            $pimDocument->setProductLabel(sprintf('[%s]', $documentModel->getTitle()));
-            $pimDocument->setUpdatedAt($documentModel->getUpdatedAt());
-            $pimDocument->setLanguage($projectModel->getLanguageTo());
-            $pimDocument->setStatus($this->formatStatusLabel($documentModel->getStatus()));
+            $pimDocument = $this->findOrCreateDocument($projectModel->getId(), $documentModel->getTitle())
+                ->setProjectIdentifier($projectModel->getId())
+                ->setDocumentIdentifier($documentModel->getId())
+                ->setProductIdentifier($documentModel->getTitle())
+                ->setProductId($productData['productId'])
+                ->setProductLabel($productData['productLabel'])
+                ->setUpdatedAt($documentModel->getUpdatedAt())
+                ->setLanguage($this->formatLanquage($projectModel->getLanguageToCode()))
+                ->setStatus($this->formatStatusLabel($documentModel->getStatus()));
 
             $documents[] = $pimDocument;
         }
@@ -145,9 +155,27 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     }
 
     /**
+     * Retrieve akeneo locale code from textmaster locale code.
+     *
+     * @param string $textmasterLocaleCode
+     *
+     * @return null|string
+     */
+    protected function getLocaleSourceCode(string $textmasterLocaleCode): ?string
+    {
+        if (!empty($textmasterLocaleCode)) {
+            list ($lang, $country) = explode('-', $textmasterLocaleCode);
+
+            return sprintf('%s_%s', strtolower($lang), strtoupper($country));
+        }
+
+        return null;
+    }
+
+    /**
      * @param string $message
      */
-    protected function writeMessage($message)
+    protected function writeMessage($message): void
     {
         $this->output->writeln(sprintf('%s - %s', date('Y-m-d H:i:s'), trim($message)));
     }
@@ -155,7 +183,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     /**
      * @return object|DocumentRepository
      */
-    protected function getDocumentRepository()
+    protected function getDocumentRepository(): DocumentRepository
     {
         if (null === $this->documentRepository) {
             $this->documentRepository = $this->getContainer()->get('pim_textmaster.repository.document');
@@ -186,7 +214,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     /**
      * @return object|WebApiRepository
      */
-    protected function getWebApiRepository()
+    protected function getWebApiRepository(): WebApiRepository
     {
         if (null === $this->webApiRepository) {
             $this->webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
@@ -196,39 +224,40 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     }
 
     /**
-     * Check if product exists in pim.
+     * Retrieve product label.
      *
      * @param string $productIdentifier
+     * @param string $localeCode
      *
-     * @return bool
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return mixed|null|string
      */
-    protected function isProductExist(string $productIdentifier): bool
+    protected function getProductData(string $productIdentifier, string $localeCode)
     {
-        if (\in_array($productIdentifier, $this->productIdentifiers)) {
-            return true;
+        if (
+            \array_key_exists($productIdentifier, $this->productIdentifiers)
+            && \array_key_exists($localeCode, $this->productIdentifiers[$productIdentifier])
+        ) {
+            return $this->productIdentifiers[$productIdentifier][$localeCode];
         }
 
         if (null === $this->productRepository) {
             $this->productRepository = $this->getContainer()->get('pim_catalog.repository.product');
         }
 
-        $queryBuilder = $this->productRepository->createQueryBuilder('p');
+        $product = $this->productRepository->findOneByIdentifier($productIdentifier);
 
-        $countProduct = $queryBuilder->select('COUNT(p.id)')
-            ->where($queryBuilder->expr()->eq('p.identifier', ':productIdentifier'))
-            ->setParameter('productIdentifier', $productIdentifier)
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        if ($countProduct > 0) {
-            $this->productIdentifiers[] = $productIdentifier;
-
-            return true;
+        if (null === $product) {
+            return null;
         }
 
-        return false;
+        $this->productIdentifiers[$productIdentifier][$localeCode] = [
+            'productId'    => $product->getId(),
+            'productLabel' => $product->getLabel($localeCode)
+        ];
+
+        $this->detachObjects([$product]);
+
+        return $this->productIdentifiers[$productIdentifier][$localeCode];
     }
 
     /**
@@ -270,7 +299,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     /**
      * @return LoggerInterface
      */
-    protected function getLogger()
+    protected function getLogger(): LoggerInterface
     {
         if (null === $this->logger) {
             $this->logger = $this->getContainer()->get('monolog.logger.textmaster');
@@ -307,6 +336,25 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     }
 
     /**
+     * Format language for grid.
+     *
+     * @param string $textmasterLocaleCode
+     *
+     * @return string
+     */
+    protected function formatLanquage(string $textmasterLocaleCode): string
+    {
+        if (null === $this->translator) {
+            $this->translator = $this->getContainer()->get('translator');
+            $this->translator->setLocale('en');
+        }
+
+        return $this->translator->trans(
+            sprintf('pim_textmaster.locale.%s', $textmasterLocaleCode)
+        );
+    }
+
+    /**
      * @param string $statusCode
      *
      * @return string
@@ -314,7 +362,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     protected function formatStatusLabel(string $statusCode): string
     {
         if (!\array_key_exists($statusCode, $this->statusLabels)) {
-            $statusLabel = '';
+            $statusLabel    = '';
             $explodedStatus = explode('_', $this->mergeStatus($statusCode));
 
             foreach ($explodedStatus as $partStatusCode) {

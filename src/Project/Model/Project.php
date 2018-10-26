@@ -22,4 +22,24 @@ class Project extends BaseProject implements ProjectInterface
     {
         return $this->getProperty('documents_statuses');
     }
+
+    /**
+     * Retrieve language from code.
+     *
+     * @return mixed
+     */
+    public function getLanguageFromCode()
+    {
+        return $this->getProperty('language_from_code');
+    }
+
+    /**
+     * Retrieve language to code.
+     *
+     * @return mixed
+     */
+    public function getLanguageToCode()
+    {
+        return $this->getProperty('language_to_code');
+    }
 }

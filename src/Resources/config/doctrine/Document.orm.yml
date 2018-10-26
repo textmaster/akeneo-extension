@@ -12,6 +12,12 @@ Pim\Bundle\TextmasterBundle\Entity\Document:
         projectIdentifier:
             type: string
             column: project_identifier
+        documentIdentifier:
+            type: string
+            column: document_identifier
+        productId:
+            type: integer
+            column: product_id
         productIdentifier:
             type: string
             column: product_identifier

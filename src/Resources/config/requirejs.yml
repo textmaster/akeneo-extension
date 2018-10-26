@@ -12,6 +12,8 @@ config:
         textmaster/form/dashboard/status: pimtextmaster/js/form/dashboard/status
         textmaster/template/form/dashboard/status: pimtextmaster/js/templates/form/dashboard/status.html
 
+        oro/datagrid/open-blank-action: pimtextmaster/js/datagrid/action/open-blank-action
+
     config:
         pim/fetcher-registry:
             fetchers:
@@ -25,6 +27,11 @@ config:
                     options:
                         urls:
                             list: textmaster_rest_dashboard_status_data
+                textmaster-open-blank-to-project:
+                    module: pim/base-fetcher
+                    options:
+                        urls:
+                            get: textmaster_rest_dashboard_status_data
         pim/controller-registry:
             controllers:
                 textmaster_rest_dashboard:

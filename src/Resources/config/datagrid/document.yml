@@ -19,6 +19,33 @@ datagrid:
             updatedAt:
                 label: pim_textmaster.field.label.updated_at
                 frontend_type: date
+        properties:
+            edit_product:
+                type: url
+                route: pim_enrich_product_edit
+                params:
+                    - id
+            texmaster_view:
+                type: url
+                route: textmaster_open_blank_to_project
+                params:
+                    - projectIdentifier
+                    - documentIdentifier
+        actions:
+            edit_attributes:
+                launcherOptions:
+                    className: AknIconButton AknIconButton--small AknIconButton--edit
+                type:      navigate
+                label:     Edit attributes of the product
+                link: edit_product
+                rowAction: false
+            texmaster_view:
+                launcherOptions:
+                    className: AknIconButton AknIconButton--small AknIconButton--view
+                type:      open-blank
+                label:     pim_textmaster.action.show_on_textmaster
+                link:      texmaster_view
+                rowAction: false
         sorters:
             columns:
                 productIdentifier:

@@ -42,7 +42,9 @@ class DocumentRepository extends EntityRepository implements DatagridRepositoryI
 
         return $queryBuilder->select(
             [
-                'd.projectIdentifier',
+                'd.projectIdentifier AS projectIdentifier',
+                'd.documentIdentifier AS documentIdentifier',
+                'd.productId AS id',
                 'd.productIdentifier',
                 'd.productLabel',
                 'd.language',
