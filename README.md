@@ -10,17 +10,18 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 ## Requirements
 
-| Akeneo Textmaster extension |   Akeneo PIM Community Edition    |
-|:---------------------------:|:---------------------------------:|
-| v2.4.*                      | v2.3.* + API template + Dashboard |
-| v2.3.*                      | v2.3.* + API template             |
-| v2.2.*                      | v2.2.* + API template             |
-| v2.1.*                      | v2.1.* + API template             |
-| v2.0.*                      | v2.0.* + API template             |
-| v1.3.*                      | v1.7.* + API template             |
-| v1.2.*                      | v1.7.*                            |
-| v1.1.*                      | v1.6.*                            |
-| v1.0.*                      | v1.5.*                            |
+| Akeneo Textmaster extension | Akeneo PIM Community Edition |
+|:---------------------------:|:----------------------------:|
+| v2.4.*                      | v2.3.* + API template        |
+|                             | + Dashboard + Product model  |
+| v2.3.*                      | v2.3.* + API template        |
+| v2.2.*                      | v2.2.* + API template        |
+| v2.1.*                      | v2.1.* + API template        |
+| v2.0.*                      | v2.0.* + API template        |
+| v1.3.*                      | v1.7.* + API template        |
+| v1.2.*                      | v1.7.*                       |
+| v1.1.*                      | v1.6.*                       |
+| v1.0.*                      | v1.5.*                       |
 
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
