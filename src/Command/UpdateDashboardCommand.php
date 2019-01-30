@@ -106,7 +106,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     protected function getProjectsFromApi(): array
     {
         $filters = [
-//            'archived' => false,
+            'archived' => false,
         ];
 
         return $this->getWebApiRepository()->getAllProjects($filters);
