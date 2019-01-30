@@ -120,7 +120,7 @@ class FinalizeProjectsTasklet implements TaskletInterface
             if ($status === $textMasterproject->getStatus()) {
                 return true;
             }
-            sleep(5);
+            sleep(10);
             $retry++;
         }
 
