@@ -73,12 +73,25 @@ textmaster:
     resource: "@PimTextmasterBundle/Resources/config/routing.yml"
 ```
 
+Optional : Add those parameters into app/config/parameters.yml to use textmaster sandbox :
+
+```
+parameters:
+    ...
+    textmaster.base_uri.api: 'https://api.textmastersandbox.com/v1'
+    textmaster.base_uri.app: 'https://app.textmastersandbox.com'
+```
+
 Update the database schema and regenerate your cache and assets:
 
 ```
-rm bin/cache/* -rf
+rm -rf var/cache/* web/bundles/* web/js/* web/css/*
 bin/console doctrine:schema:update --force
-rm -rf web/bundles/* web/css/* web/js/* ; bin/console pim:install:assets
+bin/console p:i:a --symlink
+bin/console a:i --symlink
+node yarn run webpack
+find ./ -type d -exec chmod 755 {} \;
+find ./ -type f -exec chmod 644 {} \;
 ```
 
 Set a `cron` to retrieve the translated contents from Textmaster:
