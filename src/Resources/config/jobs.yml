@@ -57,7 +57,7 @@ services:
             - '@pim_textmaster.tasklet.send_projects'
 
     pim_textmaster.mass_edit.step.launch_projects:
-        class: '%pim_connector.step.tasklet.class%'
+        class: Pim\Bundle\TextmasterBundle\Step\FinalizeProjectsTaskletStep
         arguments:
             - 'textmaster.step.finalize_projects'
             - '@event_dispatcher'

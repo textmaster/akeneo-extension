@@ -24,22 +24,26 @@ class Project extends BaseProject implements ProjectInterface
     }
 
     /**
-     * Retrieve language from code.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getLanguageFromCode()
+    public function getLanguageFrom()
     {
         return $this->getProperty('language_from_code');
     }
 
     /**
-     * Retrieve language to code.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function getLanguageToCode()
+    public function getLanguageTo()
     {
         return $this->getProperty('language_to_code');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWordCountError()
+    {
+        return $this->getProperty('word_count_error');
     }
 }

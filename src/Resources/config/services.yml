@@ -24,12 +24,6 @@ services:
         tags:
             - { name: monolog.logger, channel: textmaster }
 
-    pim_textmaster.document.updater:
-        class: Pim\Bundle\TextmasterBundle\Product\Updater
-        arguments:
-            - '@pim_catalog.repository.product'
-            - '@pim_catalog.updater.product'
-
     pim_textmaster.locale.finder:
         class: Pim\Bundle\TextmasterBundle\Locale\LocaleFinder
         arguments:

@@ -11,6 +11,7 @@ textmaster:
     customer:
         validation_link: Aller sur TextMaster pour valider et lancer les projets
         launched_link: Aller sur TextMaster
+        wordcount_error: Time out sur lors du décompte des mots, le project %project_code% a été annulé
     step:
         create_projects: Creation de projets dans TextMaster
         add_documents: Ajout de documents aux projets
@@ -20,6 +21,7 @@ textmaster:
 
 job_execution.summary.projects_created: Projets créés
 job_execution.summary.documents_added: Documents ajoutés
+job_execution.summary.no_translation: Produits sans traduction
 job_execution.summary.launched: Projects lancés
 job_execution.summary.not_launched: Projets prêts à lancer
 job_execution.summary.link: Lien direct

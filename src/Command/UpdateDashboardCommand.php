@@ -120,7 +120,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
     protected function getProjectDocuments(Project $projectModel): array
     {
         $documents    = [];
-        $apiDocuments = $this->getWebApiRepository()->getDocuments(
+        $apiDocuments = $this->getWebApiRepository()->getAllDocuments(
             $this->getDocumentsFilters(), $projectModel->getId()
         );
 
@@ -131,7 +131,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
 
             $productData       = $this->getProductData(
                 $productIdentifier,
-                $this->getLocaleSourceCode($projectModel->getLanguageFromCode())
+                $this->getLocaleSourceCode($projectModel->getLanguageFrom())
             );
 
             if (null === $productData) {
@@ -145,7 +145,7 @@ class UpdateDashboardCommand extends ContainerAwareCommand
                 ->setProductId($productData['productId'])
                 ->setProductLabel($productData['productLabel'])
                 ->setUpdatedAt($documentModel->getUpdatedAt())
-                ->setLanguage($this->formatLanquage($projectModel->getLanguageToCode()))
+                ->setLanguage($this->formatLanquage($projectModel->getLanguageTo()))
                 ->setStatus($this->formatStatusLabel($documentModel->getStatus()));
 
             $documents[] = $pimDocument;

@@ -18,11 +18,13 @@ textmaster:
     customer:
         validation_link: See project in TextMaster
         launched_link: See project in TextMaster
+        wordcount_error: Time out on counting word step, Project %project_code% canceled
     steps:
         skipped_document.title: Skipped document
 
 job_execution.summary.projects_created: Created projects
 job_execution.summary.documents_added: Added documents
+job_execution.summary.no_translation: Products without traduction
 job_execution.summary.projects_sent: Processed projects
 job_execution.summary.not_launched: Projects ready to launch
 job_execution.summary.link: Direct link

@@ -16,9 +16,22 @@ use Textmaster\Model\ProjectInterface as BaseProjectInterface;
 interface ProjectInterface extends BaseProjectInterface
 {
     /**
-     * Get project's documents statuses
-     *
-     * @return int[]
+     * {@inheritdoc}
      */
     public function getDocumentsStatuses();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLanguageFrom();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLanguageTo();
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWordCountError();
 }

@@ -2,8 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\Project;
 
-use Pim\Component\Catalog\Model\ProductInterface;
-
 /**
  * TextMaster builder.
  * Can build project and document payload from PIM data
@@ -22,10 +20,10 @@ interface BuilderInterface
     public function createProjectData(ProjectInterface $project);
     
     /**
-     * @param ProductInterface $product
-     * @param string           $localeCode
+     * @param mixed  $product
+     * @param string $localeCode
      *
      * @return array
      */
-    public function createDocumentData(ProductInterface $product, $localeCode);
+    public function createDocumentData($product, $localeCode);
 }

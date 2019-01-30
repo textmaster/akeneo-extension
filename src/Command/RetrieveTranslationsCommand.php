@@ -2,11 +2,20 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
+use Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Remover\BaseRemover;
+use Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver;
+use Akeneo\Component\StorageUtils\Saver\BulkSaverInterface;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
+use Pim\Bundle\TextmasterBundle\Locale\LocaleFinder;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
+use Pim\Bundle\TextmasterBundle\Updater\ProductModelUpdater;
+use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModelInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Textmaster\Model\DocumentInterface;
+use Pim\Bundle\TextmasterBundle\Updater\ProductUpdater;
 
 /**
  * Retrieve translations and update products
@@ -17,6 +26,33 @@ use Textmaster\Model\DocumentInterface;
  */
 class RetrieveTranslationsCommand extends ContainerAwareCommand
 {
+    /** @var WebApiRepository */
+    protected $webApiRepository;
+
+    /** @var ProductModelUpdater */
+    protected $productModelUpdater;
+
+    /** @var ProductUpdater */
+    protected $productUpdater;
+
+    /** @var BulkSaverInterface */
+    protected $productSaver;
+
+    /** @var BulkSaverInterface */
+    protected $productModelSaver;
+
+    /** @var BaseSaver */
+    protected $projectSaver;
+
+    /** @var BaseRemover */
+    protected $projectRemover;
+
+    /** @var LocaleFinder */
+    protected $localeFinder;
+
+    /** @var array */
+    protected $apiTemplates;
+
     /** @var OutputInterface */
     private $output;
 
@@ -30,6 +66,8 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             ->setDescription('Fetch translations via TextMaster API call');
     }
 
+
+
     /**
      * {@inheritdoc}
      */
@@ -38,33 +76,32 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         $this->output = $output;
 
         // Random delay to start to not overload TextMaster servers at the same time
-        $sleepTime = rand(1, 300);
+        $sleepTime = rand(1, 3);
         $this->writeMessage(sprintf('Sleep for %d seconds', $sleepTime));
         sleep($sleepTime);
 
         $this->writeMessage('Check TextMaster projects');
 
         $pimProjects = $this->getPimProjects();
+
         foreach ($pimProjects as $project) {
             $this->writeMessage(sprintf('Update products for project %s', $project->getCode()));
             $this->updateProducts($project);
         }
+
         $this->updatePimProjects($pimProjects);
     }
+
 
     /**
      * @param ProjectInterface $project
      *
      * @return ProjectInterface
      */
-    protected function updateProducts(ProjectInterface $project)
+    protected function updateProducts(ProjectInterface $project): ProjectInterface
     {
-        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
-        $localeFinder = $this->getContainer()->get('pim_textmaster.locale.finder');
-
-        $apiTemplate = $webApiRepository->getApiTemplates()[$project->getApiTemplateId()];
-        $tmLocaleCode = $apiTemplate['language_to'];
-        $pimLocaleCode = $localeFinder->getPimLocaleCode($tmLocaleCode);
+        $apiTemplate   = $this->getApiTemplate($project->getApiTemplateId());
+        $pimLocaleCode = $this->getPimLocaleCode($apiTemplate['language_to']);
 
         $filters = [
             'status' => [
@@ -79,22 +116,39 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         }
 
         try {
-            $documents = $webApiRepository->getDocuments($filters, $project->getCode());
+            $documents = $this->getWebApiRepository()->getAllDocuments($filters, $project->getCode());
             $project->setUpdatedAt();
-            $updater = $this->getContainer()->get('pim_textmaster.document.updater');
-            $products = [];
+            $products      = [];
+            $productModels = [];
+
+            /** @var DocumentInterface $document */
             foreach ($documents as $document) {
-                $product = $updater->update($document, $pimLocaleCode);
-                $this->writeMessage(sprintf(
-                    'Updated document %s for locale %s',
-                    $document->getTitle(),
-                    $pimLocaleCode
-                ));
-                $products[] = $product;
+                $product = $this->getUpdater($document)
+                    ->update($document, $pimLocaleCode);
+
+                $this->writeMessage(
+                    sprintf(
+                        'Updated document %s for locale %s',
+                        $document->getTitle(),
+                        $pimLocaleCode
+                    )
+                );
+
+                if ($product instanceof ProductInterface) {
+                    $products[] = $product;
+                } else {
+                    $productModels[] = $product;
+                }
             }
 
-            $saver = $this->getContainer()->get('pim_catalog.saver.product');
-            $saver->saveAll($products);
+            if (!empty($products)) {
+                $this->saveProducts($products);
+            }
+
+            if (!empty($productModels)) {
+                $this->saveProductModels($productModels);
+            }
+
         } catch (\Exception $e) {
             $this->writeMessage(
                 sprintf(
@@ -108,33 +162,158 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         return $project;
     }
 
+
     /**
      * @param ProjectInterface[] $projects
      */
-    protected function updatePimProjects(array $projects)
+    protected function updatePimProjects(array $projects): void
     {
-        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
-
         $filters = [
-            "status"   => [
+            'status'   => [
                 '$nin' => [DocumentInterface::STATUS_CANCELED, DocumentInterface::STATUS_COMPLETED],
             ],
             'archived' => false,
         ];
 
-        $textmasterCodes = $webApiRepository->getProjectCodes($filters);
+        $textmasterCodes = $this->getWebApiRepository()->getProjectCodes($filters);
 
         foreach ($projects as $project) {
-            if (in_array($project->getCode(), $textmasterCodes)) {
-                $saver = $this->getContainer()->get('pim_textmaster.saver.project');
-                $saver->save($project);
-                $this->writeMessage(sprintf('<info>Project %s was updated</info>', $project->getCode()));
+            if (\in_array($project->getCode(), $textmasterCodes)) {
+                $this->saveProject($project);
             } else {
-                $remover = $this->getContainer()->get('pim_textmaster.remover.project');
-                $remover->remove($project);
-                $this->writeMessage(sprintf('<info>Project %s was removed</info>', $project->getCode()));
+                $this->removeProject($project);
             }
         }
+    }
+
+    /**
+     * @return object|WebApiRepository
+     */
+    protected function getWebApiRepository()
+    {
+        if (null === $this->webApiRepository) {
+            $this->webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
+        }
+
+        return $this->webApiRepository;
+    }
+
+    /**
+     * Retrieve product updater or product model updater using document title.
+     *
+     * @param DocumentInterface $document
+     *
+     * @return object|ProductModelUpdater|ProductUpdater
+     */
+    protected function getUpdater(DocumentInterface $document)
+    {
+        if (strrpos($document->getTitle(), 'product_model|') !== false) {
+            return $this->getProductModelUpdater();
+        }
+
+        return $this->getProductUpdater();
+    }
+
+    /**
+     * @return object|ProductModelUpdater
+     */
+    protected function getProductModelUpdater()
+    {
+        if (null === $this->productModelUpdater) {
+            $this->productModelUpdater = $this->getContainer()->get('pim_textmaster.updater.document.product_model');
+        }
+
+        return $this->productModelUpdater;
+    }
+
+    /**
+     * @return object|ProductUpdater
+     */
+    protected function getProductUpdater()
+    {
+        if (null === $this->productUpdater) {
+            $this->productUpdater = $this->getContainer()->get('pim_textmaster.updater.document.product');
+        }
+
+        return $this->productUpdater;
+    }
+
+    /**
+     * @param ProductInterface[] $products
+     */
+    protected function saveProducts(array $products): void
+    {
+        if (null === $this->productSaver) {
+            $this->productSaver = $this->getContainer()->get('pim_catalog.saver.product');
+        }
+
+        $this->productSaver->saveAll($products);
+    }
+
+    /**
+     * @param ProductModelInterface[] $productModels
+     */
+    protected function saveProductModels(array $productModels): void
+    {
+        if (null === $this->productModelSaver) {
+            $this->productModelSaver = $this->getContainer()->get('pim_catalog.saver.product_model');
+        }
+
+        $this->productModelSaver->saveAll($productModels);
+    }
+
+    /**
+     * @param ProjectInterface $project
+     */
+    protected function saveProject(ProjectInterface $project): void
+    {
+        if (null === $this->projectSaver) {
+            $this->projectSaver = $this->getContainer()->get('pim_textmaster.saver.project');
+        }
+
+        $this->projectSaver->save($project);
+        $this->writeMessage(sprintf('<info>Project %s was updated</info>', $project->getCode()));
+    }
+
+    /**
+     * @param ProjectInterface $project
+     */
+    protected function removeProject(ProjectInterface $project): void
+    {
+        if (null === $this->projectRemover) {
+            $this->projectRemover = $this->getContainer()->get('pim_textmaster.remover.project');
+        }
+
+        $this->projectRemover->remove($project);
+        $this->writeMessage(sprintf('<info>Project %s was removed</info>', $project->getCode()));
+    }
+
+    /**
+     * @param string $apiTemplateId
+     *
+     * @return array
+     */
+    protected function getApiTemplate(string $apiTemplateId): array
+    {
+        if (empty($this->apiTemplates)) {
+            $this->apiTemplates = $this->getWebApiRepository()->getApiTemplates();
+        }
+
+        return $this->apiTemplates[$apiTemplateId];
+    }
+
+    /**
+     * @param string $textmasterLocaleCode
+     *
+     * @return string
+     */
+    protected function getPimLocaleCode(string $textmasterLocaleCode): string
+    {
+        if (null === $this->localeFinder) {
+            $this->localeFinder = $this->getContainer()->get('pim_textmaster.locale.finder');
+        }
+
+        return $this->localeFinder->getPimLocaleCode($textmasterLocaleCode);
     }
 
     /**
@@ -142,18 +321,17 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      *
      * @return ProjectInterface[]
      */
-    protected function getPimProjects()
+    protected function getPimProjects(): array
     {
-        $projectRepository = $this->getContainer()->get('pim_textmaster.repository.project');
-        $projects = $projectRepository->findAll();
-
-        return $projects;
+        return $this->getContainer()
+            ->get('pim_textmaster.repository.project')
+            ->findAll();
     }
 
     /**
      * @param string $message
      */
-    private function writeMessage($message)
+    protected function writeMessage($message): void
     {
         $this->output->writeln(sprintf('%s - %s', date('Y-m-d H:i:s'), trim($message)));
     }

@@ -2,7 +2,6 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\DataInvalidItem;
 use Akeneo\Component\Batch\Item\ExecutionContext;
 use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Doctrine\Common\Util\ClassUtils;
@@ -12,6 +11,7 @@ use Pim\Bundle\TextmasterBundle\Locale\LocaleFinderInterface;
 use Pim\Bundle\TextmasterBundle\Project\BuilderInterface;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
 use Pim\Component\Catalog\Model\ProductInterface;
+use Pim\Component\Catalog\Model\ProductModel;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -46,10 +46,10 @@ class AddDocumentsProcessor extends AbstractProcessor
         LoggerInterface $logger
     ) {
         $this->projectBuilder = $projectBuilder;
-        $this->detacher = $detacher;
-        $this->apiRepository = $apiRepository;
-        $this->logger = $logger;
-        $this->localeFinder = $localeFinder;
+        $this->detacher       = $detacher;
+        $this->apiRepository  = $apiRepository;
+        $this->logger         = $logger;
+        $this->localeFinder   = $localeFinder;
     }
 
     /**
@@ -60,32 +60,33 @@ class AddDocumentsProcessor extends AbstractProcessor
      */
     public function process($product)
     {
-        if (!$product instanceof ProductInterface) {
+        if (!$product instanceof ProductInterface && !$product instanceof ProductModel) {
             throw new \Exception(
-                sprintf('Processed item must implement ProductInterface, %s given', ClassUtils::getClass($product))
+                sprintf(
+                    'Processed item must implement ProductInterface or Product Model, %s given',
+                    ClassUtils::getClass($product)
+                )
             );
         }
 
-        $projects = $this->getProjects();
+        $projects      = $this->getProjects();
         $apiTemmplates = $this->apiRepository->getApiTemplates();
 
         foreach ($projects as $project) {
             $this->logger->debug(sprintf('Processing project %s', $project->getCode()));
             $apiTemplate = $apiTemmplates[$project->getApiTemplateId()];
-            $fromLocale = $this->localeFinder->getPimLocaleCode($apiTemplate['language_from']);
+            $fromLocale  = $this->localeFinder->getPimLocaleCode($apiTemplate['language_from']);
             $this->logger->debug(sprintf('API template: %s', json_encode($apiTemplate)));
             $this->logger->debug(sprintf('PIM locale code: %s', $fromLocale));
             $attributesToTranslate = $this->projectBuilder->createDocumentData($product, $fromLocale);
 
             if (null === $attributesToTranslate) {
-                $invalidItem = new DataInvalidItem([
-                    'product identifier' => $product->getIdentifier()->getData(),
-                ]);
-                $this->stepExecution->addWarning('No content to translate for product', [], $invalidItem);
+                $this->stepExecution->incrementSummaryInfo('no_translation');
             } else {
                 $project->addDocument($attributesToTranslate);
-                $this->stepExecution->incrementSummaryInfo('documents_added', 1);
+                $this->stepExecution->incrementSummaryInfo('documents_added');
             }
+
             $this->logger->debug(
                 sprintf('Add %d documents to project %s', count($project->getDocuments()), $project->getCode())
             );

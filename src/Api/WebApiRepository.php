@@ -111,6 +111,42 @@ class WebApiRepository implements WebApiRepositoryInterface
     }
 
     /**
+     * Retrieve all project from textmaster.
+     *
+     * @param array  $filters
+     * @param string $projectCode
+     * @param array  $documents
+     * @param null   $currentPage
+     *
+     * @return array
+     */
+    public function getAllDocuments(
+        array $filters, string $projectCode, array &$documents = [], $currentPage = null
+    ): array {
+        $documentApi = $this->clientApi->projects()->documents($projectCode);
+
+        if (null !== $currentPage) {
+            $documentApi->setPage($currentPage);
+        }
+
+        $response = $documentApi->filter($filters);
+
+        foreach ($response['documents'] as $documentData) {
+            $documents[] = new Document($this->clientApi, $documentData);
+        }
+
+        if (null !== $response['total_pages'] && 1 === $response['total_pages']) {
+            return $documents;
+        }
+
+        if (null !== $response['total_pages'] && $currentPage < $response['total_pages']) {
+            $this->getAllDocuments($filters, $projectCode, $documents, (int) $response['page'] + 1);
+        }
+
+        return $documents;
+    }
+
+    /**
      * @param array $filters
      *
      * @return string[]
