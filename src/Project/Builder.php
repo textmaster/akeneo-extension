@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Project;
 
+use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Pim\Bundle\TextmasterBundle\Project\Exception\RuntimeException;
 use Pim\Component\Catalog\AttributeTypes;
@@ -32,6 +33,9 @@ class Builder implements BuilderInterface
     /** @var ConfigManager */
     protected $configManager;
 
+    /** @var ObjectDetacherInterface */
+    protected $objectDetacher;
+
     /** @var LoggerInterface */
     protected $logger;
 
@@ -45,16 +49,21 @@ class Builder implements BuilderInterface
     protected $availableAttributes = [];
 
     /**
-     * @param ConfigManager   $configManager
-     * @param LoggerInterface $logger
+     * @param ConfigManager           $configManager
+     * @param ObjectDetacherInterface $objectDetacher
+     * @param LoggerInterface         $logger
      */
-    public function __construct(ConfigManager $configManager, LoggerInterface $logger)
-    {
+    public function __construct(
+        ConfigManager $configManager,
+        ObjectDetacherInterface $objectDetacher,
+        LoggerInterface $logger
+    ) {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
-        $this->options       = $resolver->resolve([]);
-        $this->configManager = $configManager;
-        $this->logger        = $logger;
+        $this->options        = $resolver->resolve([]);
+        $this->configManager  = $configManager;
+        $this->objectDetacher = $objectDetacher;
+        $this->logger         = $logger;
     }
 
     /**
@@ -172,6 +181,14 @@ class Builder implements BuilderInterface
 
 
             if (1 === $product->getLevel()) {
+                if (!isset($this->availableAttributes[$familyVariantCode])) {
+                    $this->availableAttributes[$familyVariantCode] = $this->getAvailableAttributes(
+                        $product->getParent()
+                    );
+
+                    $this->objectDetacher->detach($product->getParent());
+                }
+
                 $availableAttributes = array_diff(
                     $availableAttributes,
                     $this->availableAttributes[$familyVariantCode]
@@ -180,6 +197,18 @@ class Builder implements BuilderInterface
         }
 
         return $availableAttributes;
+    }
+
+    /**
+     * Retrieve available attributes from product.
+     *
+     * @param EntityWithValuesInterface $product
+     *
+     * @return array
+     */
+    protected function getAvailableAttributesFromProduct(EntityWithValuesInterface $product)
+    {
+        return array_intersect($this->getTextmasterAttributes(), $product->getUsedAttributeCodes());
     }
 
 

@@ -20,6 +20,7 @@ services:
         public: false
         arguments:
             - '@oro_config.global'
+            - '@akeneo_storage_utils.doctrine.object_detacher'
             - '@monolog.logger.textmaster'
         tags:
             - { name: monolog.logger, channel: textmaster }

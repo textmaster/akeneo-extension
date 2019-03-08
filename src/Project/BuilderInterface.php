@@ -20,8 +20,8 @@ interface BuilderInterface
     public function createProjectData(ProjectInterface $project);
     
     /**
-     * @param mixed  $product
-     * @param string $localeCode
+     * @param mixed $product
+     * @param string           $localeCode
      *
      * @return array
      */

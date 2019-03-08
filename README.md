@@ -88,9 +88,9 @@ Update the database schema and regenerate your cache and assets:
 
 ```
 rm -rf var/cache/* web/bundles/* web/js/* web/css/*
-bin/console doctrine:schema:update --force
-bin/console p:i:a --symlink
-bin/console a:i --symlink
+bin/console doctrine:schema:update --force --env=prod
+bin/console p:i:a --symlink --env=prod
+bin/console a:i --symlink --env=prod
 node yarn run webpack
 find ./ -type d -exec chmod 755 {} \;
 find ./ -type f -exec chmod 644 {} \;
