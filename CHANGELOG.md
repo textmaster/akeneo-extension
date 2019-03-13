@@ -1,3 +1,18 @@
+# 2.4.1: PIM 2.3 compatibility
+
+- Fix bug using variation axes filters on product model
+
+# 2.4.0: PIM 2.3 compatibility
+
+- Add dashbord
+- Add product model translation
+
+# 2.3.0: PIM 2.3 compatibility
+
+# 2.2.0: PIM 2.2 compatibility
+
+# 2.1.0: PIM 2.1 compatibility
+
 # 2.0.0: PIM 2.0 compatibility
 
 # v1.3.0: API templates

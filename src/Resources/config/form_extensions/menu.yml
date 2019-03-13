@@ -1,0 +1,9 @@
+extensions:
+    pim-menu-settings-textmaster:
+        module: pim/menu/item
+        parent: pim-menu-settings-navigation-block
+        aclResourceId: pim_textmaster_dashboard_index
+        position: 300
+        config:
+            title: pim_menu.item.textmaster_dashboard
+            to: textmaster_rest_dashboard

@@ -1,3 +1,11 @@
+textmaster_rest_dashboard:
+    path: /textmaster/dashboard
+
+textmaster_rest_dashboard_status_data:
+    path: /rest/dashboard/data
+    defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterStatusData }
+    methods: [GET]
+
 textmaster_rest_categories:
     path: /rest/categories
     defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterCategories }
@@ -6,4 +14,12 @@ textmaster_rest_categories:
 textmaster_rest_api-templates:
     path: /rest/api-templates
     defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterApiTemplates }
+    methods: [GET]
+
+textmaster_open_blank_to_project:
+    path: /textmaster/open-blank-to-project/{projectIdentifier}/{documentIdentifier}
+    defaults: { _controller: pim_textmaster.controller:openBlankToProject }
+    requirements:
+        projectIdentifier: '[0-9a-f]+'
+        documentIdentifier: '[0-9a-f]+'
     methods: [GET]

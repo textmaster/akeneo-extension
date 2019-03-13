@@ -69,7 +69,7 @@ class WebApiRepository implements WebApiRepositoryInterface
      */
     public function getProjects(array $filters)
     {
-        $projectApi = $this->clientApi->project();
+        $projectApi = $this->clientApi->projects();
         $response = $projectApi->filter($filters);
 
         $projects = [];
@@ -78,6 +78,72 @@ class WebApiRepository implements WebApiRepositoryInterface
         }
 
         return $projects;
+    }
+
+    /**
+     * Retrieve all project from textmaster.
+     *
+     * @param array $filters
+     * @param array $projects
+     * @param null  $currentPage
+     *
+     * @return array
+     */
+    public function getAllProjects(array $filters, array &$projects = [], $currentPage = null): array
+    {
+        $projectApi = $this->clientApi->projects();
+
+        if (null !== $currentPage) {
+            $projectApi->setPage($currentPage);
+        }
+
+        $response = $projectApi->filter($filters);
+
+        foreach ($response['projects'] as $projectData) {
+            $projects[] = new Project($this->clientApi, $projectData);
+        }
+
+        if (null !== $response['total_pages'] && $currentPage < $response['total_pages']) {
+            $this->getAllProjects($filters, $projects, (int) $response['page'] + 1);
+        }
+
+        return $projects;
+    }
+
+    /**
+     * Retrieve all project from textmaster.
+     *
+     * @param array  $filters
+     * @param string $projectCode
+     * @param array  $documents
+     * @param null   $currentPage
+     *
+     * @return array
+     */
+    public function getAllDocuments(
+        array $filters, string $projectCode, array &$documents = [], $currentPage = null
+    ): array {
+        $documentApi = $this->clientApi->projects()->documents($projectCode);
+
+        if (null !== $currentPage) {
+            $documentApi->setPage($currentPage);
+        }
+
+        $response = $documentApi->filter($filters);
+
+        foreach ($response['documents'] as $documentData) {
+            $documents[] = new Document($this->clientApi, $documentData);
+        }
+
+        if (null !== $response['total_pages'] && 1 === $response['total_pages']) {
+            return $documents;
+        }
+
+        if (null !== $response['total_pages'] && $currentPage < $response['total_pages']) {
+            $this->getAllDocuments($filters, $projectCode, $documents, (int) $response['page'] + 1);
+        }
+
+        return $documents;
     }
 
     /**

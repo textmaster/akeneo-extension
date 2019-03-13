@@ -3,6 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle\Controller;
 
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
+use Pim\Bundle\TextmasterBundle\Manager\DashboardManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -15,11 +16,36 @@ class TextmasterRestController
     /** @var WebApiRepositoryInterface */
     private $apiRepository;
 
-    public function __construct(WebApiRepositoryInterface $apiRepository)
-    {
-        $this->apiRepository = $apiRepository;
+    /** @var DashboardManager */
+    private $dashboardManager;
+
+    /**
+     * TextmasterRestController constructor.
+     *
+     * @param WebApiRepositoryInterface $apiRepository
+     * @param DashboardManager          $dashboardManager
+     */
+    public function __construct(
+        WebApiRepositoryInterface $apiRepository,
+        DashboardManager $dashboardManager
+    ) {
+        $this->apiRepository    = $apiRepository;
+        $this->dashboardManager = $dashboardManager;
     }
 
+    /**
+     * @return JsonResponse
+     */
+    public function fetchTextmasterStatusData(): JsonResponse
+    {
+        $dashboardData = $this->dashboardManager->getDocumentStatuses();
+
+        return new JsonResponse($dashboardData);
+    }
+
+    /**
+     * @return JsonResponse
+     */
     public function fetchTextmasterCategories(): JsonResponse
     {
         $categories = $this->apiRepository->getCategories();
@@ -27,6 +53,9 @@ class TextmasterRestController
         return new JsonResponse($categories);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function fetchTextmasterApiTemplates(): JsonResponse
     {
         $apiTemplates = $this->apiRepository->getApiTemplates();

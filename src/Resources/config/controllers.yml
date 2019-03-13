@@ -1,0 +1,16 @@
+parameters:
+    pim_textmaster.controller.rest.class: Pim\Bundle\TextmasterBundle\Controller\TextmasterRestController
+    pim_textmaster.controller.class:      Pim\Bundle\TextmasterBundle\Controller\TextmasterController
+
+services:
+    pim_textmaster.controller.rest:
+        class: '%pim_textmaster.controller.rest.class%'
+        arguments:
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.manager.dashboard'
+            - '%textmaster.base_uri.app%'
+
+    pim_textmaster.controller:
+        class: '%pim_textmaster.controller.class%'
+        arguments:
+            - '%textmaster.base_uri.app%'

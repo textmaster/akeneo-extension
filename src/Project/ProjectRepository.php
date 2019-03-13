@@ -13,4 +13,19 @@ use Doctrine\ORM\EntityRepository;
  */
 class ProjectRepository extends EntityRepository
 {
+    /**
+     * Remove projects by their code.
+     *
+     * @param array $projectCodes
+     */
+    public function removeProjectsByCode(array $projectCodes): void
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+
+        $queryBuilder->delete()
+            ->where($queryBuilder->expr()->in('p.code', ':codes'))
+            ->setParameter('codes', $projectCodes)
+            ->getQuery()
+            ->execute();
+    }
 }

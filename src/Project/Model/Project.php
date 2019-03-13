@@ -22,4 +22,28 @@ class Project extends BaseProject implements ProjectInterface
     {
         return $this->getProperty('documents_statuses');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLanguageFrom()
+    {
+        return $this->getProperty('language_from_code');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLanguageTo()
+    {
+        return $this->getProperty('language_to_code');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWordCountError()
+    {
+        return $this->getProperty('word_count_error');
+    }
 }

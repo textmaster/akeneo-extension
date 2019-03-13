@@ -1,0 +1,6 @@
+services:
+    pim_textmaster.extension.action.type.open_blank:
+        class: '%oro_datagrid.extension.action.type.navigate.class%'
+        shared: false
+        tags:
+            - { name:  oro_datagrid.extension.action.type, type: open-blank }

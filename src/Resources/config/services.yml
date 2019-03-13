@@ -1,9 +1,4 @@
 services:
-    pim_textmaster.controller.rest:
-        class: Pim\Bundle\TextmasterBundle\Controller\TextmasterRestController
-        arguments:
-            - '@pim_textmaster.repository.webapi'
-
     pim_textmaster.form.create_projects:
         class: Pim\Bundle\TextmasterBundle\Project\Form\CreateProjectType
         arguments:
@@ -13,13 +8,6 @@ services:
         tags:
             - { name: form.type, alias: textmaster_create_projects }
 
-    pim_textmaster.saver.project:
-        class: Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@event_dispatcher'
-            - 'Pim\Bundle\TextmasterBundle\Entity\Project'
-
     pim_textmaster.remover.project:
         class: Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Remover\BaseRemover
         arguments:
@@ -27,35 +15,18 @@ services:
             - '@event_dispatcher'
             - 'Pim\Bundle\TextmasterBundle\Entity\Project'
 
-    pim_textmaster.repository.webapi:
-        class: Pim\Bundle\TextmasterBundle\Api\WebApiRepository
-        public: false
-        arguments:
-            - '@worldia.textmaster.api.client'
-
     pim_textmaster.project.builder:
         class: Pim\Bundle\TextmasterBundle\Project\Builder
         public: false
         arguments:
             - '@oro_config.global'
+            - '@akeneo_storage_utils.doctrine.object_detacher'
             - '@monolog.logger.textmaster'
         tags:
             - { name: monolog.logger, channel: textmaster }
-
-    pim_textmaster.document.updater:
-        class: Pim\Bundle\TextmasterBundle\Product\Updater
-        arguments:
-            - '@pim_catalog.repository.product'
-            - '@pim_catalog.updater.product'
 
     pim_textmaster.locale.finder:
         class: Pim\Bundle\TextmasterBundle\Locale\LocaleFinder
         arguments:
             - '@pim_textmaster.repository.webapi'
             - '@pim_catalog.repository.locale'
-
-    pim_textmaster.repository.project:
-        class: Pim\Bundle\TextmasterBundle\Project\ProjectRepository
-        factory: ['@doctrine.orm.entity_manager', 'getRepository']
-        arguments:
-            - Pim\Bundle\TextmasterBundle\Entity\Project

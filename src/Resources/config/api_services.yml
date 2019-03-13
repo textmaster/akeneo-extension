@@ -9,7 +9,7 @@ services:
         factory: ['@pim_textmaster.api.httpclient_factory', 'createHttpClient']
         arguments:
             -
-                base_uri: '%textmaster.base_uri%'
+                base_uri: '%textmaster.base_uri.api%'
                 headers:
                     X-Partner-Id: 43254561-62f2-4930-858e-2e17c8a77265
 
