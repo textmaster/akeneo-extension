@@ -4,7 +4,7 @@ namespace Pim\Bundle\TextmasterBundle\Project\Form;
 
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\MassAction\Operation\CreateProjects;
-use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

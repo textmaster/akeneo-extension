@@ -2,10 +2,10 @@
 
 namespace Pim\Bundle\TextmasterBundle\Step;
 
-use Akeneo\Component\Batch\Item\InvalidItemException;
-use Akeneo\Component\Batch\Model\StepExecution;
-use Akeneo\Component\Batch\Model\Warning;
-use Pim\Component\Connector\Step\TaskletStep as ParentStep;
+use Akeneo\Tool\Component\Batch\Item\InvalidItemException;
+use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use Akeneo\Tool\Component\Batch\Model\Warning;
+use Akeneo\Tool\Component\Connector\Step\TaskletStep as ParentStep;
 
 /**
  * Class TaskletStep.

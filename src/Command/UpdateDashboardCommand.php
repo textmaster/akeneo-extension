@@ -2,9 +2,9 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
-use Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Detacher\ObjectDetacher;
-use Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver;
-use Pim\Bundle\CatalogBundle\Doctrine\ORM\Repository\ProductRepository;
+use Akeneo\Tool\Bundle\StorageUtilsBundle\Doctrine\Common\Detacher\ObjectDetacher;
+use Akeneo\Tool\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver;
+use Akeneo\Pim\Enrichment\Bundle\Doctrine\ORM\Repository\ProductRepository;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository;
 use Pim\Bundle\TextmasterBundle\Entity\Document;

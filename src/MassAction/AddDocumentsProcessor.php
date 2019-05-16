@@ -2,16 +2,16 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\ExecutionContext;
-use Akeneo\Component\StorageUtils\Detacher\ObjectDetacherInterface;
+use Akeneo\Tool\Component\Batch\Item\ExecutionContext;
+use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Doctrine\Common\Util\ClassUtils;
-use Pim\Bundle\EnrichBundle\Connector\Processor\AbstractProcessor;
+use Akeneo\Pim\Enrichment\Component\Product\Connector\Processor\MassEdit\AbstractProcessor;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\Locale\LocaleFinderInterface;
 use Pim\Bundle\TextmasterBundle\Project\BuilderInterface;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
-use Pim\Component\Catalog\Model\ProductInterface;
-use Pim\Component\Catalog\Model\ProductModel;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -87,9 +87,15 @@ class AddDocumentsProcessor extends AbstractProcessor
                 $this->stepExecution->incrementSummaryInfo('documents_added');
             }
 
-            $this->logger->debug(
-                sprintf('Add %d documents to project %s', count($project->getDocuments()), $project->getCode())
-            );
+            if (!is_array($project->getDocuments())) {
+                var_dump($product->getIdentifier());
+            }
+
+            if (null !== $project->getDocuments()) {
+                $this->logger->debug(
+                    sprintf('Add %d documents to project %s', count($project->getDocuments()), $project->getCode())
+                );
+            }
         }
 
         $this->detacher->detach($product);

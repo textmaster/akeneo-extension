@@ -2,12 +2,12 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\ExecutionContext;
-use Akeneo\Component\Batch\Model\StepExecution;
+use Akeneo\Tool\Component\Batch\Item\ExecutionContext;
+use Akeneo\Tool\Component\Batch\Model\StepExecution;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
-use Pim\Component\Connector\Step\TaskletInterface;
+use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**

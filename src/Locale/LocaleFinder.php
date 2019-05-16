@@ -3,7 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle\Locale;
 
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
-use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
 
 /**
  * Locale finder utility. Everything to find locales and code from one system to the other.

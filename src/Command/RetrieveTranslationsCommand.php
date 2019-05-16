@@ -2,15 +2,15 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
-use Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Remover\BaseRemover;
-use Akeneo\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver;
-use Akeneo\Component\StorageUtils\Saver\BulkSaverInterface;
+use Akeneo\Tool\Bundle\StorageUtilsBundle\Doctrine\Common\Remover\BaseRemover;
+use Akeneo\Tool\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver;
+use Akeneo\Tool\Component\StorageUtils\Saver\BulkSaverInterface;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\Locale\LocaleFinder;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
 use Pim\Bundle\TextmasterBundle\Updater\ProductModelUpdater;
-use Pim\Component\Catalog\Model\ProductInterface;
-use Pim\Component\Catalog\Model\ProductModelInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -76,7 +76,7 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         $this->output = $output;
 
         // Random delay to start to not overload TextMaster servers at the same time
-        $sleepTime = rand(1, 3);
+        $sleepTime = rand(1, 300);
         $this->writeMessage(sprintf('Sleep for %d seconds', $sleepTime));
         sleep($sleepTime);
 

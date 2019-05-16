@@ -12,6 +12,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
+| v3.0.*                      | v3.0.*                       |
 | v2.4.*                      | v2.3.* + API template        |
 |                             | + Dashboard + Product model  |
 | v2.3.*                      | v2.3.* + API template        |
@@ -53,7 +54,7 @@ You can check translation progress with the dashboard :
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension 2.3
+composer require textmaster/akeneo-extension 3.0
 ```
 
 Register your bundle in the `AppKernel::registerProjectBundles`:
@@ -80,8 +81,8 @@ Optional : Add those parameters into app/config/parameters.yml to use textmaster
 ```
 parameters:
     ...
-    textmaster.base_uri.api: 'https://api.textmastersandbox.com/v1'
-    textmaster.base_uri.app: 'https://app.textmastersandbox.com'
+    textmaster.base_uri.api: 'https://api.textmasterstaging.comv1'
+    textmaster.base_uri.app: 'https://app.textmasterstaging.com'
 ```
 
 Update the database schema and regenerate your cache and assets:

@@ -17,14 +17,14 @@ services:
                 type: '%pim_enrich.job.mass_edit_type%'
 
     pim_textmaster.mass_edit.job.job_parameters.default_values_provider.start_projects:
-        class: '%pim_enrich.connector.job.job_parameters.default_values_provider.product_mass_edit.class%'
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\DefaultValueProvider\ProductMassEdit'
         arguments:
             - ['textmaster_start_projects']
         tags:
             - { name: akeneo_batch.job.job_parameters.default_values_provider }
 
     pim_textmaster.mass_edit.job.job_parameters.constraint_collection_provider.start_projects:
-        class: '%pim_enrich.connector.job.job_parameters.constraint_collection_provider.product_mass_edit.class%'
+        class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\ConstraintCollectionProvider\ProductMassEdit'
         arguments:
             - ['textmaster_start_projects']
         tags:
@@ -57,7 +57,7 @@ services:
             - '@pim_textmaster.tasklet.send_projects'
 
     pim_textmaster.mass_edit.step.launch_projects:
-        class: Pim\Bundle\TextmasterBundle\Step\FinalizeProjectsTaskletStep
+        class: 'Pim\Bundle\TextmasterBundle\Step\FinalizeProjectsTaskletStep'
         arguments:
             - 'textmaster.step.finalize_projects'
             - '@event_dispatcher'

@@ -4,7 +4,7 @@ namespace Pim\Bundle\TextmasterBundle\Doctrine\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Pim\Bundle\DataGridBundle\Doctrine\ORM\Repository\DatagridRepositoryInterface;
+use Oro\Bundle\PimDataGridBundle\Doctrine\ORM\Repository\DatagridRepositoryInterface;
 use Pim\Bundle\TextmasterBundle\Model\DocumentInterface;
 
 /**

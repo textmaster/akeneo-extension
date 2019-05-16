@@ -1,11 +1,11 @@
 services:
     pim_textmaster.api.httpclient_factory:
-        class: Pim\Bundle\TextmasterBundle\Api\ClientFactory
+        class: 'Pim\Bundle\TextmasterBundle\Api\ClientFactory'
         arguments:
             - '@oro_config.global'
 
     worldia.textmaster.api.httpclient:
-        class: Textmaster\HttpClient\HttpClient
+        class: 'Textmaster\HttpClient\HttpClient'
         factory: ['@pim_textmaster.api.httpclient_factory', 'createHttpClient']
         arguments:
             -
@@ -14,12 +14,12 @@ services:
                     X-Partner-Id: 43254561-62f2-4930-858e-2e17c8a77265
 
     worldia.textmaster.api.client:
-        class: Textmaster\Client
+        class: 'Textmaster\Client'
         arguments:
             - '@worldia.textmaster.api.httpclient'
             - '@event_dispatcher'
 
     worldia.textmaster.api.manager:
-        class : Textmaster\Manager
+        class : 'Textmaster\Manager'
         arguments:
             - '@worldia.textmaster.api.client'
