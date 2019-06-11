@@ -87,10 +87,6 @@ class AddDocumentsProcessor extends AbstractProcessor
                 $this->stepExecution->incrementSummaryInfo('documents_added');
             }
 
-            if (!is_array($project->getDocuments())) {
-                var_dump($product->getIdentifier());
-            }
-
             if (null !== $project->getDocuments()) {
                 $this->logger->debug(
                     sprintf('Add %d documents to project %s', count($project->getDocuments()), $project->getCode())
