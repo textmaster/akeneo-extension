@@ -8,6 +8,11 @@ Also available on the Akeneo marketplace: https://marketplace.akeneo.com/
 
 The Textmaster Akeneo extension allows you to easily translate your Akeneo product contents to a large quantity of languages with a simple mass edit process.
 
+## NOTES 
+- Please know that this module is not compatible with other TextMaster modules. If you want to use another TextMaster module, make sure to use another TextMaster account. 
+- The TextMaster module with Akeneo is not compatible with the feature ‘Organization’ we recently released. It is, however, in our roadmap. We invite you to consult it or contact us if you have any request. 
+
+
 ## Requirements
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
@@ -81,7 +86,7 @@ Optional : Add those parameters into app/config/parameters.yml to use textmaster
 ```
 parameters:
     ...
-    textmaster.base_uri.api: 'https://api.textmasterstaging.comv1'
+    textmaster.base_uri.api: 'https://api.textmasterstaging.com/v1'
     textmaster.base_uri.app: 'https://app.textmasterstaging.com'
 ```
 
@@ -90,8 +95,8 @@ Update the database schema and regenerate your cache and assets:
 ```
 rm -rf var/cache/* web/bundles/* web/js/* web/css/*
 bin/console doctrine:schema:update --force --env=prod
-bin/console p:i:a --symlink --env=prod
-bin/console a:i --symlink --env=prod
+bin/console p:i:a --env=prod
+bin/console a:i --env=prod
 node yarn run webpack
 find ./ -type d -exec chmod 755 {} \;
 find ./ -type f -exec chmod 644 {} \;
