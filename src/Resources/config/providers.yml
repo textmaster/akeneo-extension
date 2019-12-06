@@ -1,0 +1,14 @@
+parameters:
+    pim_textmaster.provider.datagrid.class: 'Pim\Bundle\TextmasterBundle\Provider\DatagridProvider'
+    pim_textmaster.provider.locale.class:   'Pim\Bundle\TextmasterBundle\Provider\LocaleProvider'
+
+services:
+    pim_textmaster.provider.datagrid:
+        class: '%pim_textmaster.provider.datagrid.class%'
+        arguments:
+            - '@pim_localization.translator'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_catalog.repository.locale'
+            -
+    pim_textmaster.provider.locale:
+        class: '%pim_textmaster.provider.locale.class%'

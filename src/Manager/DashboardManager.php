@@ -4,6 +4,12 @@ namespace Pim\Bundle\TextmasterBundle\Manager;
 
 use Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository;
 
+/**
+ * Class DashboardManager.
+ *
+ * @package Pim\Bundle\TextmasterBundle\Manager
+ * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
+ */
 class DashboardManager
 {
     /** @var DocumentRepository */

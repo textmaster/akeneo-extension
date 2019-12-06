@@ -1,0 +1,9 @@
+parameters:
+    pim_textmaster.writer.document.class: 'Akeneo\Tool\Component\Connector\Writer\Database\Writer'
+
+services:
+    pim_textmaster.writer.document:
+        class: '%pim_textmaster.writer.document.class%'
+        arguments:
+            - '@pim_textmaster.saver.document'
+            - '@akeneo_storage_utils.doctrine.object_detacher'

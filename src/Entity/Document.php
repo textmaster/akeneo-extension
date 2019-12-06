@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Entity;
 
+use DateTime;
 use Pim\Bundle\TextmasterBundle\Model\DocumentInterface;
 
 /**
@@ -15,11 +16,11 @@ class Document implements DocumentInterface
     /** @var int */
     protected $id;
 
-    /** @var string */
-    protected $projectIdentifier;
+    /** @var int */
+    protected $projectId;
 
     /** @var string */
-    protected $documentIdentifier;
+    protected $textmasterDocumentId;
 
     /** @var int */
     protected $productId;
@@ -31,16 +32,25 @@ class Document implements DocumentInterface
     protected $productLabel;
 
     /** @var string */
-    protected $language;
+    protected $dataToSend;
+
+    /** @var string */
+    protected $languageFrom;
+
+    /** @var string */
+    protected $languageTo;
 
     /** @var string */
     protected $status;
 
-    /** @var \DateTime */
+    /** @var DateTime */
+    protected $createdAt;
+
+    /** @var DateTime */
     protected $updatedAt;
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getId()
     {
@@ -48,47 +58,43 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getProjectIdentifier(): string
+    public function getProjectId(): int
     {
-        return $this->projectIdentifier;
+        return $this->projectId;
     }
 
     /**
-     * @param string $projectIdentifier
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
-    public function setProjectIdentifier(string $projectIdentifier): DocumentInterface
+    public function setProjectId(int $projectId): DocumentInterface
     {
-        $this->projectIdentifier = $projectIdentifier;
+        $this->projectId = $projectId;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getDocumentIdentifier(): string
+    public function getTextmasterDocumentId(): string
     {
-        return $this->documentIdentifier;
+        return $this->textmasterDocumentId;
     }
 
     /**
-     * @param string $documentIdentifier
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
-    public function setDocumentIdentifier(string $documentIdentifier): DocumentInterface
+    public function setTextmasterDocumentId(string $textmasterDocumentId): DocumentInterface
     {
-        $this->documentIdentifier = $documentIdentifier;
+        $this->textmasterDocumentId = $textmasterDocumentId;
 
         return $this;
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getProductId(): int
     {
@@ -96,9 +102,7 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @param int $productId
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
     public function setProductId(int $productId): DocumentInterface
     {
@@ -108,7 +112,7 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getProductIdentifier(): string
     {
@@ -116,9 +120,7 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @param string $productIdentifier
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
     public function setProductIdentifier(string $productIdentifier): DocumentInterface
     {
@@ -128,7 +130,7 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getProductLabel(): string
     {
@@ -136,9 +138,7 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @param string $productLabel
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
     public function setProductLabel(string $productLabel): DocumentInterface
     {
@@ -148,27 +148,61 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function getLanguage(): string
+    public function getDataToSend(): string
     {
-        return $this->language;
+        return $this->dataToSend;
     }
 
     /**
-     * @param string $language
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
-    public function setLanguage(string $language): DocumentInterface
+    public function setDataToSend(string $dataToSend): DocumentInterface
     {
-        $this->language = $language;
+        $this->dataToSend = $dataToSend;
 
         return $this;
     }
 
     /**
-     * @return string
+     * @inheritdoc
+     */
+    public function getLanguageFrom(): string
+    {
+        return $this->languageFrom;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setLanguageFrom(string $languageFrom): DocumentInterface
+    {
+        $this->languageFrom = $languageFrom;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getLanguageTo(): string
+    {
+        return $this->languageTo;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setLanguageTo(string $languageTo): DocumentInterface
+    {
+        $this->languageTo = $languageTo;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function getStatus(): string
     {
@@ -176,9 +210,7 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @param string $status
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
     public function setStatus(string $status): DocumentInterface
     {
@@ -188,19 +220,35 @@ class Document implements DocumentInterface
     }
 
     /**
-     * @return \DateTime
+     * @inheritdoc
      */
-    public function getUpdatedAt(): \DateTime
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCreatedAt(?DateTime $createdAt): DocumentInterface
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param \DateTime $updatedAt
-     *
-     * @return DocumentInterface
+     * @inheritdoc
      */
-    public function setUpdatedAt($updatedAt): DocumentInterface
+    public function setUpdatedAt(?DateTime $updatedAt): DocumentInterface
     {
         $this->updatedAt = $updatedAt;
 

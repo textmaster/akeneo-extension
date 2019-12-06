@@ -1,8 +1,24 @@
 parameters:
-    pim_textmaster.manager.dashboard.class: Pim\Bundle\TextmasterBundle\Manager\DashboardManager
+    pim_textmaster.manager.dashboard.class: 'Pim\Bundle\TextmasterBundle\Manager\DashboardManager'
+    pim_textmaster.manager.document.class:  'Pim\Bundle\TextmasterBundle\Manager\DocumentManager'
+    pim_textmaster.manager.project.class:   'Pim\Bundle\TextmasterBundle\Manager\ProjectManager'
 
 services:
     pim_textmaster.manager.dashboard:
         class: '%pim_textmaster.manager.dashboard.class%'
         arguments:
             - '@pim_textmaster.repository.document'
+
+    pim_textmaster.manager.document:
+        class: '%pim_textmaster.manager.document.class%'
+        arguments:
+            - '@pim_textmaster.factory.document'
+            - '@pim_textmaster.repository.document'
+            - '@pim_textmaster.saver.document'
+
+    pim_textmaster.manager.project:
+        class: '%pim_textmaster.manager.project.class%'
+        arguments:
+            - '@pim_textmaster.factory.project'
+            - '@pim_textmaster.repository.project'
+            - '@pim_textmaster.saver.project'

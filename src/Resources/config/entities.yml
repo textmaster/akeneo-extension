@@ -1,3 +1,5 @@
 parameters:
-    pim_textmaster.entity.project.class:  Pim\Bundle\TextmasterBundle\Entity\Project
-    pim_textmaster.entity.document.class: Pim\Bundle\TextmasterBundle\Entity\Document
+    pim_textmaster.entity.document.class:     'Pim\Bundle\TextmasterBundle\Entity\Document'
+    pim_textmaster.entity.project.class:      'Pim\Bundle\TextmasterBundle\Entity\Project'
+    pim_textmaster.entity.document.interface: 'Pim\Bundle\TextmasterBundle\Model\DocumentInterface'
+    pim_textmaster.entity.project.interface:  'Pim\Bundle\TextmasterBundle\Model\ProjectInterface'

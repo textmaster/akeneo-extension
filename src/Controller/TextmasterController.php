@@ -27,18 +27,18 @@ class TextmasterController extends AbstractController
     }
 
     /**
-     * @param string $projectIdentifier
-     * @param string $documentIdentifier
+     * @param string $projectId
+     * @param string $textmasterDocumentId
      *
      * @return RedirectResponse
      */
-    public function openBlankToProject(string $projectIdentifier, string $documentIdentifier): RedirectResponse
+    public function openBlankToProject(string $projectId, string $textmasterDocumentId): RedirectResponse
     {
         $url = sprintf(
             '%s/clients/projects/%s/documents/%s',
             rtrim($this->appBaseUri, '/'),
-            $projectIdentifier,
-            $documentIdentifier
+            $projectId,
+            $textmasterDocumentId
         );
 
         return $this->redirect($url);

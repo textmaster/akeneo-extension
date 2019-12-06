@@ -46,4 +46,20 @@ class Project extends BaseProject implements ProjectInterface
     {
         return $this->getProperty('word_count_error');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isAutoLaunch(): bool
+    {
+        return $this->getProperty('auto_launch');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isFinalized(): bool
+    {
+        return $this->getProperty('finalized');
+    }
 }

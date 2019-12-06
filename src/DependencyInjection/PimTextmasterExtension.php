@@ -15,6 +15,9 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 class PimTextmasterExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
     public function prepend(ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -34,16 +37,19 @@ class PimTextmasterExtension extends Extension implements PrependExtensionInterf
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('actions.yml');
         $loader->load('api_services.yml');
+        $loader->load('builders.yml');
         $loader->load('controllers.yml');
         $loader->load('entities.yml');
+        $loader->load('factories.yml');
         $loader->load('jobs.yml');
         $loader->load('managers.yml');
         $loader->load('parameters.yml');
         $loader->load('processors.yml');
+        $loader->load('providers.yml');
         $loader->load('repositories.yml');
         $loader->load('savers.yml');
-        $loader->load('services.yml');
-        $loader->load('tasklets.yml');
+        $loader->load('steps.yml');
         $loader->load('updaters.yml');
+        $loader->load('writers.yml');
     }
 }

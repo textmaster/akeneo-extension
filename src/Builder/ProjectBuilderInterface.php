@@ -1,6 +1,8 @@
 <?php
 
-namespace Pim\Bundle\TextmasterBundle\Project;
+namespace Pim\Bundle\TextmasterBundle\Builder;
+
+use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
 
 /**
  * TextMaster builder.
@@ -10,7 +12,7 @@ namespace Pim\Bundle\TextmasterBundle\Project;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-interface BuilderInterface
+interface ProjectBuilderInterface
 {
     /**
      * @param ProjectInterface $project

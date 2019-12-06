@@ -6,10 +6,9 @@ services:
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
             -
-                - '@pim_textmaster.mass_edit.step.create_projects'
-                - '@pim_textmaster.mass_edit.step.add_documents'
-                - '@pim_textmaster.mass_edit.step.send_projects'
-                - '@pim_textmaster.mass_edit.step.launch_projects'
+                - '@pim_textmaster.step.prepare_projects'
+                - '@pim_textmaster.step.add_documents'
+                - '@pim_textmaster.step.flag_projects_to_send'
         tags:
             -
                 name: 'akeneo_batch.job'
@@ -19,47 +18,13 @@ services:
     pim_textmaster.mass_edit.job.job_parameters.default_values_provider.start_projects:
         class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\DefaultValueProvider\ProductMassEdit'
         arguments:
-            - ['textmaster_start_projects']
+            - ['textmaster_start_projects', 'textmaster_configure_projects']
         tags:
             - { name: akeneo_batch.job.job_parameters.default_values_provider }
 
     pim_textmaster.mass_edit.job.job_parameters.constraint_collection_provider.start_projects:
         class: 'Akeneo\Pim\Enrichment\Component\Product\Connector\Job\JobParameters\ConstraintCollectionProvider\ProductMassEdit'
         arguments:
-            - ['textmaster_start_projects']
+            - ['textmaster_start_projects', 'textmaster_configure_projects']
         tags:
             - { name: akeneo_batch.job.job_parameters.constraint_collection_provider }
-
-    pim_textmaster.mass_edit.step.create_projects:
-        class: '%pim_connector.step.tasklet.class%'
-        arguments:
-            - 'textmaster.step.create_projects'
-            - '@event_dispatcher'
-            - '@akeneo_batch.job_repository'
-            - '@pim_textmaster.tasklet.create_projects'
-
-    pim_textmaster.mass_edit.step.add_documents:
-        class: '%pim_connector.step.item_step.class%'
-        arguments:
-            - 'textmaster.step.add_documents'
-            - '@event_dispatcher'
-            - '@akeneo_batch.job_repository'
-            - '@pim_enrich.reader.database.product_and_product_model'
-            - '@pim_textmaster.mass_edit.processor.add_documents'
-            - '@pim_connector.writer.dummy_item'
-
-    pim_textmaster.mass_edit.step.send_projects:
-        class: '%pim_connector.step.tasklet.class%'
-        arguments:
-            - 'textmaster.step.send_projects'
-            - '@event_dispatcher'
-            - '@akeneo_batch.job_repository'
-            - '@pim_textmaster.tasklet.send_projects'
-
-    pim_textmaster.mass_edit.step.launch_projects:
-        class: 'Pim\Bundle\TextmasterBundle\Step\FinalizeProjectsTaskletStep'
-        arguments:
-            - 'textmaster.step.finalize_projects'
-            - '@event_dispatcher'
-            - '@akeneo_batch.job_repository'
-            - '@pim_textmaster.tasklet.finalize_projects'

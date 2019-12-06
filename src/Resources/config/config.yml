@@ -2,20 +2,20 @@
 pim_textmaster:
     settings:
         api_key:
-            value: your_api_key
-            scope: app
+            value: 'your_api_key'
+            scope: 'app'
         api_secret:
-            value: your_api_secret
-            scope: app
+            value: 'your_api_secret'
+            scope: 'app'
         attributes:
             value: ~
-            scope: app
+            scope: 'app'
 
 monolog:
     channels: ['textmaster']
     handlers:
         textmaster:
-            type:  stream
-            path:  %kernel.logs_dir%/textmaster_%kernel.environment%.log
-            level: info
-            channels: textmaster
+            type:     'stream'
+            path:     '%kernel.logs_dir%/textmaster_%kernel.environment%.log'
+            level:    'info'
+            channels: 'textmaster'

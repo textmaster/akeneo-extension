@@ -1,3 +1,7 @@
+|:---------------------------:|:----------------------------:|
+# Need to be updated for the new version !!!
+|:---------------------------:|:----------------------------:|
+
 # Textmaster extension for Akeneo PIM
 
 [![Build Status](https://travis-ci.org/textmaster/akeneo-extension.svg?branch=master)](https://travis-ci.org/textmaster/akeneo-extension)
@@ -17,6 +21,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
+| v3.2.*                      | v3.2.*                       |
 | v3.0.*                      | v3.0.*                       |
 | v2.4.*                      | v2.3.* + API template        |
 |                             | + Dashboard + Product model  |

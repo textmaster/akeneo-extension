@@ -16,22 +16,23 @@ use Textmaster\Model\ProjectInterface as BaseProjectInterface;
 interface ProjectInterface extends BaseProjectInterface
 {
     /**
-     * {@inheritdoc}
-     */
-    public function getDocumentsStatuses();
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLanguageFrom();
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLanguageTo();
-
-    /**
-     * {@inheritdoc}
+     * Get word count error.
+     *
+     * @return mixed
      */
     public function getWordCountError();
+
+    /**
+     * Get auto launch value.
+     *
+     * @return bool
+     */
+    public function isAutoLaunch(): bool;
+
+    /**
+     * Get auto launch value.
+     *
+     * @return bool
+     */
+    public function isFinalized(): bool;
 }

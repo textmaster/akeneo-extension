@@ -1,10 +1,13 @@
 <?php
 
-namespace Pim\Bundle\TextmasterBundle\Project;
+namespace Pim\Bundle\TextmasterBundle\Builder;
 
-use Akeneo\Pim\Structure\Bundle\Doctrine\ORM\Repository\AttributeRepository;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyVariantInterface;
+use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
+use Exception;
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
 use Pim\Bundle\TextmasterBundle\Project\Exception\RuntimeException;
 use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
@@ -13,8 +16,6 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Textmaster\Model\DocumentInterface;
 use Doctrine\Common\Util\ClassUtils;
@@ -27,7 +28,7 @@ use Doctrine\Common\Util\ClassUtils;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class Builder implements BuilderInterface
+class ProjectBuilder implements ProjectBuilderInterface
 {
     /** @var array */
     protected $options = [];
@@ -38,23 +39,14 @@ class Builder implements BuilderInterface
     /** @var ObjectDetacherInterface */
     protected $objectDetacher;
 
-    /** @var LoggerInterface */
-    protected $logger;
+    /** @var AttributeRepositoryInterface */
+    protected $attributeRepository;
 
     /**@var array */
     protected $textmasterAttributes;
 
-    /**@var array */
-    protected $validAttribute;
-
     /** @var array */
     protected $availableAttributes = [];
-
-    /** @var Container */
-    protected $container;
-
-    /** @var AttributeRepository */
-    protected $attributeRepository;
 
     /** @var array */
     protected $attributes = [];
@@ -62,27 +54,22 @@ class Builder implements BuilderInterface
     /**
      * Builder constructor.
      *
-     * @param ConfigManager           $configManager
-     * @param ObjectDetacherInterface $objectDetacher
-     * @param LoggerInterface         $logger
-     * @param Container               $container
-     *
-     * @throws \Exception
+     * @param ConfigManager                $configManager
+     * @param ObjectDetacherInterface      $objectDetacher
+     * @param AttributeRepositoryInterface $attributeRepository
      */
     public function __construct(
         ConfigManager $configManager,
         ObjectDetacherInterface $objectDetacher,
-        LoggerInterface $logger,
-        Container $container
+        AttributeRepositoryInterface $attributeRepository
     ) {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
-        $this->options              = $resolver->resolve([]);
-        $this->configManager        = $configManager;
-        $this->objectDetacher       = $objectDetacher;
-        $this->logger               = $logger;
-        $this->container            = $container;
-        $this->attributeRepository  = $this->container->get('pim_catalog.repository.attribute');
+        $this->options = $resolver->resolve([]);
+
+        $this->configManager       = $configManager;
+        $this->objectDetacher      = $objectDetacher;
+        $this->attributeRepository = $attributeRepository;
     }
 
     /**
@@ -95,8 +82,6 @@ class Builder implements BuilderInterface
             'api_template_id' => $project->getApiTemplateId(),
         ];
 
-        $this->logger->debug(sprintf('Create project data: %s', json_encode($data)));
-
         return $data;
     }
 
@@ -105,85 +90,87 @@ class Builder implements BuilderInterface
      */
     public function createDocumentData($product, $localeCode)
     {
-        $docData = $this->getProductValuesTitle($product);
-
-        $originalContent = [];
         $wysiwyg         = false;
+        $originalContent = [];
 
         /** @var ValueInterface $productValue */
-        foreach ($docData['product_values'] as $productValue) {
-            $code = $productValue->getAttributeCode();
-            $this->getAttributeByCode($code);
-            $attribute = $this->attributes[$code];
+        foreach ($this->getDataToTranslate($product) as $productValue) {
+            $attribute = $this->getAttributeByCode($productValue->getAttributeCode());
 
-            if (
-                $this->isValidForTranslation($attribute)
-                && $localeCode === $productValue->getLocaleCode()
-            ) {
-                $key            = $this->createProductValueKey($productValue);
-                $originalPhrase = trim($productValue->getData());
-                if ($attribute->isWysiwygEnabled()) {
-                    $wysiwyg = true;
-                }
-                if (!empty($originalPhrase)) {
-                    $originalContent[$key]['original_phrase'] = $originalPhrase;
-                }
+            if (false === $this->isValidForTranslation($attribute) || $productValue->getLocaleCode() !== $localeCode) {
+                continue;
+            }
+
+            $originalPhrase = trim($productValue->getData());
+
+            if ($attribute->isWysiwygEnabled()) {
+                $wysiwyg = true;
+            }
+
+            if (!empty($originalPhrase)) {
+                $originalContent[$this->createProductValueKey($productValue)]['original_phrase'] = $originalPhrase;
             }
         }
 
+        if (empty($originalContent)) {
+            return null;
+        }
+
         $documentData = [
-            'title'              => $docData['title'],
+            'title'              => $this->getDocumentTitle($product),
             'original_content'   => $originalContent,
             'perform_word_count' => true,
             'type'               => DocumentInterface::TYPE_KEY_VALUE,
             'markup_in_content'  => $wysiwyg,
         ];
 
-        if (empty($originalContent)) {
-            return null;
+        return $documentData;
+    }
+
+    /**
+     * Retrieve document title from product or product model.
+     *
+     * @param EntityWithValuesInterface $product
+     *
+     * @return string
+     */
+    protected function getDocumentTitle(EntityWithValuesInterface $product): string
+    {
+        if ($product instanceof ProductInterface) {
+            return $product->getIdentifier();
+        } elseif ($product instanceof ProductModel) {
+            return sprintf('product_model|%s', $product->getCode());
         }
 
-        $this->logger->debug(sprintf('Create document data: %s', json_encode($documentData)));
-
-        return $documentData;
+        throw new Exception(
+            sprintf(
+                'Processed item must implement ProductInterface or Product Model, %s given',
+                ClassUtils::getClass($product)
+            )
+        );
     }
 
 
     /**
-     * getProductValuesTitle
+     * Retrieve productVal
      *
      * @param EntityWithValuesInterface $product
      *
      * @return array
-     * @throws \Exception
      */
-    private function getProductValuesTitle(EntityWithValuesInterface $product): array
+    private function getDataToTranslate(EntityWithValuesInterface $product): array
     {
-        if ($product instanceof ProductInterface) {
-            $title = $product->getIdentifier();
-        } elseif ($product instanceof ProductModel) {
-            $title = sprintf('product_model|%s', $product->getCode());
-        } else {
-            throw new \Exception(
-                sprintf(
-                    'Processed item must implement ProductInterface or Product Model, %s given',
-                    ClassUtils::getClass($product)
-                )
-            );
-        }
-
-        $productValues       = [];
         $availableAttributes = $this->getAvailableAttributes($product);
+        $productValues       = [];
 
         /** @var ValueInterface $productValue */
         foreach ($product->getValues() as $productValue) {
-            #if (\in_array($productValue->getAttribute()->getCode(), $availableAttributes)) {
-            if (\in_array($productValue->getAttributeCode(), $availableAttributes)) {
+            if (in_array($productValue->getAttributeCode(), $availableAttributes)) {
                 $productValues[] = $productValue;
             }
         }
 
-        return ['product_values' => $productValues, 'title' => $title];
+        return $productValues;
     }
 
     /**
@@ -195,17 +182,14 @@ class Builder implements BuilderInterface
      */
     protected function getAvailableAttributes(EntityWithValuesInterface $product): array
     {
-        $availableAttributes = array_intersect($this->getTextmasterAttributes(), $product->getUsedAttributeCodes());
+        $availableAttributes = $this->getAvailableAttributesFromProduct($product);
 
         if ($product instanceof ProductModelInterface) {
             $familyVariantCode = $product->getFamilyVariant()->getCode();
 
-            if (0 === $product->getLevel()) {
+            if (EntityWithFamilyVariantInterface::ROOT_VARIATION_LEVEL === $product->getLevel()) {
                 $this->availableAttributes[$familyVariantCode] = $product->getUsedAttributeCodes();
-            }
-
-
-            if (1 === $product->getLevel()) {
+            } else {
                 if (!isset($this->availableAttributes[$familyVariantCode])) {
                     $this->availableAttributes[$familyVariantCode] = $this->getAvailableAttributes(
                         $product->getParent()
@@ -225,7 +209,7 @@ class Builder implements BuilderInterface
     }
 
     /**
-     * Retrieve available attributes from product.
+     * Retrieve available attributes from product given.
      *
      * @param EntityWithValuesInterface $product
      *
@@ -236,7 +220,6 @@ class Builder implements BuilderInterface
         return array_intersect($this->getTextmasterAttributes(), $product->getUsedAttributeCodes());
     }
 
-
     /**
      * Create the document key for a product value
      *
@@ -246,18 +229,15 @@ class Builder implements BuilderInterface
      */
     public function createProductValueKey(ValueInterface $productValue): string
     {
-        $attributeCode = $productValue->getAttributeCode();
-
         if ($productValue->isScopable()) {
-            $attributeCode = sprintf('%s-%s', $attributeCode, $productValue->getScopeCode());
+            return sprintf('%s-%s', $productValue->getAttributeCode(), $productValue->getScopeCode());
         }
 
-        return $attributeCode;
+        return $productValue->getAttributeCode();
     }
 
-
     /**
-     * getTextmasterAttributes
+     * Retrieve textmaster's attributes to translate.
      *
      * @return string[]
      */
@@ -276,7 +256,7 @@ class Builder implements BuilderInterface
 
 
     /**
-     * isValidForTranslation
+     * Check if attribute is a text attribute.
      *
      * @param AttributeInterface $attribute
      *
@@ -284,12 +264,11 @@ class Builder implements BuilderInterface
      */
     protected function isValidForTranslation(AttributeInterface $attribute): bool
     {
-        if (!\in_array($attribute->getCode(), $this->getTextmasterAttributes())) {
+        if (!in_array($attribute->getCode(), $this->getTextmasterAttributes())) {
             return false;
         }
 
-        $isText = AttributeTypes::TEXT === $attribute->getType()
-            || AttributeTypes::TEXTAREA === $attribute->getType();
+        $isText = AttributeTypes::TEXT === $attribute->getType() || AttributeTypes::TEXTAREA === $attribute->getType();
 
         return $isText && $attribute->isLocalizable();
     }
@@ -307,13 +286,18 @@ class Builder implements BuilderInterface
     }
 
     /**
-     * getAttributeByCode
+     * Retrieve attribute by its code.
      *
-     * @param string $code
+     * @param $code
+     *
+     * @return AttributeInterface|null
      */
-    protected function getAttributeByCode($code) {
+    protected function getAttributeByCode($code): ?AttributeInterface
+    {
         if (!array_key_exists($code, $this->attributes)) {
             $this->attributes[$code] = $this->attributeRepository->findOneByIdentifier($code);
         }
+
+        return $this->attributes[$code];
     }
 }

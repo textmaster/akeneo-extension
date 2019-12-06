@@ -2,11 +2,9 @@
 
 namespace Pim\Bundle\TextmasterBundle\Api;
 
-use Pim\Bundle\TextmasterBundle\Project\Model\Project;
-use Pim\Bundle\TextmasterBundle\Project\Model\ProjectInterface;
+use Pim\Bundle\TextmasterBundle\Project\Model\Document as ApiDocument;
+use Pim\Bundle\TextmasterBundle\Project\Model\Project as ApiProject;
 use Textmaster\Client;
-use Textmaster\Exception\RuntimeException;
-use Textmaster\Model\Document;
 
 /**
  * Calls to TextMaster php API
@@ -29,22 +27,17 @@ class WebApiRepository implements WebApiRepositoryInterface
     }
 
     /**
-     * @param array  $documents
-     * @param string $projectId
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function sendProjectDocuments(array $documents, $projectId)
+    public function createDocument(string $textmasterProjectId, array $data)
     {
         $projectApi = $this->clientApi->project();
 
-        return $projectApi->documents($projectId)->batchCreate($documents);
+        return $projectApi->documents($textmasterProjectId)->create($data);
     }
 
     /**
-     * @param array $data
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function createProject(array $data)
     {
@@ -52,73 +45,23 @@ class WebApiRepository implements WebApiRepositoryInterface
     }
 
     /**
-     * @param array  $data
-     * @param string $projectId
-     *
-     * @return array
-     */
-    public function updateProject(array $data, $projectId)
-    {
-        return $this->clientApi->projects()->update($projectId, $data);
-    }
-
-    /**
-     * @param array $filters
-     *
-     * @return ProjectInterface[]
+     * {@inheritdoc}
      */
     public function getProjects(array $filters)
     {
         $projectApi = $this->clientApi->projects();
-        $response = $projectApi->filter($filters);
+        $response   = $projectApi->filter($filters);
 
         $projects = [];
         foreach ($response['projects'] as $projectData) {
-            $projects[] = new Project($this->clientApi, $projectData);
+            $projects[] = new ApiProject($this->clientApi, $projectData);
         }
 
         return $projects;
     }
 
     /**
-     * Retrieve all project from textmaster.
-     *
-     * @param array $filters
-     * @param array $projects
-     * @param null  $currentPage
-     *
-     * @return array
-     */
-    public function getAllProjects(array $filters, array &$projects = [], $currentPage = null): array
-    {
-        $projectApi = $this->clientApi->projects();
-
-        if (null !== $currentPage) {
-            $projectApi->setPage($currentPage);
-        }
-
-        $response = $projectApi->filter($filters);
-
-        foreach ($response['projects'] as $projectData) {
-            $projects[] = new Project($this->clientApi, $projectData);
-        }
-
-        if (null !== $response['total_pages'] && $currentPage < $response['total_pages']) {
-            $this->getAllProjects($filters, $projects, (int) $response['page'] + 1);
-        }
-
-        return $projects;
-    }
-
-    /**
-     * Retrieve all project from textmaster.
-     *
-     * @param array  $filters
-     * @param string $projectCode
-     * @param array  $documents
-     * @param null   $currentPage
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getAllDocuments(
         array $filters, string $projectCode, array &$documents = [], $currentPage = null
@@ -132,7 +75,7 @@ class WebApiRepository implements WebApiRepositoryInterface
         $response = $documentApi->filter($filters);
 
         foreach ($response['documents'] as $documentData) {
-            $documents[] = new Document($this->clientApi, $documentData);
+            $documents[] = new ApiDocument($this->clientApi, $documentData);
         }
 
         if (null !== $response['total_pages'] && 1 === $response['total_pages']) {
@@ -140,58 +83,25 @@ class WebApiRepository implements WebApiRepositoryInterface
         }
 
         if (null !== $response['total_pages'] && $currentPage < $response['total_pages']) {
-            $this->getAllDocuments($filters, $projectCode, $documents, (int) $response['page'] + 1);
+            $this->getAllDocuments($filters, $projectCode, $documents, (int)$response['page'] + 1);
         }
 
         return $documents;
     }
 
     /**
-     * @param array $filters
-     *
-     * @return string[]
-     */
-    public function getProjectCodes(array $filters)
-    {
-        $projects = $this->getProjects($filters);
-        $projectsCodes = [];
-        foreach ($projects as $project) {
-            $projectsCodes[] = $project->getId();
-        }
-
-        return $projectsCodes;
-    }
-
-    /**
-     * @param string $projectCode
-     *
-     * @return ProjectInterface
+     * {@inheritdoc}
      */
     public function getProject($projectCode)
     {
         $projectApi = $this->clientApi->project();
-        $response = $projectApi->show($projectCode);
+        $response   = $projectApi->show($projectCode);
 
-        return new Project($this->clientApi, $response);
+        return new ApiProject($this->clientApi, $response);
     }
 
     /**
-     * @param string $projectCode
-     *
-     * @return ProjectInterface
-     */
-    public function launchProject($projectCode)
-    {
-        $projectApi = $this->clientApi->project();
-        $response = $projectApi->launch($projectCode);
-
-        return new Project($this->clientApi, $response);
-    }
-
-    /**
-     * @param string $projectId
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function cancelProject($projectId)
     {
@@ -201,21 +111,7 @@ class WebApiRepository implements WebApiRepositoryInterface
     }
 
     /**
-     * @param string $projectId
-     *
-     * @return array
-     */
-    public function archiveProject($projectId)
-    {
-        $projectApi = $this->clientApi->project();
-
-        return $projectApi->archive($projectId);
-    }
-
-    /**
-     * @param string $projectId
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function finalizeProject($projectId)
     {
@@ -225,69 +121,7 @@ class WebApiRepository implements WebApiRepositoryInterface
     }
 
     /**
-     * @param array  $filters
-     * @param string $projectCode
-     *
-     * @return \Textmaster\Model\DocumentInterface[]
-     */
-    public function getDocuments(array $filters, $projectCode)
-    {
-        $documentsApi = $this->clientApi->project()->documents($projectCode);
-        $documents = $documentsApi->filter($filters);
-        $models = [];
-        foreach ($documents['documents'] as $documentData) {
-            $models[] = new Document($this->clientApi, $documentData);
-        }
-
-        return $models;
-    }
-
-    /**
-     * @param string[] $pimLocaleCodes
-     *
-     * @return \string[]
-     */
-    public function getAvailableLocaleCodes(array $pimLocaleCodes)
-    {
-        $pimLocaleCodes = array_map(function ($localeCode) {
-            return strtolower(str_replace('_', '-', $localeCode));
-        }, $pimLocaleCodes);
-
-        $availableLocales = [];
-        try {
-            $tmLocales = $this->clientApi->locales()->all();
-            foreach ($tmLocales as $tmLocale) {
-                $tmLocaleCode = strtolower($tmLocale['code']);
-                if (in_array($tmLocaleCode, $pimLocaleCodes)) {
-                    $availableLocales[] = $tmLocale['code'];
-                }
-            }
-        } catch (RuntimeException $e) {
-            $tmLocales = null;
-        }
-
-        return $availableLocales;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCategories()
-    {
-        $response = $this->clientApi->categories()->all();
-
-        $categories = [];
-        foreach ($response['categories'] as $category) {
-            $categories[$category['code']] = $category['value'];
-        }
-
-        asort($categories);
-
-        return $categories;
-    }
-
-    /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getApiTemplates()
     {
@@ -300,9 +134,18 @@ class WebApiRepository implements WebApiRepositoryInterface
                 'name'          => $apiTemplate['name'],
                 'language_from' => $apiTemplate['language_from'],
                 'language_to'   => $apiTemplate['language_to'],
+                'auto_launch'   => $apiTemplate['auto_launch'],
             ];
         }
 
         return $apiTemplates;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLangages()
+    {
+        return $this->clientApi->language()->all();
     }
 }

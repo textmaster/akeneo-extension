@@ -46,16 +46,6 @@ class TextmasterRestController
     /**
      * @return JsonResponse
      */
-    public function fetchTextmasterCategories(): JsonResponse
-    {
-        $categories = $this->apiRepository->getCategories();
-
-        return new JsonResponse($categories);
-    }
-
-    /**
-     * @return JsonResponse
-     */
     public function fetchTextmasterApiTemplates(): JsonResponse
     {
         $apiTemplates = $this->apiRepository->getApiTemplates();

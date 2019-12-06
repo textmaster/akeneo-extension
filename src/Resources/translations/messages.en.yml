@@ -36,88 +36,19 @@ pim_textmaster:
             project_identifier: Project identifier
             product_identifier: Product identifier
             product_label:      Product label
-            language:           Language
+            language_from:      From
+            language_to:        To
             status:             Status
             updated_at:         Updated at
+    status:
+        in_creation: In creation
+        in_progress: In progress
+        waiting_assignment: Waiting assignement
+        in_review: In review
+        completed: Completed
     acl_group:
         dashboard: Textmaster
     acl:
         dashboard:
             index: Dashboard
         system_configuration: System configuration
-    locale:
-        af-za: Afrikaans
-        ar-lb: Arabic (Lebanon)
-        ar-sa: Arabic (Modern Standard)
-        az-az: Azerbaijani
-        be-by: Belarusian
-        bg-bg: Bulgarian
-        bs-ba: Bosnian
-        ca-es: Catalan
-        cs-cz: Czech
-        da-dk: Danish
-        de-at: German (Austria)
-        de-ch: German (Switzerland)
-        de-de: German
-        el-gr: Greek
-        en-ca: English (Canada)
-        en-gb: English (UK)
-        en-us: English (US)
-        es-es: Spanish
-        es-sa: Spanish (Latin America)
-        et-ee: Estonian
-        eu-es: Basque
-        fa-ir: Persian (Farsi)
-        fi-fi: Finnish
-        fr-be: French (Belgium)
-        fr-ca: French (Canada)
-        fr-ch: French (Switzerland)
-        fr-fr: French
-        fr-lu: French (Luxembourg)
-        gd-ie: Irish Gaelic
-        gl-es: Galician
-        he-il: Hebrew
-        hi-in: Hindi
-        hr-hr: Croatian
-        hu-hu: Hungarian
-        hy-am: Armenian
-        id-id: Indonesian
-        is-is: Icelandic
-        it-ch: Italian (Switzerland)
-        it-it: Italian
-        ja-jp: Japanese
-        ka-ge: Georgian
-        kk-kz: Kazakh
-        ko-kr: Korean
-        lb-lu: Luxembourgish
-        lt-lt: Lithuanian
-        lv-lv: Latvian
-        mk-mk: Macedonian
-        mn-mn: Mongolian
-        ms-my: Malay
-        mt-mt: Maltese
-        my-mm: Burmese
-        nl-be: Flemish (Belgium)
-        nl-nl: Dutch
-        no-no: Norwegian
-        pl-pl: Polish
-        pt-br: Portuguese (Brazil)
-        pt-pt: Portuguese (Portugal)
-        ro-ro: Romanian
-        ru-ru: Russian
-        sk-sk: Slovak
-        sl-si: Slovenian
-        sq-al: Albanian
-        sr-rs: Serbian
-        sv-se: Swedish
-        ta-in: Tamil
-        th-th: Thai
-        tl-ph: Tagalog
-        tr-tr: Turkish
-        uk-ua: Ukrainian
-        ur-pk: Urdu
-        uz-uz: Uzbek
-        vi-vn: Vietnamese
-        zh-cn: Chinese (Mandarin Simplified)
-        zh-hk: Chinese (Traditional)
-

@@ -1,6 +1,6 @@
 parameters:
-    pim_textmaster.controller.rest.class: Pim\Bundle\TextmasterBundle\Controller\TextmasterRestController
-    pim_textmaster.controller.class:      Pim\Bundle\TextmasterBundle\Controller\TextmasterController
+    pim_textmaster.controller.rest.class: 'Pim\Bundle\TextmasterBundle\Controller\TextmasterRestController'
+    pim_textmaster.controller.class:      'Pim\Bundle\TextmasterBundle\Controller\TextmasterController'
 
 services:
     pim_textmaster.controller.rest:

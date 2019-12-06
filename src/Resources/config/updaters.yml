@@ -1,12 +1,16 @@
+parameters:
+    pim_textmaster.updater.document.product.class:       'Pim\Bundle\TextmasterBundle\Updater\ProductUpdater'
+    pim_textmaster.updater.document.product_model.class: 'Pim\Bundle\TextmasterBundle\Updater\ProductModelUpdater'
+
 services:
     pim_textmaster.updater.document.product:
-        class: 'Pim\Bundle\TextmasterBundle\Updater\ProductUpdater'
+        class: '%pim_textmaster.updater.document.product.class%'
         arguments:
             - '@pim_catalog.repository.product'
             - '@pim_catalog.updater.product'
 
     pim_textmaster.updater.document.product_model:
-        class: 'Pim\Bundle\TextmasterBundle\Updater\ProductModelUpdater'
+        class: '%pim_textmaster.updater.document.product_model.class%'
         arguments:
             - '@pim_catalog.repository.product_model'
             - '@pim_catalog.updater.product_model'
