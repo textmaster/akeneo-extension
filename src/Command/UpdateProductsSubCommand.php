@@ -155,7 +155,6 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
             $document->setStatus($apiDocument->getStatus());
             $this->documents[] = $document;
 
-            $this->saveData();
             unset($apiDocument);
         }
 
