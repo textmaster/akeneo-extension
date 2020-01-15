@@ -177,6 +177,11 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
 
         $textmasterCodes = $this->getWebApiRepository()->getProjectCodes($filters);
 
+        /**
+         * @todo this is just a quick fix for #PLG-365, logging should be done properly in Textmaster\HttpClient\HttpClient
+         */
+        $this->writeMessage('Receive project codes from TextMaster: ' . json_encode($textmasterCodes));
+
         foreach ($projects as $project) {
             if (\in_array($project->getCode(), $textmasterCodes)) {
                 $this->saveProject($project);
