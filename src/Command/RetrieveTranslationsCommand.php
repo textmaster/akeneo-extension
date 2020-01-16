@@ -177,6 +177,8 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
 
         $textmasterCodes = $this->getWebApiRepository()->getProjectCodes($filters);
 
+        $this->writeMessage('Receive project codes from TextMaster API: ' . json_encode($textmasterCodes));
+
         foreach ($projects as $project) {
             if (\in_array($project->getCode(), $textmasterCodes)) {
                 $this->saveProject($project);

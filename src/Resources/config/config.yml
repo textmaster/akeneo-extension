@@ -17,5 +17,4 @@ monolog:
         textmaster:
             type:  stream
             path:  %kernel.logs_dir%/textmaster_%kernel.environment%.log
-            level: info
             channels: textmaster
