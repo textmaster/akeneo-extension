@@ -2,15 +2,15 @@
 
 namespace Pim\Bundle\TextmasterBundle\MassAction;
 
-use Akeneo\Component\Batch\Item\ExecutionContext;
-use Akeneo\Component\Batch\Model\StepExecution;
-use Akeneo\Component\StorageUtils\Saver\SaverInterface;
+use Akeneo\Tool\Component\Batch\Item\ExecutionContext;
+use Akeneo\Tool\Component\Batch\Model\StepExecution;
+use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepository;
 use Pim\Bundle\TextmasterBundle\Entity\Project;
 use Pim\Bundle\TextmasterBundle\Project\BuilderInterface;
 use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
-use Pim\Component\Catalog\Repository\LocaleRepositoryInterface;
-use Pim\Component\Connector\Step\TaskletInterface;
+use Akeneo\Channel\Component\Repository\LocaleRepositoryInterface;
+use Akeneo\Tool\Component\Connector\Step\TaskletInterface;
 
 /**
  * Create the project entity and put it in job context

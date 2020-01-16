@@ -2,7 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Product;
 
-use Pim\Component\Catalog\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Textmaster\Model\DocumentInterface;
 
 /**

@@ -2,9 +2,9 @@
 
 namespace Pim\Bundle\TextmasterBundle\Product;
 
-use Akeneo\Component\StorageUtils\Updater\ObjectUpdaterInterface;
-use Pim\Component\Catalog\Model\ProductInterface;
-use Pim\Component\Catalog\Repository\ProductRepositoryInterface;
+use Akeneo\Tool\Component\StorageUtils\Updater\ObjectUpdaterInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Repository\ProductRepositoryInterface;
 use Textmaster\Exception\RuntimeException;
 use Textmaster\Model\DocumentInterface;
 
