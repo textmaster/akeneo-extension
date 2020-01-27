@@ -123,9 +123,16 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
         ];
 
         $textmasterCodes = $webApiRepository->getProjectCodes($filters);
+        $recentlyCompletedProjectCodes = $this->getRecentlyCompletedProjectCodes();
+
+        $this->writeMessage('Receive active project codes from TextMaster API: ' . json_encode($textmasterCodes));
+        $this->writeMessage('Receive recently completed project codes from TextMaster API: ' . json_encode($recentlyCompletedProjectCodes));
+
+        $activeProjectCodes = array_merge($textmasterCodes, $recentlyCompletedProjectCodes);
+
 
         foreach ($projects as $project) {
-            if (in_array($project->getCode(), $textmasterCodes)) {
+            if (in_array($project->getCode(), $activeProjectCodes)) {
                 $saver = $this->getContainer()->get('pim_textmaster.saver.project');
                 $saver->save($project);
                 $this->writeMessage(sprintf('<info>Project %s was updated</info>', $project->getCode()));
@@ -135,6 +142,28 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
                 $this->writeMessage(sprintf('<info>Project %s was removed</info>', $project->getCode()));
             }
         }
+    }
+
+    /**
+     * This is to prevent a bug happens when the project status is changed during the script is running.
+     * See more in ticket PLG-365
+     */
+    protected function getRecentlyCompletedProjectCodes()
+    {
+        $time = new \DateTime();
+        $time->setTimezone(new \DateTimeZone('UTC'));
+        $time->modify('-1 day');
+
+        $filters = [
+            'status' => [
+                '$in' => [DocumentInterface::STATUS_COMPLETED],
+            ],
+            'updated_at' => ['$gt' => $time->format('Y-m-d H:i:s')],
+        ];
+
+        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
+
+        return $webApiRepository->getProjectCodes($filters);
     }
 
     /**
