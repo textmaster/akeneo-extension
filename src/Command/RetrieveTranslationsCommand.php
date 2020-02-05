@@ -175,11 +175,11 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             'archived' => false,
         ];
 
-        $textmasterCodes = $this->getWebApiRepository()->getProjectCodes($filters);
+        $textmasterCodes = $this->getWebApiRepository()->getAllProjectCodes($filters);
         $recentlyCompletedProjectCodes = $this->getRecentlyCompletedProjectCodes();
 
-        $this->writeMessage('Receive active project codes from TextMaster API: ' . json_encode($textmasterCodes));
-        $this->writeMessage('Receive recently completed project codes from TextMaster API: ' . json_encode($recentlyCompletedProjectCodes));
+        $this->writeMessage(sprintf('Receive %s active project codes from TextMaster API: %s', count($textmasterCodes), json_encode($textmasterCodes)));
+        $this->writeMessage(sprintf('Receive %s recently completed project codes from TextMaster API: %s', count($recentlyCompletedProjectCodes), json_encode($recentlyCompletedProjectCodes)));
 
         $activeProjectCodes = array_merge($textmasterCodes, $recentlyCompletedProjectCodes);
 
@@ -209,7 +209,7 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             'updated_at' => ['$gt' => $time->format('Y-m-d H:i:s')],
         ];
 
-        return $this->getWebApiRepository()->getProjectCodes($filters);
+        return $this->getWebApiRepository()->getAllProjectCodes($filters);
     }
 
     /**
