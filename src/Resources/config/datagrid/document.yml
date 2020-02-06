@@ -33,11 +33,11 @@ datagrid:
                 template: PimTextmasterBundle:Property:date.html.twig
                 frontend_type: html
         properties:
-#            edit_product:
-#                type: url
-#                route: pim_enrich_product_edit
-#                params:
-#                    - id
+            edit_product:
+                type: url
+                route: pim_enrich_product_edit
+                params:
+                    - id
             texmaster_view:
                 type: url
                 route: textmaster_open_blank_to_project
@@ -45,13 +45,13 @@ datagrid:
                     - projectId
                     - textmasterDocumentId
         actions:
-#            edit_attributes:
-#                launcherOptions:
-#                    className: AknIconButton AknIconButton--small AknIconButton--edit
-#                type:      navigate
-#                label:     Edit attributes of the product
-#                link:      edit_product
-#                rowAction: false
+            edit_attributes:
+                launcherOptions:
+                    className: AknIconButton AknIconButton--small AknIconButton--edit
+                type:      navigate
+                label:     Edit attributes of the product
+                link:      edit_product
+                rowAction: false
             texmaster_view:
                 launcherOptions:
                     className: AknIconButton AknIconButton--small AknIconButton--view
