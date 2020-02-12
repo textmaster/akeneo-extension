@@ -122,14 +122,13 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             'archived' => false,
         ];
 
-        $textmasterCodes = $webApiRepository->getProjectCodes($filters);
+        $textmasterCodes = $webApiRepository->getAllProjectCodes($filters);
         $recentlyCompletedProjectCodes = $this->getRecentlyCompletedProjectCodes();
 
-        $this->writeMessage('Receive active project codes from TextMaster API: ' . json_encode($textmasterCodes));
-        $this->writeMessage('Receive recently completed project codes from TextMaster API: ' . json_encode($recentlyCompletedProjectCodes));
+        $this->writeMessage(sprintf('Receive %s active project codes from TextMaster API: %s', count($textmasterCodes), json_encode($textmasterCodes)));
+        $this->writeMessage(sprintf('Receive %s recently completed project codes from TextMaster API: %s', count($recentlyCompletedProjectCodes), json_encode($recentlyCompletedProjectCodes)));
 
         $activeProjectCodes = array_merge($textmasterCodes, $recentlyCompletedProjectCodes);
-
 
         foreach ($projects as $project) {
             if (in_array($project->getCode(), $activeProjectCodes)) {
@@ -163,7 +162,7 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
 
         $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
 
-        return $webApiRepository->getProjectCodes($filters);
+        return $webApiRepository->getAllProjectCodes($filters);
     }
 
     /**

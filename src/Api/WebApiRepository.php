@@ -97,6 +97,38 @@ class WebApiRepository implements WebApiRepositoryInterface
     }
 
     /**
+     * Get codes of all paginated project (all pages)
+     *
+     * @param array $filters
+     *
+     * @return string[]
+     */
+    public function getAllProjectCodes(array $filters)
+    {
+        $projectApi = $this->clientApi->projects();
+        $currentPage = 0;
+        $totalPages = 1;
+
+        $projectCodes = [];
+
+        while ($currentPage < $totalPages) {
+            $currentPage++;
+            $projectApi->setPage($currentPage);
+
+            $response = $projectApi->filter($filters);
+            $totalPages = $response['total_pages'];
+
+            foreach ($response['projects'] as $projectData) {
+                /** @var ProjectInterface $projects */
+                $project = new Project($this->clientApi, $projectData);
+                $projectCodes[] = $project->getId();
+            }
+        }
+
+        return $projectCodes;
+    }
+
+    /**
      * @param string $projectCode
      *
      * @return ProjectInterface
