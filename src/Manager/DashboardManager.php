@@ -3,6 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle\Manager;
 
 use Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository;
+use Textmaster\Model\DocumentInterface;
 
 /**
  * Class DashboardManager.
@@ -49,6 +50,7 @@ class DashboardManager
             $statuses[$status]++;
         }
 
+        $statuses = $this->sortStatuses($statuses);
         $countStatuses = array_sum($statuses);
 
         foreach ($statuses as $statusName => $count) {
@@ -61,5 +63,33 @@ class DashboardManager
         }
 
         return $documentStatuses;
+    }
+
+    protected function sortStatuses(array $statuses)
+    {
+        $statusOrder = [
+            DocumentInterface::STATUS_IN_CREATION,
+            DocumentInterface::STATUS_IN_PROGRESS,
+            DocumentInterface::STATUS_WAITING_ASSIGNMENT,
+            DocumentInterface::STATUS_IN_REVIEW,
+            DocumentInterface::STATUS_COMPLETED,
+            DocumentInterface::STATUS_INCOMPLETE,
+            DocumentInterface::STATUS_PAUSED,
+            DocumentInterface::STATUS_CANCELED,
+            DocumentInterface::STATUS_COPYSCAPE,
+            DocumentInterface::STATUS_COUNTING_WORDS,
+            DocumentInterface::STATUS_QUALITY,
+        ];
+
+        $sortedStatus = [];
+
+        foreach ($statusOrder as $statusName) {
+            if (isset($statuses[$statusName])) {
+                $sortedStatus[$statusName] = $statuses[$statusName];
+                unset($statuses[$statusName]);
+            }
+        }
+
+        return array_merge($sortedStatus, $statuses);
     }
 }
