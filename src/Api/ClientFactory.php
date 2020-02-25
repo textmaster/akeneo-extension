@@ -3,7 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle\Api;
 
 use Oro\Bundle\ConfigBundle\Config\ConfigManager;
-use Textmaster\HttpClient\HttpClient;
+use Psr\Log\LoggerInterface;
 
 /**
  * Factory to build the HttpClient with stored configuration
@@ -17,12 +17,17 @@ class ClientFactory
     /** @var ConfigManager */
     protected $configManager;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     /**
      * @param ConfigManager $configManager
+     * @param LoggerInterface $logger
      */
-    public function __construct(ConfigManager $configManager)
+    public function __construct(ConfigManager $configManager, LoggerInterface $logger)
     {
         $this->configManager = $configManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -34,7 +39,7 @@ class ClientFactory
     {
         $apiKey = $this->configManager->get('pim_textmaster.api_key');
         $apiSecret = $this->configManager->get('pim_textmaster.api_secret');
-        $client = new HttpClient($apiKey, $apiSecret, $options);
+        $client = new HttpClient($apiKey, $apiSecret, $options, $this->logger);
 
         return $client;
     }

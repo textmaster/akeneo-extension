@@ -87,7 +87,7 @@ class WebApiRepository implements WebApiRepositoryInterface
      * @param array $projects
      * @param null  $currentPage
      *
-     * @return array
+     * @return array|ProjectInterface[]
      */
     public function getAllProjects(array $filters, array &$projects = [], $currentPage = null): array
     {
@@ -160,6 +160,25 @@ class WebApiRepository implements WebApiRepositoryInterface
         }
 
         return $projectsCodes;
+    }
+
+    /**
+     * Get codes of all paginated project (all pages)
+     *
+     * @param array $filters
+     *
+     * @return string[]
+     */
+    public function getAllProjectCodes(array $filters)
+    {
+        $projects = $this->getAllProjects($filters);
+        $projectCodes = [];
+
+        foreach ($projects as $project) {
+            $projectCodes[] = $project->getId();
+        }
+
+        return $projectCodes;
     }
 
     /**

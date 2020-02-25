@@ -42,7 +42,8 @@ class DashboardManager
 
             $statuses[$status]++;
         }
-
+        
+        $statuses = $this->sortStatuses($statuses);
         $countStatuses = array_sum($statuses);
 
         foreach ($statuses as $statusName => $count) {
@@ -55,5 +56,32 @@ class DashboardManager
         }
 
         return $documentStatuses;
+    }
+
+    protected function sortStatuses(array $statuses)
+    {
+        $statusOrder = [
+            'In Creation',
+            'In Progress',
+            'Waiting Assignment',
+            'In Review',
+            'Completed',
+            'Incomplete',
+            'Paused',
+            'Copyscape',
+            'Counting Words',
+            'Quality',
+        ];
+
+        $sortedStatus = [];
+
+        foreach ($statusOrder as $statusName) {
+            if (isset($statuses[$statusName])) {
+                $sortedStatus[$statusName] = $statuses[$statusName];
+                unset($statuses[$statusName]);
+            }
+        }
+
+        return array_merge($sortedStatus, $statuses);
     }
 }
