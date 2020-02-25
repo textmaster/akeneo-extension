@@ -168,6 +168,8 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
      */
     protected function updatePimProjects(array $projects): void
     {
+        $webApiRepository = $this->getWebApiRepository();
+
         $filters = [
             'status'   => [
                 '$nin' => [DocumentInterface::STATUS_CANCELED, DocumentInterface::STATUS_COMPLETED],
@@ -175,15 +177,45 @@ class RetrieveTranslationsCommand extends ContainerAwareCommand
             'archived' => false,
         ];
 
-        $textmasterCodes = $this->getWebApiRepository()->getProjectCodes($filters);
+        $textmasterCodes = $webApiRepository->getAllProjectCodes($filters);
+        $recentlyCompletedProjectCodes = $this->getRecentlyCompletedProjectCodes();
+
+        $this->writeMessage(sprintf('Receive %s active project codes from TextMaster API: %s', count($textmasterCodes), json_encode($textmasterCodes)));
+        $this->writeMessage(sprintf('Receive %s recently completed project codes from TextMaster API: %s', count($recentlyCompletedProjectCodes), json_encode($recentlyCompletedProjectCodes)));
+
+        $activeProjectCodes = array_merge($textmasterCodes, $recentlyCompletedProjectCodes);
 
         foreach ($projects as $project) {
-            if (\in_array($project->getCode(), $textmasterCodes)) {
+            if (in_array($project->getCode(), $activeProjectCodes)) {
                 $this->saveProject($project);
+                $this->writeMessage(sprintf('<info>Project %s was updated</info>', $project->getCode()));
             } else {
                 $this->removeProject($project);
+                $this->writeMessage(sprintf('<info>Project %s was removed</info>', $project->getCode()));
             }
         }
+    }
+
+    /**
+     * This is to prevent a bug happens when the project status is changed during the script is running.
+     * See more in ticket PLG-365
+     */
+    protected function getRecentlyCompletedProjectCodes()
+    {
+        $time = new \DateTime();
+        $time->setTimezone(new \DateTimeZone('UTC'));
+        $time->modify('-1 day');
+
+        $filters = [
+            'status' => [
+                '$in' => [DocumentInterface::STATUS_COMPLETED],
+            ],
+            'updated_at' => ['$gt' => $time->format('Y-m-d H:i:s')],
+        ];
+
+        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
+
+        return $webApiRepository->getAllProjectCodes($filters);
     }
 
     /**

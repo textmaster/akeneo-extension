@@ -3,6 +3,7 @@ services:
         class: Pim\Bundle\TextmasterBundle\Api\ClientFactory
         arguments:
             - '@oro_config.global'
+            - '@monolog.logger.textmaster'
 
     worldia.textmaster.api.httpclient:
         class: Textmaster\HttpClient\HttpClient
