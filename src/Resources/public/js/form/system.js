@@ -51,6 +51,7 @@ define(
 
                 const searchOptions = {
                     options: {
+                        limit: 200,
                         types: [
                             'pim_catalog_text',
                             'pim_catalog_textarea'
