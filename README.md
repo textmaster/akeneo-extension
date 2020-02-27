@@ -64,7 +64,7 @@ You can check translation progress with the dashboard :
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension 3.0
+composer require textmaster/akeneo-extension ~3.2
 ```
 
 Register your bundle in the `AppKernel::registerProjectBundles`:
@@ -78,6 +78,8 @@ Then we need to add a new mass edit batch job:
 ```
 bin/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_projects' "mass_edit" 'textmaster_start_projects'
 ```
+
+Make sure you have native Akeneo script `bin/console akeneo:batch:job-queue-consumer-daemon` running.
 
 Add the new routes used by the extension to the global router. Add the following lines at the end of `app/config/routing.yml`:
 
@@ -107,19 +109,18 @@ find ./ -type d -exec chmod 755 {} \;
 find ./ -type f -exec chmod 644 {} \;
 ```
 
-Set a `cron` to retrieve the translated contents from Textmaster:
+Set a `cron` to synchronize projects & documents between Akeneo and Textmaster:
 ```
-0 * * * * /home/akeno/pim/bin/console pim:textmaster:retrieve-translations >> /tmp/textmaster.log
-```
-
-This command checks for translated content once every hour. We do not recommend to check more often than every hour to not overload the Textmaster servers.
-
-Finally, you must set a `cron` to synchronize translation progress from Textmaster:
-```
-0 0 0/4 1/1 * ? * /home/akeno/pim/bin/console pim:textmaster:update-dashboard >> /tmp/textmaster.log
+0 * * * * /path/to/bin/console pim:textmaster:processing >> /tmp/textmaster.log
 ```
 
-This command retrieve translation progress from textmaster to supply datagrid dashboard once every 4 hours.
+This command checks for translated content once every hour and outputs log to `/tmp/textmaster.log`. We do not recommend to check more often than every hour to not overload the Textmaster servers.
+Note that you should select products that have non-empty translatable attributes and the attributes are added in `System >> Configuration >> TextMaster`.
+
+To see projects that are registered on TextMaster, run:
+```
+bin/console pim:textmaster:list-projects
+```
 
 ### Parameters
 
