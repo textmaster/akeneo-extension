@@ -4,14 +4,20 @@ namespace Pim\Bundle\TextmasterBundle\Command;
 
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
+use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\BulkSaverInterface;
 use DateTimeZone;
 use LogicException;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
+use Pim\Bundle\TextmasterBundle\Builder\ProjectBuilderInterface;
+use Pim\Bundle\TextmasterBundle\Manager\DocumentManager;
+use Pim\Bundle\TextmasterBundle\Manager\ProjectManager;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
+use Pim\Bundle\TextmasterBundle\Provider\LocaleProvider;
 use Pim\Bundle\TextmasterBundle\Updater\ProductModelUpdater;
 use Pim\Bundle\TextmasterBundle\Updater\ProductUpdater;
 use Pim\Bundle\TextmasterBundle\Updater\UpdaterInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +32,7 @@ use Throwable;
  * @package Pim\Bundle\TextmasterBundle\Command
  * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
  */
-class UpdateProductsSubCommand extends ContainerAwareCommand
+class UpdateProductsSubCommand extends Command
 {
     use LockableTrait;
     use CommandTrait;
@@ -36,24 +42,96 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
     protected const PRODUCTS_BATCH_SIZE = 20;
     protected const DOCUMENTS_BATCH_SIZE = 50;
 
-    /** @var ProductModelUpdater */
+    /**
+     * @var ProductModelUpdater
+     */
     protected $productModelUpdater;
 
-    /** @var ProductUpdater */
+    /**
+     * @var ProductUpdater
+     */
     protected $productUpdater;
 
-    /** @var BulkSaverInterface */
+    /**
+     * @var BulkSaverInterface
+     */
     protected $productSaver;
 
-    /** @var BulkSaverInterface */
+    /**
+     * @var BulkSaverInterface
+     */
     protected $productModelSaver;
 
-    /** @var array EntityWithValueInterface[] */
+    /**
+     * @var ObjectDetacherInterface
+     */
+    private $objectDetacher;
+
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
+
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var WebApiRepositoryInterface
+     */
+    private $webApiRepository;
+
+    /**
+     * @var ProjectBuilderInterface
+     */
+    private $projectBuilder;
+
+    /**
+     * @var LocaleProvider
+     */
+    private $localeProvider;
+
+    /**
+     * @var array EntityWithValueInterface[]
+     */
     protected $products = [];
-    /** @var array EntityWithValueInterface[] */
+
+    /**
+     * @var array EntityWithValueInterface[]
+     */
     protected $productModels = [];
-    /** @var array DocumentInterface[] */
+
+    /**
+     * @var array DocumentInterface[]
+     */
     protected $documents = [];
+
+    public function __construct(
+        ProductUpdater $productUpdater,
+        ProductModelUpdater $productModelUpdater,
+        BulkSaverInterface $productSaver,
+        BulkSaverInterface $productModelSaver,
+        ObjectDetacherInterface $objectDetacher,
+        ProjectManager $projectManager,
+        DocumentManager $documentManager,
+        WebApiRepositoryInterface $webApiRepository,
+        LocaleProvider $localeProvider,
+        ProjectBuilderInterface $projectBuilder
+    ) {
+        parent::__construct();
+
+        $this->productUpdater = $productUpdater;
+        $this->productModelUpdater = $productModelUpdater;
+        $this->productSaver = $productSaver;
+        $this->productModelSaver = $productModelSaver;
+        $this->objectDetacher = $objectDetacher;
+        $this->projectManager = $projectManager;
+        $this->documentManager = $documentManager;
+        $this->webApiRepository = $webApiRepository;
+        $this->projectBuilder = $projectBuilder;
+        $this->localeProvider = $localeProvider;
+    }
 
     /**
      * {@inheritdoc}
@@ -87,7 +165,7 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
 
         try {
             /** @var ProjectInterface $project */
-            $project = $this->getProjectManager()->getProjectById($input->getArgument(self::PROJECT_ID_ARGUMENT));
+            $project = $this->projectManager->getProjectById($input->getArgument(self::PROJECT_ID_ARGUMENT));
             $this->writeMessage(
                 sprintf(
                     'Update products for project %s with Textmaster id %s.',
@@ -98,8 +176,8 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
             $this->updateProducts($project);
         } catch (Throwable $exception) {
             if ($exception instanceof LogicException && Response::HTTP_NOT_FOUND === $exception->getCode()) {
-                $this->getDocumentManager()->deleteDocumentsByProjectIds([$project->getId()]);
-                $this->getProjectManager()->deleteProjectsByIds([$project->getId()]);
+                $this->documentManager->deleteDocumentsByProjectIds([$project->getId()]);
+                $this->projectManager->deleteProjectsByIds([$project->getId()]);
 
                 $this->writeMessage(
                     sprintf(
@@ -109,7 +187,7 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
                     )
                 );
 
-                $this->getObjectDetacher()->detach($project);
+                $this->objectDetacher->detach($project);
             } else {
                 $this->release();
                 throw $exception;
@@ -127,13 +205,13 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
     protected function updateProducts(ProjectInterface $project): ProjectInterface
     {
         $apiTemplate   = $this->getApiTemplateById($project->getApiTemplateId());
-        $pimLocaleCode = $this->getLocaleProvider()->getPimLocaleCode($apiTemplate['language_to']);
+        $pimLocaleCode = $this->localeProvider->getPimLocaleCode($apiTemplate['language_to']);
 
         $apiDocuments = $this->getApiDocumentsByProject($project, $this->getDocumentsFilters($project));
 
         /** @var ApiDocumentInterface $apiDocument */
         foreach ($apiDocuments as $apiDocument) {
-            $document = $this->getDocumentManager()->getDocumentByTextmasterId($apiDocument->getId());
+            $document = $this->documentManager->getDocumentByTextmasterId($apiDocument->getId());
 
             /** @var EntityWithValuesInterface $product */
             $product = $this->getUpdater($apiDocument)->update($apiDocument, $pimLocaleCode);
@@ -161,11 +239,11 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
         $this->saveData(true);
 
         /** @var \Pim\Bundle\TextmasterBundle\Project\Model\ProjectInterface $apiProject */
-        $apiProject = $this->getWebApiRepository()->getProject($project->getTextmasterProjectId());
+        $apiProject = $this->webApiRepository->getProject($project->getTextmasterProjectId());
 
         $project->setTextmasterStatus($apiProject->getStatus());
-        $this->getProjectManager()->saveProject($project);
-        $this->getObjectDetacher()->detach($project);
+        $this->projectManager->saveProject($project);
+        $this->objectDetacher->detach($project);
         unset($apiProject);
 
         return $project;
@@ -187,7 +265,7 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
         }
 
         if (true === $forceSave || count($this->documents) >= self::DOCUMENTS_BATCH_SIZE) {
-            $this->getDocumentManager()->saveDocuments($this->documents);
+            $this->documentManager->saveDocuments($this->documents);
         }
     }
 
@@ -231,31 +309,7 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
     protected function getUpdater(ApiDocumentInterface $document): UpdaterInterface
     {
         if (strrpos($document->getTitle(), 'product_model|') !== false) {
-            return $this->getProductModelUpdater();
-        }
-
-        return $this->getProductUpdater();
-    }
-
-    /**
-     * @return UpdaterInterface
-     */
-    protected function getProductModelUpdater(): UpdaterInterface
-    {
-        if (null === $this->productModelUpdater) {
-            $this->productModelUpdater = $this->getContainer()->get('pim_textmaster.updater.document.product_model');
-        }
-
-        return $this->productModelUpdater;
-    }
-
-    /**
-     * @return UpdaterInterface
-     */
-    protected function getProductUpdater(): UpdaterInterface
-    {
-        if (null === $this->productUpdater) {
-            $this->productUpdater = $this->getContainer()->get('pim_textmaster.updater.document.product');
+            return $this->productModelUpdater;
         }
 
         return $this->productUpdater;
@@ -267,12 +321,8 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
      */
     protected function saveProducts(): void
     {
-        if (null === $this->productSaver) {
-            $this->productSaver = $this->getContainer()->get('pim_catalog.saver.product');
-        }
-
         $this->productSaver->saveAll($this->products);
-        $this->getObjectDetacher()->detachAll($this->products);
+        $this->objectDetacher->detachAll($this->products);
         $this->products = [];
     }
 
@@ -282,12 +332,8 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
      */
     protected function saveProductModels(): void
     {
-        if (null === $this->productModelSaver) {
-            $this->productModelSaver = $this->getContainer()->get('pim_catalog.saver.product_model');
-        }
-
         $this->productModelSaver->saveAll($this->productModels);
-        $this->getObjectDetacher()->detachAll($this->productModels);
+        $this->objectDetacher->detachAll($this->productModels);
         $this->productModels = [];
     }
 
@@ -296,8 +342,42 @@ class UpdateProductsSubCommand extends ContainerAwareCommand
      */
     protected function saveDocuments(): void
     {
-        $this->getDocumentManager()->saveDocuments($this->documents);
-        $this->getObjectDetacher()->detachAll($this->documents);
+        $this->documentManager->saveDocuments($this->documents);
+        $this->objectDetacher->detachAll($this->documents);
         $this->documents = [];
+    }
+
+    /**
+     * Retrieve api template by id.
+     *
+     * @param string $apiTemplateId
+     *
+     * @return array|null
+     */
+    protected function getApiTemplateById(string $apiTemplateId): ?array
+    {
+        if (null === $this->apiTemplates) {
+            $this->apiTemplates = $this->webApiRepository->getApiTemplates();
+        }
+
+        return isset($this->apiTemplates[$apiTemplateId]) ? $this->apiTemplates[$apiTemplateId] : null;
+    }
+
+    /**
+     * Retrieve api document related to project.
+     *
+     * @param ProjectInterface $project
+     * @param array            $filters
+     *
+     * @return ApiDocumentInterface[]
+     */
+    protected function getApiDocumentsByProject(ProjectInterface $project, array $filters): array
+    {
+        return $this
+            ->webApiRepository
+            ->getAllDocuments(
+                $filters,
+                $project->getTextmasterProjectId()
+            );
     }
 }

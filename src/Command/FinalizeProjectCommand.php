@@ -2,10 +2,13 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
+use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use LogicException;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
+use Pim\Bundle\TextmasterBundle\Manager\DocumentManager;
 use Pim\Bundle\TextmasterBundle\Manager\ProjectManager;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,10 +22,45 @@ use Throwable;
  * @package Pim\Bundle\TextmasterBundle\Command
  * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
  */
-class FinalizeProjectCommand extends ContainerAwareCommand
+class FinalizeProjectCommand extends Command
 {
     use LockableTrait;
     use CommandTrait;
+
+    protected static $defaultName = 'pim:textmaster:finalize-project';
+
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
+
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var WebApiRepositoryInterface
+     */
+    private $webApiRepository;
+
+    /**
+     * @var ObjectDetacherInterface
+     */
+    private $objectDetacher;
+
+    public function __construct(
+        ProjectManager $projectManager,
+        DocumentManager $documentManager,
+        WebApiRepositoryInterface $webApiRepository,
+        ObjectDetacherInterface $objectDetacher
+    ) {
+        parent::__construct();
+        $this->projectManager = $projectManager;
+        $this->documentManager = $documentManager;
+        $this->webApiRepository = $webApiRepository;
+        $this->objectDetacher = $objectDetacher;
+    }
 
     /**
      * {@inheritdoc}
@@ -30,7 +68,7 @@ class FinalizeProjectCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('pim:textmaster:finalize-project')
+            ->setName(self::$defaultName)
             ->setDescription('Finalize project into textmaster.');
     }
 
@@ -51,7 +89,7 @@ class FinalizeProjectCommand extends ContainerAwareCommand
 
         foreach ($this->getProjectsToFinalize() as $projectId) {
             /** @var ProjectInterface $project */
-            $project = $this->getProjectManager()->getProjectById($projectId);
+            $project = $this->projectManager->getProjectById($projectId);
 
             try {
                 $this->writeMessage(
@@ -62,11 +100,11 @@ class FinalizeProjectCommand extends ContainerAwareCommand
                     )
                 );
                 $this->finalizeProject($project);
-                $this->getProjectManager()->saveProject($project);
+                $this->projectManager->saveProject($project);
             } catch (Throwable $exception) {
                 if ($exception instanceof LogicException && Response::HTTP_NOT_FOUND === $exception->getCode()) {
-                    $this->getDocumentManager()->deleteDocumentsByProjectIds([$project->getId()]);
-                    $this->getProjectManager()->deleteProjectsByIds([$project->getId()]);
+                    $this->documentManager->deleteDocumentsByProjectIds([$project->getId()]);
+                    $this->projectManager->deleteProjectsByIds([$project->getId()]);
 
                     $this->writeMessage(
                         sprintf(
@@ -76,7 +114,7 @@ class FinalizeProjectCommand extends ContainerAwareCommand
                         )
                     );
 
-                    $this->getObjectDetacher()->detach($project);
+                    $this->objectDetacher->detach($project);
                     continue;
                 }
 
@@ -95,13 +133,13 @@ class FinalizeProjectCommand extends ContainerAwareCommand
      */
     protected function finalizeProject(ProjectInterface $project): void
     {
-        $apiProject = $this->getWebApiRepository()->getProject($project->getTextmasterProjectId());
+        $apiProject = $this->webApiRepository->getProject($project->getTextmasterProjectId());
 
         if (true === $apiProject->isFinalized()) {
             $project->setAkeneoStatus(ProjectManager::FINALIZE_STATUS);
             $project->setTextmasterStatus($apiProject->getStatus());
         } elseif (false === $apiProject->isAutoLaunch() || true === $this->checkDocumentsCounted($project)) {
-            $response = $this->getWebApiRepository()->finalizeProject($project->getTextmasterProjectId());
+            $response = $this->webApiRepository->finalizeProject($project->getTextmasterProjectId());
             $project->setAkeneoStatus(ProjectManager::FINALIZE_STATUS);
             $project->setTextmasterStatus($response['status']);
         } else {
@@ -147,6 +185,25 @@ class FinalizeProjectCommand extends ContainerAwareCommand
      */
     protected function getProjectsToFinalize(): array
     {
-        return $this->getProjectManager()->getProjectIdsByStatus(ProjectManager::TO_FINALIZE_STATUS);
+        return $this->projectManager->getProjectIdsByStatus(ProjectManager::TO_FINALIZE_STATUS);
+    }
+
+
+    /**
+     * Retrieve api document related to project.
+     *
+     * @param ProjectInterface $project
+     * @param array            $filters
+     *
+     * @return ApiDocumentInterface[]
+     */
+    protected function getApiDocumentsByProject(ProjectInterface $project, array $filters): array
+    {
+        return $this
+            ->webApiRepository
+            ->getAllDocuments(
+                $filters,
+                $project->getTextmasterProjectId()
+            );
     }
 }

@@ -3,6 +3,9 @@ parameters:
     pim_textmaster.step.flag_projects_to_send.class: 'Pim\Bundle\TextmasterBundle\Step\FlagProjectsToSendStep'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.step.prepare_projects:
         class: '%pim_textmaster.step.prepare_projects.class%'
         arguments:

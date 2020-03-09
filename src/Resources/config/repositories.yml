@@ -4,9 +4,11 @@ parameters:
     pim_textmaster.repository.project.class:  'Pim\Bundle\TextmasterBundle\Doctrine\Repository\ProjectRepository'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.repository.webapi:
         class: '%pim_textmaster.repository.webapi.class%'
-        public: false
         arguments:
             - '@worldia.textmaster.api.client'
 

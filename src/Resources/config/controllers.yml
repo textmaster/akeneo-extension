@@ -9,8 +9,12 @@ services:
             - '@pim_textmaster.repository.webapi'
             - '@pim_textmaster.manager.dashboard'
             - '%textmaster.base_uri.app%'
+        tags:
+            - {name: controller.service_arguments}
 
     pim_textmaster.controller:
         class: '%pim_textmaster.controller.class%'
         arguments:
             - '%textmaster.base_uri.app%'
+        tags:
+            - {name: controller.service_arguments}
