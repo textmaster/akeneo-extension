@@ -11,6 +11,12 @@ textmaster_rest_api-templates:
     defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterApiTemplates }
     methods: [GET]
 
+
+textmaster_rest_default-attributes:
+    path: /rest/default-attributes
+    defaults: { _controller: pim_textmaster.controller.rest:fetchTextmasterDefaultAttributes }
+    methods: [GET]
+
 textmaster_open_blank_to_project:
     path: /textmaster/open-blank-to-project/{projectId}/{textmasterDocumentId}
     defaults: { _controller: pim_textmaster.controller:openBlankToProject }
