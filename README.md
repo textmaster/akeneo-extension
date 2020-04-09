@@ -34,6 +34,7 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 | v1.1.*                      | v1.6.*                       |
 | v1.0.*                      | v1.5.*                       |
 
+
 You also need a Textmaster account to have some API credentials and access to the Textmaster's customer interface.
 
 ### Create a Textmaster account
