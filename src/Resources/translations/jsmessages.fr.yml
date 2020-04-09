@@ -31,7 +31,8 @@ pim_textmaster:
             project_identifier: Identifiant projet
             product_identifier: Identifiant produit
             product_label:      Produit
-            language:           Langage
+            language_from:      Depuis language
+            language_to:        Vers langue
             status:             Statut
             updated_at:         Updated at
     action:

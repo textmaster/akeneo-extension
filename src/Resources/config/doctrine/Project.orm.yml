@@ -1,7 +1,7 @@
 Pim\Bundle\TextmasterBundle\Entity\Project:
     type: entity
     table: textmaster_project
-    repositoryClass: Pim\Bundle\TextmasterBundle\Project\ProjectRepository
+    repositoryClass: Pim\Bundle\TextmasterBundle\Doctrine\Repository\ProjectRepository
     changeTrackingPolicy: DEFERRED_EXPLICIT
     fields:
         id:
@@ -9,20 +9,29 @@ Pim\Bundle\TextmasterBundle\Entity\Project:
             id: true
             generator:
                 strategy: AUTO
-        code:
+        textmasterProjectId:
             type: string
-            column: code
+            column: textmaster_project_id
+            nullable: true
+        username:
+            type: string
+            column: username
         name:
             type: string
             column: name
         apiTemplateId:
             type: string
             column: api_template_id
+        textmasterStatus:
+            type: string
+            column: textmaster_status
+            nullable: true
+        akeneoStatus:
+            type: string
+            column: akeneo_status
+        createdAt:
+            type: datetime
+            column: created_at
         updatedAt:
             type: datetime
             column: updated_at
-            nullable: true
-        username:
-            type: string
-            column: username
-            nullable: true

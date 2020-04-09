@@ -1,9 +1,15 @@
+parameters:
+    pim_textmaster.processor.denormalization.document.class: 'Pim\Bundle\TextmasterBundle\Processor\Denormalization\DocumentProcessor'
+
 services:
-    pim_textmaster.mass_edit.processor.add_documents:
-        class: 'Pim\Bundle\TextmasterBundle\MassAction\AddDocumentsProcessor'
+    _defaults:
+        public: true
+
+    pim_textmaster.processor.denormalization.document:
+        class: '%pim_textmaster.processor.denormalization.document.class%'
         arguments:
-            - '@pim_textmaster.project.builder'
+            - '@pim_textmaster.provider.locale'
+            - '@pim_textmaster.builder.project'
+            - '@pim_textmaster.manager.document'
+            - '@pim_textmaster.manager.project'
             - '@akeneo_storage_utils.doctrine.object_detacher'
-            - '@pim_textmaster.repository.webapi'
-            - '@pim_textmaster.locale.finder'
-            - '@monolog.logger.textmaster'

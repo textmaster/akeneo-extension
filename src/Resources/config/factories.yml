@@ -1,0 +1,14 @@
+parameters:
+    pim_textmaster.factory.document.class: 'Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactory'
+    pim_textmaster.factory.project.class:  'Akeneo\Tool\Component\StorageUtils\Factory\SimpleFactory'
+
+services:
+    pim_textmaster.factory.document:
+        class: '%pim_textmaster.factory.document.class%'
+        arguments:
+            - '%pim_textmaster.entity.document.class%'
+            -
+    pim_textmaster.factory.project:
+        class: '%pim_textmaster.factory.project.class%'
+        arguments:
+            - '%pim_textmaster.entity.project.class%'

@@ -1,0 +1,5 @@
+{% if value is defined %}
+    <span class="flag-language">
+        <i class="flag flag-{{ value|split('-')[1] }}"></i>
+    </span>
+{% endif %}

@@ -12,13 +12,26 @@ datagrid:
                 label: pim_textmaster.field.label.product_identifier
             productLabel:
                 label: pim_textmaster.field.label.product_label
-            language:
-                label: pim_textmaster.field.label.language
+            languageFrom:
+                label: pim_textmaster.field.label.language_from
+                type: twig
+                template: PimTextmasterBundle:Property:flag.html.twig
+                frontend_type: html
+            languageTo:
+                label: pim_textmaster.field.label.language_to
+                type: twig
+                template: PimTextmasterBundle:Property:flag.html.twig
+                frontend_type: html
             status:
                 label: pim_textmaster.field.label.status
+                type: twig
+                template: PimTextmasterBundle:Property:status.html.twig
+                frontend_type: html
             updatedAt:
                 label: pim_textmaster.field.label.updated_at
-                frontend_type: date
+                type: twig
+                template: PimTextmasterBundle:Property:date.html.twig
+                frontend_type: html
         properties:
             edit_product:
                 type: url
@@ -29,15 +42,15 @@ datagrid:
                 type: url
                 route: textmaster_open_blank_to_project
                 params:
-                    - projectIdentifier
-                    - documentIdentifier
+                    - projectId
+                    - textmasterDocumentId
         actions:
             edit_attributes:
                 launcherOptions:
                     className: AknIconButton AknIconButton--small AknIconButton--edit
                 type:      navigate
                 label:     Edit attributes of the product
-                link: edit_product
+                link:      edit_product
                 rowAction: false
             texmaster_view:
                 launcherOptions:
@@ -52,8 +65,10 @@ datagrid:
                     data_name: d.productIdentifier
                 productLabel:
                     data_name: d.productLabel
-                language:
-                    data_name: d.language
+                languageFrom:
+                    data_name: d.languageFrom
+                languageTo:
+                    data_name: d.languageTo
                 status:
                     data_name: d.status
                 updatedAt:
@@ -70,14 +85,30 @@ datagrid:
                     type:      string
                     label:     pim_textmaster.field.label.product_label
                     data_name: d.productLabel
-                language:
-                    type:      string
-                    label:     pim_textmaster.field.label.language
-                    data_name: d.language
+                languageFrom:
+                    type:      choice
+                    label:     pim_textmaster.field.label.language_from
+                    data_name: d.languageFrom
+                    options:
+                        field_options:
+                            multiple: true
+                            choices:  '@pim_textmaster.provider.datagrid->getLangageChoices'
+                languageTo:
+                    type:      choice
+                    label:     pim_textmaster.field.label.language_to
+                    data_name: d.languageTo
+                    options:
+                        field_options:
+                            multiple: true
+                            choices:  '@pim_textmaster.provider.datagrid->getLangageChoices'
                 status:
-                    type:      string
+                    type:      choice
                     label:     pim_textmaster.field.label.status
                     data_name: d.status
+                    options:
+                        field_options:
+                            multiple: true
+                            choices:  '@pim_textmaster.provider.datagrid->getStatusChoices'
                 updatedAt:
                     type:             date
                     label:            pim_textmaster.field.label.updated_at

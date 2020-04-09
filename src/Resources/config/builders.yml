@@ -1,0 +1,13 @@
+parameters:
+    pim_textmaster.builder.project.class: 'Pim\Bundle\TextmasterBundle\Builder\ProjectBuilder'
+
+services:
+    pim_textmaster.builder.project:
+        class: '%pim_textmaster.builder.project.class%'
+        public: true
+        arguments:
+            - '@pim_textmaster.repository.version'
+            - '@akeneo_storage_utils.doctrine.object_detacher'
+            - '@pim_catalog.repository.attribute'
+        tags:
+            - { name: monolog.logger, channel: textmaster }

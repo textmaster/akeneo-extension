@@ -3,6 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle;
 
 use Pim\Bundle\TextmasterBundle\DependencyInjection\Compiler\OroConfigCompilerPass;
+use Pim\Bundle\TextmasterBundle\DependencyInjection\Compiler\ResolveDoctrineTargetModelPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -19,6 +20,8 @@ class PimTextmasterBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
-        $container->addCompilerPass(new OroConfigCompilerPass());
+        $container
+            ->addCompilerPass(new OroConfigCompilerPass())
+            ->addCompilerPass(new ResolveDoctrineTargetModelPass());
     }
 }

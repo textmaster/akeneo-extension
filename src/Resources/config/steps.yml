@@ -1,0 +1,37 @@
+parameters:
+    pim_textmaster.step.prepare_projects.class:      'Pim\Bundle\TextmasterBundle\Step\PrepareProjectsStep'
+    pim_textmaster.step.flag_projects_to_send.class: 'Pim\Bundle\TextmasterBundle\Step\FlagProjectsToSendStep'
+
+services:
+    _defaults:
+        public: true
+
+    pim_textmaster.step.prepare_projects:
+        class: '%pim_textmaster.step.prepare_projects.class%'
+        arguments:
+            - 'textmaster.step.prepare_projects'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@oro_config.global'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.manager.project'
+
+    pim_textmaster.step.add_documents:
+        class: '%pim_connector.step.item_step.class%'
+        arguments:
+            - 'textmaster.step.add_documents'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+            - '@pim_enrich.reader.database.product_and_product_model'
+            - '@pim_textmaster.processor.denormalization.document'
+            - '@pim_connector.writer.dummy_item'
+
+    pim_textmaster.step.flag_projects_to_send:
+        class: '%pim_textmaster.step.flag_projects_to_send.class%'
+        arguments:
+            - 'textmaster.step.flag_projects_to_send'
+            - '@event_dispatcher'
+            - '@akeneo_batch.job_repository'
+        calls:
+            - [ setProjectManager, ['@pim_textmaster.manager.project' ]]
+            - [ setDocumentManager, ['@pim_textmaster.manager.document' ]]

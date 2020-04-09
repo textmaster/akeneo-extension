@@ -33,9 +33,16 @@ pim_textmaster:
             project_identifier: Identifiant projet
             product_identifier: Identifiant produit
             product_label:      Produit
-            language:           Langage
+            language_from:      Depuis
+            language_to:        Vers
             status:             Statut
             updated_at:         Updated at
+    status:
+        in_creation: In creation
+        in_progress: In progress
+        waiting_assignment: Waiting assignement
+        in_review: In review
+        completed: Completed
     acl_group:
         dashboard: Textmaster
     acl:

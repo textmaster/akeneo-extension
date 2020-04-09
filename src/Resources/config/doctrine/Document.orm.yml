@@ -9,12 +9,13 @@ Pim\Bundle\TextmasterBundle\Entity\Document:
             id: true
             generator:
                 strategy: AUTO
-        projectIdentifier:
+        projectId:
+            type: integer
+            column: project_id
+        textmasterDocumentId:
             type: string
-            column: project_identifier
-        documentIdentifier:
-            type: string
-            column: document_identifier
+            column: textmaster_document_id
+            nullable: true
         productId:
             type: integer
             column: product_id
@@ -24,12 +25,22 @@ Pim\Bundle\TextmasterBundle\Entity\Document:
         productLabel:
             type: string
             column: product_label
-        language:
+        dataToSend:
+            type: json_array
+            column: data_to_send
+        languageFrom:
             type: string
-            column: language
+            column: language_from
+        languageTo:
+            type: string
+            column: language_to
         status:
             type: string
             column: status
+            nullable: true
+        createdAt:
+            type: datetime
+            column: created_at
         updatedAt:
             type: datetime
             column: updated_at

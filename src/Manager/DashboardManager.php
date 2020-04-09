@@ -3,7 +3,14 @@
 namespace Pim\Bundle\TextmasterBundle\Manager;
 
 use Pim\Bundle\TextmasterBundle\Doctrine\Repository\DocumentRepository;
+use Textmaster\Model\DocumentInterface;
 
+/**
+ * Class DashboardManager.
+ *
+ * @package Pim\Bundle\TextmasterBundle\Manager
+ * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
+ */
 class DashboardManager
 {
     /** @var DocumentRepository */
@@ -61,16 +68,17 @@ class DashboardManager
     protected function sortStatuses(array $statuses)
     {
         $statusOrder = [
-            'In Creation',
-            'In Progress',
-            'Waiting Assignment',
-            'In Review',
-            'Completed',
-            'Incomplete',
-            'Paused',
-            'Copyscape',
-            'Counting Words',
-            'Quality',
+            DocumentInterface::STATUS_IN_CREATION,
+            DocumentInterface::STATUS_IN_PROGRESS,
+            DocumentInterface::STATUS_WAITING_ASSIGNMENT,
+            DocumentInterface::STATUS_IN_REVIEW,
+            DocumentInterface::STATUS_COMPLETED,
+            DocumentInterface::STATUS_INCOMPLETE,
+            DocumentInterface::STATUS_PAUSED,
+            DocumentInterface::STATUS_CANCELED,
+            DocumentInterface::STATUS_COPYSCAPE,
+            DocumentInterface::STATUS_COUNTING_WORDS,
+            DocumentInterface::STATUS_QUALITY,
         ];
 
         $sortedStatus = [];

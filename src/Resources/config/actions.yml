@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.extension.action.type.open_blank:
         class: '%oro_datagrid.extension.action.type.navigate.class%'
         shared: false

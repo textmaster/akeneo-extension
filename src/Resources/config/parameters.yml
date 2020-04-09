@@ -1,3 +1,3 @@
 parameters:
-    textmaster.base_uri.app: 'https://app.textmasterstaging.com'
-    textmaster.base_uri.api: 'https://api.textmasterstaging.com/v1'
+    textmaster.base_uri.app: 'https://app.textmaster.com'
+    textmaster.base_uri.api: 'https://api.textmaster.com/v1'

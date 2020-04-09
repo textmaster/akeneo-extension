@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Controller;
 
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
 use Pim\Bundle\TextmasterBundle\Manager\DashboardManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,18 +20,24 @@ class TextmasterRestController
     /** @var DashboardManager */
     private $dashboardManager;
 
+    /** @var ConfigManager */
+    private $configManager;
+
     /**
      * TextmasterRestController constructor.
      *
      * @param WebApiRepositoryInterface $apiRepository
-     * @param DashboardManager          $dashboardManager
+     * @param DashboardManager $dashboardManager
+     * @param ConfigManager $configManager
      */
     public function __construct(
         WebApiRepositoryInterface $apiRepository,
-        DashboardManager $dashboardManager
+        DashboardManager $dashboardManager,
+        ConfigManager $configManager
     ) {
         $this->apiRepository    = $apiRepository;
         $this->dashboardManager = $dashboardManager;
+        $this->configManager = $configManager;
     }
 
     /**
@@ -46,20 +53,17 @@ class TextmasterRestController
     /**
      * @return JsonResponse
      */
-    public function fetchTextmasterCategories(): JsonResponse
-    {
-        $categories = $this->apiRepository->getCategories();
-
-        return new JsonResponse($categories);
-    }
-
-    /**
-     * @return JsonResponse
-     */
     public function fetchTextmasterApiTemplates(): JsonResponse
     {
         $apiTemplates = $this->apiRepository->getApiTemplates();
 
         return new JsonResponse($apiTemplates);
+    }
+
+    public function fetchTextmasterDefaultAttributes(): JsonResponse
+    {
+        $attributes = explode(',', $this->configManager->get('pim_textmaster.attributes'));
+
+        return new JsonResponse($attributes);
     }
 }

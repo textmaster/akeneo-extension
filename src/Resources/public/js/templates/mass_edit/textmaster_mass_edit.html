@@ -7,7 +7,15 @@
                name="name"
                type="text" value="<%- name %>"/>
     </div>
+    <div class="AknFieldContainer-footer footer-elements-container">
+        <div class="AknFieldContainer-validationErrors validation-errors">
+            <span class="AknFieldContainer-validationError">
+                <span class="error-message" id="name-error"></span>
+            </span>
+        </div>
+    </div>
 </div>
+
 <div class="AknFieldContainer">
     <div class="AknFieldContainer-header">
         <label class="AknFieldContainer-label" for="textmaster-api-templates">API template</label>
@@ -17,4 +25,87 @@
                id="textmaster-api-templates" name="apiTemplates"
                type="hidden" value="<%- apiTemplates %>"/>
     </div>
+    <div class="AknFieldContainer-footer footer-elements-container">
+        <div class="AknFieldContainer-validationErrors validation-errors">
+            <span class="AknFieldContainer-validationError">
+                <span class="error-message" id="api-templates-error"></span>
+            </span>
+        </div>
+    </div>
 </div>
+
+<div class="AknFieldContainer">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label" for="textmaster-attribute-option">Attribute option</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <input class="select-field textmaster-field"
+               id="textmaster-attribute-option" name="attributeOption"
+               type="hidden" value="<%- attributeOption %>"/>
+    </div>
+</div>
+
+<div class="AknFieldContainer" style="display: none">
+    <div class="AknFieldContainer-header">
+        <label class="AknFieldContainer-label" for="textmaster-personalized-attributes">Attributes</label>
+    </div>
+    <div class="AknFieldContainer-inputContainer">
+        <input class="select-field multi-select textmaster-field"
+               id="textmaster-personalized-attributes" name="personalizedAttributes"
+               type="hidden" value="<%- personalizedAttributes %>"/>
+    </div>
+    <div class="AknFieldContainer-footer footer-elements-container">
+        <div class="AknFieldContainer-validationErrors validation-errors">
+            <span class="AknFieldContainer-validationError">
+                <span class="error-message" id="personalized-attributes-error"></span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="date-range-fields-container" style="display: none">
+    <div class="akeneo-datepicker-field AknFieldContainer">
+        <div class="AknFieldContainer-header">
+            <label class="AknFieldContainer-label" for="dateRangeStartsAt">From Date</label>
+        </div>
+        <div class="AknFieldContainer-inputContainer field-input">
+            <div class="datetimepicker AknFieldContainer-subContainer">
+                <input name="dateRangeStartsAt"
+                       id="dateRangeStartsAt"
+                       class="AknTextField datepicker-field add-on"
+                       value="<%- dateRangeStartsAtFormatted %>"
+                       type="text">
+            </div>
+        </div>
+        <div class="AknFieldContainer-footer footer-elements-container">
+            <div class="AknFieldContainer-validationErrors validation-errors">
+            <span class="AknFieldContainer-validationError">
+                <span class="error-message" id="start-date-error"></span>
+            </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="akeneo-datepicker-field AknFieldContainer">
+        <div class="AknFieldContainer-header">
+            <label class="AknFieldContainer-label" for="dateRangeEndsAt">To Date</label>
+        </div>
+        <div class="AknFieldContainer-inputContainer field-input">
+            <div class="datetimepicker AknFieldContainer-subContainer">
+                <input name="dateRangeEndsAt"
+                       id="dateRangeEndsAt"
+                       class="AknTextField datepicker-field add-on"
+                       value="<%- dateRangeEndsAtFormatted %>"
+                       type="text">
+            </div>
+        </div>
+        <div class="AknFieldContainer-footer footer-elements-container">
+            <div class="AknFieldContainer-validationErrors validation-errors">
+            <span class="AknFieldContainer-validationError">
+                <span class="error-message" id="end-date-error"></span>
+            </span>
+            </div>
+        </div>
+    </div>
+</div>
+

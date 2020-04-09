@@ -2,110 +2,197 @@
 
 namespace Pim\Bundle\TextmasterBundle\Entity;
 
-use Pim\Bundle\TextmasterBundle\Project\ProjectInterface;
+use DateTime;
+use Doctrine\Common\Collections\Collection;
+use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
 
 /**
- * Project entity
+ * Class Project.
  *
- * @author    Jean-Marie Leroux <jean-marie.leroux@akeneo.com>
- * @copyright 2016 TextMaster.com (https://textmaster.com)
- * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @package Pim\Bundle\TextmasterBundle\Entity
+ * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
  */
 class Project implements ProjectInterface
 {
     /** @var int */
-    private $id;
+    protected $id;
 
     /** @var string */
-    private $code;
+    protected $textmasterProjectId;
 
     /** @var string */
-    private $name;
-
-    /** @var \DateTime */
-    private $updatedAt;
+    protected $username;
 
     /** @var string */
-    private $username;
+    protected $name;
 
     /** @var string */
-    private $apiTemplateId;
+    protected $apiTemplateId;
 
-    /** @var array */
-    private $documents;
+    /** @var string */
+    protected $textmasterStatus;
 
-    public function getId()
+    /** @var string */
+    protected $akeneoStatus;
+
+    /** @var Collection */
+    protected $documents;
+
+    /** @var DateTime */
+    protected $createdAt;
+
+    /** @var DateTime */
+    protected $updatedAt;
+
+    /**
+     * @inheritdoc
+     */
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId($id)
+    /**
+     * @inheritdoc
+     */
+    public function getTextmasterProjectId(): string
     {
-        $this->id = $id;
+        return $this->textmasterProjectId;
     }
 
-    public function getCode()
+    /**
+     * @inheritdoc
+     */
+    public function setTextmasterProjectId(string $textmasterProjectId): ProjectInterface
     {
-        return $this->code;
+        $this->textmasterProjectId = $textmasterProjectId;
+
+        return $this;
     }
 
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt()
-    {
-        $this->updatedAt = new \DateTime();
-    }
-
-    public function getUsername()
+    /**
+     * @inheritdoc
+     */
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function setUsername($username)
+    /**
+     * @inheritdoc
+     */
+    public function setUsername(string $username): ProjectInterface
     {
         $this->username = $username;
+
+        return $this;
     }
 
-    public function getApiTemplateId()
+    /**
+     * @inheritdoc
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setName(string $name): ProjectInterface
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getApiTemplateId(): string
     {
         return $this->apiTemplateId;
     }
 
-    public function setApiTemplateId($templateId)
+    /**
+     * @inheritdoc
+     */
+    public function setApiTemplateId(string $apiTemplateId): ProjectInterface
     {
-        $this->apiTemplateId = $templateId;
+        $this->apiTemplateId = $apiTemplateId;
+
+        return $this;
     }
 
-    public function getDocuments()
+    /**
+     * @inheritdoc
+     */
+    public function getTextmasterStatus(): string
     {
-        return $this->documents;
+        return $this->textmasterStatus;
     }
 
-    public function setDocuments($documents)
+    /**
+     * @inheritdoc
+     */
+    public function setTextmasterStatus(string $textmasterStatus): ProjectInterface
     {
-        $this->documents = $documents;
+        $this->textmasterStatus = $textmasterStatus;
+
+        return $this;
     }
 
-    public function addDocument($document)
+    /**
+     * @inheritdoc
+     */
+    public function getAkeneoStatus(): string
     {
-        $this->documents[] = $document;
+        return $this->akeneoStatus;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setAkeneoStatus(string $akeneoStatus): ProjectInterface
+    {
+        $this->akeneoStatus = $akeneoStatus;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setCreatedAt(?DateTime $createdAt): ProjectInterface
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setUpdatedAt(?DateTime $updatedAt): ProjectInterface
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 }

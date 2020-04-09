@@ -2,7 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Api;
 
-use Textmaster\Model\ProjectInterface;
+use Textmaster\Model\ProjectInterface as ApiProjectInterface;
 
 /**
  * Calls to TextMaster php API
@@ -14,12 +14,12 @@ use Textmaster\Model\ProjectInterface;
 interface WebApiRepositoryInterface
 {
     /**
-     * @param array  $documents
-     * @param string $projectId
+     * @param string $textmasterProjectId
+     * @param array  $data
      *
      * @return array
      */
-    public function sendProjectDocuments(array $documents, $projectId);
+    public function createDocument(string $textmasterProjectId, array $data);
 
     /**
      * @param array $data
@@ -29,40 +29,18 @@ interface WebApiRepositoryInterface
     public function createProject(array $data);
 
     /**
-     * @param array  $data
-     * @param string $projectId
-     *
-     * @return array
-     */
-    public function updateProject(array $data, $projectId);
-
-    /**
      * @param array $filters
      *
-     * @return ProjectInterface[]
+     * @return ApiProjectInterface[]
      */
     public function getProjects(array $filters);
 
     /**
-     * @param array $filters
-     *
-     * @return string[]
-     */
-    public function getProjectCodes(array $filters);
-
-    /**
      * @param string $projectCode
      *
-     * @return ProjectInterface
+     * @return ApiProjectInterface
      */
     public function getProject($projectCode);
-
-    /**
-     * @param string $projectCode
-     *
-     * @return ProjectInterface
-     */
-    public function launchProject($projectCode);
 
     /**
      * @param string $projectId
@@ -76,30 +54,15 @@ interface WebApiRepositoryInterface
      *
      * @return array
      */
-    public function archiveProject($projectId);
-
-    /**
-     * @param array  $filters
-     * @param string $projectCode
-     *
-     * @return \Textmaster\Model\DocumentInterface[]
-     */
-    public function getDocuments(array $filters, $projectCode);
-
-    /**
-     * @param string[] $pimLocaleCodes
-     *
-     * @return \string[]
-     */
-    public function getAvailableLocaleCodes(array $pimLocaleCodes);
-
-    /**
-     * @return array
-     */
-    public function getCategories();
+    public function finalizeProject($projectId);
 
     /**
      * @return array
      */
     public function getApiTemplates();
+
+    /**
+     * @return array
+     */
+    public function getLangages();
 }
