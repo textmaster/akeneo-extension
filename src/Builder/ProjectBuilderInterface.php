@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Builder;
 
+use DateTimeInterface;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
 
 /**
@@ -20,12 +21,14 @@ interface ProjectBuilderInterface
      * @return array
      */
     public function createProjectData(ProjectInterface $project);
-    
+
     /**
      * @param mixed $product
-     * @param string           $localeCode
-     *
+     * @param string[] $attributeCodes
+     * @param string $localeCode
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
      * @return array
      */
-    public function createDocumentData($product, $localeCode);
+    public function createDocumentData($product, array $attributeCodes, $localeCode, ?DateTimeInterface $startDate = null, ?DateTimeInterface $endDate = null);
 }

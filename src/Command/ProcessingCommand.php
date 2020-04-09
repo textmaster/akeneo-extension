@@ -3,7 +3,7 @@
 namespace Pim\Bundle\TextmasterBundle\Command;
 
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Pim\Bundle\TextmasterBundle\Command
  * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
  */
-class ProcessingCommand extends ContainerAwareCommand
+class ProcessingCommand extends Command
 {
     use LockableTrait;
     use CommandTrait;

@@ -3,15 +3,18 @@ parameters:
     pim_textmaster.step.flag_projects_to_send.class: 'Pim\Bundle\TextmasterBundle\Step\FlagProjectsToSendStep'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.step.prepare_projects:
         class: '%pim_textmaster.step.prepare_projects.class%'
         arguments:
             - 'textmaster.step.prepare_projects'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
-        calls:
-            - [ setWebApiRepository, ['@pim_textmaster.repository.webapi' ]]
-            - [ setProjectManager, ['@pim_textmaster.manager.project' ]]
+            - '@oro_config.global'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.manager.project'
 
     pim_textmaster.step.add_documents:
         class: '%pim_connector.step.item_step.class%'

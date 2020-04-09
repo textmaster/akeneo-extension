@@ -2,6 +2,9 @@ parameters:
     pim_textmaster.writer.document.class: 'Akeneo\Tool\Component\Connector\Writer\Database\Writer'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.writer.document:
         class: '%pim_textmaster.writer.document.class%'
         arguments:

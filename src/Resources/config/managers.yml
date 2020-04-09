@@ -4,6 +4,9 @@ parameters:
     pim_textmaster.manager.project.class:   'Pim\Bundle\TextmasterBundle\Manager\ProjectManager'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.manager.dashboard:
         class: '%pim_textmaster.manager.dashboard.class%'
         arguments:

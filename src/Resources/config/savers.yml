@@ -3,6 +3,9 @@ parameters:
     pim_textmaster.saver.project.class:  'Akeneo\Tool\Bundle\StorageUtilsBundle\Doctrine\Common\Saver\BaseSaver'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.saver.project:
         class: '%akeneo_storage_utils.saver.base.class%'
         arguments:

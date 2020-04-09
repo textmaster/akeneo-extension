@@ -2,6 +2,9 @@ parameters:
     pim_textmaster.processor.denormalization.document.class: 'Pim\Bundle\TextmasterBundle\Processor\Denormalization\DocumentProcessor'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.processor.denormalization.document:
         class: '%pim_textmaster.processor.denormalization.document.class%'
         arguments:
