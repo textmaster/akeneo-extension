@@ -27,6 +27,11 @@ config:
                     options:
                         urls:
                             list: textmaster_rest_dashboard_status_data
+                textmaster-default-attributes:
+                    module: pim/base-fetcher
+                    options:
+                        urls:
+                            list: textmaster_rest_default-attributes
                 textmaster-open-blank-to-project:
                     module: pim/base-fetcher
                     options:

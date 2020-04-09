@@ -8,7 +8,7 @@ services:
         arguments:
             - '@pim_textmaster.repository.webapi'
             - '@pim_textmaster.manager.dashboard'
-            - '%textmaster.base_uri.app%'
+            - '@oro_config.global'
         tags:
             - {name: controller.service_arguments}
 

@@ -12,9 +12,9 @@ services:
             - 'textmaster.step.prepare_projects'
             - '@event_dispatcher'
             - '@akeneo_batch.job_repository'
-        calls:
-            - [ setWebApiRepository, ['@pim_textmaster.repository.webapi' ]]
-            - [ setProjectManager, ['@pim_textmaster.manager.project' ]]
+            - '@oro_config.global'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.manager.project'
 
     pim_textmaster.step.add_documents:
         class: '%pim_connector.step.item_step.class%'

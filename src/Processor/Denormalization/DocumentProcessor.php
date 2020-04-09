@@ -2,6 +2,8 @@
 
 namespace Pim\Bundle\TextmasterBundle\Processor\Denormalization;
 
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyVariantInterface;
+use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Tool\Component\Batch\Item\ExecutionContext;
@@ -12,6 +14,7 @@ use Akeneo\Tool\Component\StorageUtils\Detacher\BulkObjectDetacherInterface;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Exception;
+use Oro\Bundle\ConfigBundle\Config\ConfigManager;
 use Pim\Bundle\TextmasterBundle\Manager\DocumentManager;
 use Pim\Bundle\TextmasterBundle\Manager\ProjectManager;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
@@ -50,13 +53,16 @@ class DocumentProcessor implements StepExecutionAwareInterface, ItemProcessorInt
     /** @var ObjectDetacherInterface|BulkObjectDetacherInterface */
     protected $objectDetacher;
 
+    /** @var array */
+    protected $availableAttributes = [];
+
     /**
      * DocumentProcessor constructor.
      *
-     * @param LocaleProvider          $localeProvider
+     * @param LocaleProvider $localeProvider
      * @param ProjectBuilderInterface $projectBuilder
-     * @param DocumentManager         $documentManager
-     * @param ProjectManager          $projectManager
+     * @param DocumentManager $documentManager
+     * @param ProjectManager $projectManager
      * @param ObjectDetacherInterface $objectDetacher
      */
     public function __construct(
@@ -89,6 +95,9 @@ class DocumentProcessor implements StepExecutionAwareInterface, ItemProcessorInt
         }
 
         $documents = [];
+        $attributeCodesToTranslate = $this->getAttributesToTranslate($product);
+        $dateRangeStartsAt = $this->getJobContext()->get(PrepareProjectsStep::DATE_RANGE_STARTS_AT_CONTEXT_KEY);
+        $dateRangeEndsAt = $this->getJobContext()->get(PrepareProjectsStep::DATE_RANGE_ENDS_AT_CONTEXT_KEY);
 
         /** @var  $project ProjectInterface */
         foreach ($this->getProjects() as $project) {
@@ -101,7 +110,7 @@ class DocumentProcessor implements StepExecutionAwareInterface, ItemProcessorInt
             }
 
             $localeFrom = $this->localeProvider->getPimLocaleCode($apiTemplate['language_from']);
-            $dataToSend = $this->projectBuilder->createDocumentData($product, $localeFrom);
+            $dataToSend = $this->projectBuilder->createDocumentData($product, $attributeCodesToTranslate, $localeFrom, $dateRangeStartsAt, $dateRangeEndsAt);
 
             if (null === $dataToSend) {
                 continue;
@@ -134,6 +143,8 @@ class DocumentProcessor implements StepExecutionAwareInterface, ItemProcessorInt
 
     /**
      * @param array DocumentInterface[]
+     *
+     * @throws Exception
      */
     protected function saveDocuments(array $documents): void
     {
@@ -191,5 +202,41 @@ class DocumentProcessor implements StepExecutionAwareInterface, ItemProcessorInt
     protected function getJobContext()
     {
         return $this->stepExecution->getJobExecution()->getExecutionContext();
+    }
+
+    /**
+     * Retrieve available attribute codes.
+     *
+     * @param EntityWithValuesInterface $product
+     *
+     * @return array
+     */
+    protected function getAttributesToTranslate(EntityWithValuesInterface $product): array
+    {
+        $selectedAttributeCodes = $this->getJobContext()->get(PrepareProjectsStep::SELECTED_ATTRIBUTES_CONTEXT_KEY);
+        $availableAttributes = array_intersect($selectedAttributeCodes, $product->getUsedAttributeCodes());
+
+        if ($product instanceof ProductModelInterface) {
+            $familyVariantCode = $product->getFamilyVariant()->getCode();
+
+            if (EntityWithFamilyVariantInterface::ROOT_VARIATION_LEVEL === $product->getLevel()) {
+                $this->availableAttributes[$familyVariantCode] = $product->getUsedAttributeCodes();
+            } else {
+                if (!isset($this->availableAttributes[$familyVariantCode])) {
+                    $this->availableAttributes[$familyVariantCode] = $this->getAttributesToTranslate(
+                        $product->getParent()
+                    );
+
+                    $this->objectDetacher->detach($product->getParent());
+                }
+
+                $availableAttributes = array_diff(
+                    $availableAttributes,
+                    $this->availableAttributes[$familyVariantCode]
+                );
+            }
+        }
+
+        return $availableAttributes;
     }
 }

@@ -66,7 +66,7 @@ You can check translation progress with the dashboard :
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension ~4.0
+composer require textmaster/akeneo-extension
 ```
 
 Register the bundle in `config/bundles.php`:
