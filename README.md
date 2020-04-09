@@ -21,15 +21,15 @@ The Textmaster Akeneo extension allows you to easily translate your Akeneo produ
 
 | Akeneo Textmaster extension | Akeneo PIM Community Edition |
 |:---------------------------:|:----------------------------:|
+| v4.0.*                      | v4.0.*                       |
 | v3.2.*                      | v3.2.*                       |
 | v3.0.*                      | v3.0.*                       |
-| v2.4.*                      | v2.3.* + API template        |
-|                             | + Dashboard + Product model  |
-| v2.3.*                      | v2.3.* + API template        |
-| v2.2.*                      | v2.2.* + API template        |
-| v2.1.*                      | v2.1.* + API template        |
-| v2.0.*                      | v2.0.* + API template        |
-| v1.3.*                      | v1.7.* + API template        |
+| v2.4.*                      | v2.3.*                       |
+| v2.3.*                      | v2.3.*                       |
+| v2.2.*                      | v2.2.*                       |
+| v2.1.*                      | v2.1.*                       |
+| v2.0.*                      | v2.0.*                       |
+| v1.3.*                      | v1.7.*                       |
 | v1.2.*                      | v1.7.*                       |
 | v1.1.*                      | v1.6.*                       |
 | v1.0.*                      | v1.5.*                       |
@@ -38,11 +38,13 @@ You also need a Textmaster account to have some API credentials and access to th
 
 ### Create a Textmaster account
 
-Creating your account on https://textmaster.com is totally free. You can access the register form by clicking on the "Login" button or by following [this link](https://textmaster.com/sign_up).
+You can create a sandbox account for testing purpose at app.textmasterstaging.com
+
+When you are ready, you can create your account on https://textmaster.com It's totally free. You can access the register form by clicking on the "Login" button or by following [this link](https://textmaster.com/sign_up).
 
 ### Create one or more API templates
 
-The 2.3 version of this extension uses Textmaster API templates.
+This extension uses Textmaster API templates.
 You must have at least one API template before using this extension.
 
 ## How it works
@@ -64,13 +66,13 @@ You can check translation progress with the dashboard :
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension ~3.2
+composer require textmaster/akeneo-extension
 ```
 
-Register your bundle in the `AppKernel::registerProjectBundles`:
+Register the bundle in `config/bundles.php`:
 
 ```
-new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle(),
+Pim\Bundle\TextmasterBundle\PimTextmasterBundle::class => ['dev' => true, 'test' => true, 'prod' => true],
 ```
 
 Then we need to add a new mass edit batch job:
@@ -81,14 +83,16 @@ bin/console akeneo:batch:create-job 'Textmaster Connector' 'textmaster_start_pro
 
 Make sure you have native Akeneo script `bin/console akeneo:batch:job-queue-consumer-daemon` running.
 
-Add the new routes used by the extension to the global router. Add the following lines at the end of `app/config/routing.yml`:
+You can also add `&` to the end of the command to make it run in the background: `bin/console akeneo:batch:job-queue-consumer-daemon &`
+
+Add the new routes used by the extension to the global router. Add the following route to your configuration:
 
 ```
 textmaster:
     resource: "@PimTextmasterBundle/Resources/config/routing.yml"
 ```
 
-Optional : Add those parameters into app/config/parameters.yml to use textmaster sandbox :
+Optional : Add parameters into app/config/parameters.yml to use textmaster sandbox :
 
 ```
 parameters:

@@ -3,6 +3,9 @@ parameters:
     pim_textmaster.updater.document.product_model.class: 'Pim\Bundle\TextmasterBundle\Updater\ProductModelUpdater'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.updater.document.product:
         class: '%pim_textmaster.updater.document.product.class%'
         arguments:

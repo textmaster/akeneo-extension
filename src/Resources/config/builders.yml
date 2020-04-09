@@ -6,7 +6,7 @@ services:
         class: '%pim_textmaster.builder.project.class%'
         public: true
         arguments:
-            - '@oro_config.global'
+            - '@pim_textmaster.repository.version'
             - '@akeneo_storage_utils.doctrine.object_detacher'
             - '@pim_catalog.repository.attribute'
         tags:

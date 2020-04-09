@@ -3,6 +3,9 @@ parameters:
     pim_textmaster.provider.locale.class:   'Pim\Bundle\TextmasterBundle\Provider\LocaleProvider'
 
 services:
+    _defaults:
+        public: true
+
     pim_textmaster.provider.datagrid:
         class: '%pim_textmaster.provider.datagrid.class%'
         arguments:

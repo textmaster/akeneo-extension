@@ -2,10 +2,11 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Textmaster\Model\Project;
+use Textmaster\Model\ProjectInterface;
 
 /**
  * Retrieve all TextMaster projects
@@ -14,10 +15,21 @@ use Textmaster\Model\Project;
  * @copyright 2016 TextMaster.com (https://textmaster.com)
  * @license   http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-class ListProjectsCommand extends ContainerAwareCommand
+class ListProjectsCommand extends Command
 {
     /** @var OutputInterface */
     private $output;
+
+    /**
+     * @var WebApiRepositoryInterface
+     */
+    private $webApiRepository;
+
+    public function __construct(WebApiRepositoryInterface $webApiRepository)
+    {
+        parent::__construct();
+        $this->webApiRepository = $webApiRepository;
+    }
 
     /**
      * {@inheritdoc}
@@ -49,12 +61,11 @@ class ListProjectsCommand extends ContainerAwareCommand
     }
 
     /**
-     * @return Project[]
+     * @return ProjectInterface[]
      */
     protected function getProjects()
     {
-        $webApiRepository = $this->getContainer()->get('pim_textmaster.repository.webapi');
-        $projects = $webApiRepository->getProjects([
+        $projects = $this->webApiRepository->getProjects([
             'archived' => false,
         ]);
 
