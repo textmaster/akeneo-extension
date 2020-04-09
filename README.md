@@ -1,7 +1,3 @@
-|:---------------------------:|:----------------------------:|
-# Need to be updated for the new version !!!
-|:---------------------------:|:----------------------------:|
-
 # Textmaster extension for Akeneo PIM
 
 [![Build Status](https://travis-ci.org/textmaster/akeneo-extension.svg?branch=master)](https://travis-ci.org/textmaster/akeneo-extension)
@@ -67,13 +63,13 @@ You can check translation progress with the dashboard :
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension
+composer require textmaster/akeneo-extension ~3.0
 ```
 
-Register the bundle in `config/bundles.php`:
+Register the bundle in `AppKernel::registerProjectBundles`:
 
 ```
-Pim\Bundle\TextmasterBundle\PimTextmasterBundle::class => ['dev' => true, 'test' => true, 'prod' => true],
+new \Pim\Bundle\TextmasterBundle\PimTextmasterBundle()
 ```
 
 Then we need to add a new mass edit batch job:
