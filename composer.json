@@ -13,8 +13,6 @@
         }
     ],
     "require": {
-        "php": "7.2.*",
-        "akeneo/pim-community-dev": "3.2.*",
         "worldia/textmaster-api": "0.7.*"
     },
     "require-dev": {

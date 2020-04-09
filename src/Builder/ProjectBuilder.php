@@ -2,23 +2,20 @@
 
 namespace Pim\Bundle\TextmasterBundle\Builder;
 
-use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithFamilyVariantInterface;
 use Akeneo\Pim\Structure\Component\Repository\AttributeRepositoryInterface;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
+use DateTimeInterface;
 use Exception;
-use Oro\Bundle\ConfigBundle\Config\ConfigManager;
+use Pim\Bundle\TextmasterBundle\Doctrine\Repository\VersionRepository;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
-use Pim\Bundle\TextmasterBundle\Project\Exception\RuntimeException;
 use Akeneo\Pim\Structure\Component\AttributeTypes;
 use Akeneo\Pim\Structure\Component\Model\AttributeInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
-use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModelInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ValueInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductModel;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Textmaster\Model\DocumentInterface;
-use Doctrine\Common\Util\ClassUtils;
 
 /**
  * TextMaster builder.
@@ -33,20 +30,14 @@ class ProjectBuilder implements ProjectBuilderInterface
     /** @var array */
     protected $options = [];
 
-    /** @var ConfigManager */
-    protected $configManager;
-
     /** @var ObjectDetacherInterface */
     protected $objectDetacher;
 
     /** @var AttributeRepositoryInterface */
     protected $attributeRepository;
 
-    /**@var array */
-    protected $textmasterAttributes;
-
-    /** @var array */
-    protected $availableAttributes = [];
+    /** @var VersionRepository */
+    private $versionRepository;
 
     /** @var array */
     protected $attributes = [];
@@ -54,12 +45,12 @@ class ProjectBuilder implements ProjectBuilderInterface
     /**
      * Builder constructor.
      *
-     * @param ConfigManager                $configManager
-     * @param ObjectDetacherInterface      $objectDetacher
+     * @param VersionRepository $versionRepository
+     * @param ObjectDetacherInterface $objectDetacher
      * @param AttributeRepositoryInterface $attributeRepository
      */
     public function __construct(
-        ConfigManager $configManager,
+        VersionRepository $versionRepository,
         ObjectDetacherInterface $objectDetacher,
         AttributeRepositoryInterface $attributeRepository
     ) {
@@ -67,9 +58,9 @@ class ProjectBuilder implements ProjectBuilderInterface
         $this->configureOptions($resolver);
         $this->options = $resolver->resolve([]);
 
-        $this->configManager       = $configManager;
         $this->objectDetacher      = $objectDetacher;
         $this->attributeRepository = $attributeRepository;
+        $this->versionRepository = $versionRepository;
     }
 
     /**
@@ -87,20 +78,21 @@ class ProjectBuilder implements ProjectBuilderInterface
 
     /**
      * @inheritdoc
+     * @throws Exception
      */
-    public function createDocumentData($product, $localeCode)
-    {
-        $wysiwyg         = false;
+    public function createDocumentData(
+        $product,
+        array $attributeCodes,
+        $localeCode,
+        ?DateTimeInterface $startDate = null,
+        ?DateTimeInterface $endDate = null
+    ) {
+        $wysiwyg = false;
         $originalContent = [];
+        $productValues = $this->getDataToTranslate($product, $attributeCodes, $localeCode, $startDate, $endDate);
 
-        /** @var ValueInterface $productValue */
-        foreach ($this->getDataToTranslate($product) as $productValue) {
+        foreach ($productValues as $productValue) {
             $attribute = $this->getAttributeByCode($productValue->getAttributeCode());
-
-            if (false === $this->isValidForTranslation($attribute) || $productValue->getLocaleCode() !== $localeCode) {
-                continue;
-            }
-
             $originalPhrase = trim($productValue->getData());
 
             if ($attribute->isWysiwygEnabled()) {
@@ -133,6 +125,8 @@ class ProjectBuilder implements ProjectBuilderInterface
      * @param EntityWithValuesInterface $product
      *
      * @return string
+     *
+     * @throws Exception
      */
     protected function getDocumentTitle(EntityWithValuesInterface $product): string
     {
@@ -145,79 +139,51 @@ class ProjectBuilder implements ProjectBuilderInterface
         throw new Exception(
             sprintf(
                 'Processed item must implement ProductInterface or Product Model, %s given',
-                ClassUtils::getClass($product)
+                get_class($product)
             )
         );
     }
-
 
     /**
      * Retrieve productVal
      *
      * @param EntityWithValuesInterface $product
+     * @param array $attributeCodes
+     * @param string $localeCode
+     * @param DateTimeInterface|null $startDate
+     * @param DateTimeInterface|null $endDate
      *
-     * @return array
+     * @return ValueInterface[]
      */
-    private function getDataToTranslate(EntityWithValuesInterface $product): array
+    private function getDataToTranslate(EntityWithValuesInterface $product, array $attributeCodes, string $localeCode, ?DateTimeInterface $startDate, ?DateTimeInterface $endDate): array
     {
-        $availableAttributes = $this->getAvailableAttributes($product);
-        $productValues       = [];
+        $productValues = [];
+        $attributesUpdatedInDateRange = null;
+
+        if ($startDate && $endDate) {
+            $attributesUpdatedInDateRange = array_flip($this->getAttributesUpdatedInDateRange($product, $startDate, $endDate));
+        }
 
         /** @var ValueInterface $productValue */
         foreach ($product->getValues() as $productValue) {
-            if (in_array($productValue->getAttributeCode(), $availableAttributes)) {
-                $productValues[] = $productValue;
+            $attribute = $this->getAttributeByCode($productValue->getAttributeCode());
+
+            if (false === $this->isValidForTranslation($attribute) || $productValue->getLocaleCode() !== $localeCode) {
+                continue;
             }
+
+            if (!in_array($productValue->getAttributeCode(), $attributeCodes)) {
+                continue;
+            }
+
+            if (!$this->isValueUpdatedInDateRange($productValue, $attributesUpdatedInDateRange)) {
+                continue;
+            }
+
+            $productValues[] = $productValue;
         }
 
         return $productValues;
-    }
-
-    /**
-     * Retrieve available attribute codes.
-     *
-     * @param EntityWithValuesInterface $product
-     *
-     * @return array
-     */
-    protected function getAvailableAttributes(EntityWithValuesInterface $product): array
-    {
-        $availableAttributes = $this->getAvailableAttributesFromProduct($product);
-
-        if ($product instanceof ProductModelInterface) {
-            $familyVariantCode = $product->getFamilyVariant()->getCode();
-
-            if (EntityWithFamilyVariantInterface::ROOT_VARIATION_LEVEL === $product->getLevel()) {
-                $this->availableAttributes[$familyVariantCode] = $product->getUsedAttributeCodes();
-            } else {
-                if (!isset($this->availableAttributes[$familyVariantCode])) {
-                    $this->availableAttributes[$familyVariantCode] = $this->getAvailableAttributes(
-                        $product->getParent()
-                    );
-
-                    $this->objectDetacher->detach($product->getParent());
-                }
-
-                $availableAttributes = array_diff(
-                    $availableAttributes,
-                    $this->availableAttributes[$familyVariantCode]
-                );
-            }
-        }
-
-        return $availableAttributes;
-    }
-
-    /**
-     * Retrieve available attributes from product given.
-     *
-     * @param EntityWithValuesInterface $product
-     *
-     * @return array
-     */
-    protected function getAvailableAttributesFromProduct(EntityWithValuesInterface $product)
-    {
-        return array_intersect($this->getTextmasterAttributes(), $product->getUsedAttributeCodes());
     }
 
     /**
@@ -237,25 +203,6 @@ class ProjectBuilder implements ProjectBuilderInterface
     }
 
     /**
-     * Retrieve textmaster's attributes to translate.
-     *
-     * @return string[]
-     */
-    protected function getTextmasterAttributes(): array
-    {
-        if (null === $this->textmasterAttributes) {
-            $this->textmasterAttributes = explode(',', $this->configManager->get('pim_textmaster.attributes'));
-
-            if (empty($this->textmasterAttributes)) {
-                throw new RuntimeException('No attributes configured for translation');
-            }
-        }
-
-        return $this->textmasterAttributes;
-    }
-
-
-    /**
      * Check if attribute is a text attribute.
      *
      * @param AttributeInterface $attribute
@@ -264,10 +211,6 @@ class ProjectBuilder implements ProjectBuilderInterface
      */
     protected function isValidForTranslation(AttributeInterface $attribute): bool
     {
-        if (!in_array($attribute->getCode(), $this->getTextmasterAttributes())) {
-            return false;
-        }
-
         $isText = AttributeTypes::TEXT === $attribute->getType() || AttributeTypes::TEXTAREA === $attribute->getType();
 
         return $isText && $attribute->isLocalizable();
@@ -299,5 +242,45 @@ class ProjectBuilder implements ProjectBuilderInterface
         }
 
         return $this->attributes[$code];
+    }
+
+    /**
+     * @param $product
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
+     *
+     * @return string[]
+     */
+    public function getAttributesUpdatedInDateRange($product, DateTimeInterface $startDate, DateTimeInterface $endDate)
+    {
+        $attributeCodes = [];
+        $versions = $this->versionRepository->findLogEntriesInDateRange($startDate, $endDate, $product);
+
+        foreach ($versions as $version) {
+            $attributeCodes = array_merge($attributeCodes, array_keys($version->getChangeset()));
+
+            $this->objectDetacher->detach($version);
+        }
+
+        return $attributeCodes;
+    }
+
+    public function isValueUpdatedInDateRange(ValueInterface $productValue, ?array $attributesUpdatedInDateRange = null)
+    {
+        if (is_null($attributesUpdatedInDateRange)) {
+            return true;
+        }
+
+        $combinedCode = $productValue->getAttributeCode();
+
+        if ($productValue->getLocaleCode()) {
+            $combinedCode .= '-'.$productValue->getLocaleCode();
+        }
+
+        if ($productValue->getScopeCode()) {
+            $combinedCode .= '-'.$productValue->getScopeCode();
+        }
+
+        return array_key_exists($combinedCode, $attributesUpdatedInDateRange);
     }
 }

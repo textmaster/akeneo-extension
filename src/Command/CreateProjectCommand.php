@@ -2,11 +2,15 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
+use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Exception;
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
+use Pim\Bundle\TextmasterBundle\Builder\ProjectBuilderInterface;
+use Pim\Bundle\TextmasterBundle\Manager\DocumentManager;
 use Pim\Bundle\TextmasterBundle\Manager\ProjectManager;
 use Pim\Bundle\TextmasterBundle\Model\DocumentInterface;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,12 +21,55 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Pim\Bundle\TextmasterBundle\Command
  * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
  */
-class CreateProjectCommand extends ContainerAwareCommand
+class CreateProjectCommand extends Command
 {
     use LockableTrait;
     use CommandTrait;
 
+    protected static $defaultName = 'pim:textmaster:create-project';
+
     protected const BATCH_SIZE = 50;
+
+    /**
+     * @var ObjectDetacherInterface
+     */
+    private $objectDetacher;
+
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
+
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+
+    /**
+     * @var WebApiRepositoryInterface
+     */
+    private $webApiRepository;
+
+    /**
+     * @var ProjectBuilderInterface
+     */
+    private $projectBuilder;
+
+    public function __construct(
+        ProjectManager $projectManager, 
+        DocumentManager $documentManager, 
+        WebApiRepositoryInterface $webApiRepository,
+        ProjectBuilderInterface $projectBuilder,
+        ObjectDetacherInterface $objectDetacher
+    )     {
+        parent::__construct();
+
+        $this->objectDetacher = $objectDetacher;
+        $this->projectManager = $projectManager;
+        $this->documentManager = $documentManager;
+        $this->webApiRepository = $webApiRepository;
+        $this->projectBuilder = $projectBuilder;
+    }
 
     /**
      * {@inheritdoc}
@@ -30,7 +77,7 @@ class CreateProjectCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('pim:textmaster:create-project')
+            ->setName(self::$defaultName)
             ->setDescription('Create project and document into textmaster');
     }
 
@@ -50,13 +97,13 @@ class CreateProjectCommand extends ContainerAwareCommand
         }
 
         $this->writeMessage('Remove project without documents.');
-        $this->getProjectManager()->deleteUselessProjects();
+        $this->projectManager->deleteUselessProjects();
 
         foreach ($this->getProjectsToSend() as $projectId) {
-            $documentIds = $this->getDocumentManager()->getDocumentIdsByProjectId($projectId);
+            $documentIds = $this->documentManager->getDocumentIdsByProjectId($projectId);
 
             if (empty($documentIds)) {
-                $this->getProjectManager()->deleteProjectsByIds([$projectId]);
+                $this->projectManager->deleteProjectsByIds([$projectId]);
                 $this->writeMessage(
                     sprintf('No document to send for project with id %s', $projectId)
                 );
@@ -65,7 +112,7 @@ class CreateProjectCommand extends ContainerAwareCommand
             }
 
             try {
-                $project = $this->getProjectManager()->getProjectById($projectId);
+                $project = $this->projectManager->getProjectById($projectId);
                 $this->sendProject($project);
                 $this->sendProjectDocuments($project, $documentIds);
                 $this->saveProject($project);
@@ -85,8 +132,8 @@ class CreateProjectCommand extends ContainerAwareCommand
      */
     protected function sendProject(ProjectInterface $project): void
     {
-        $response = $this->getWebApiRepository()->createProject(
-            $this->getBuilder()->createProjectData($project)
+        $response = $this->webApiRepository->createProject(
+            $this->projectBuilder->createProjectData($project)
         );
 
         $project->setTextmasterProjectId($response['id']);
@@ -116,11 +163,11 @@ class CreateProjectCommand extends ContainerAwareCommand
      */
     protected function sendDocuments(ProjectInterface $project, array $documentIds): void
     {
-        $documents = $this->getDocumentManager()->getDocumentsbyIds($documentIds);
+        $documents = $this->documentManager->getDocumentsbyIds($documentIds);
 
         /** @var DocumentInterface $document */
         foreach ($documents as $document) {
-            $result = $this->getWebApiRepository()->createDocument(
+            $result = $this->webApiRepository->createDocument(
                 $project->getTextmasterProjectId(),
                 json_decode($document->getDataToSend(), true)
             );
@@ -129,8 +176,8 @@ class CreateProjectCommand extends ContainerAwareCommand
             $document->setStatus($result['status']);
         }
 
-        $this->getDocumentManager()->saveDocuments($documents);
-        $this->getObjectDetacher()->detachAll($documents);
+        $this->documentManager->saveDocuments($documents);
+        $this->objectDetacher->detachAll($documents);
     }
 
     /**
@@ -140,7 +187,7 @@ class CreateProjectCommand extends ContainerAwareCommand
      */
     protected function getProjectsToSend(): array
     {
-        return $this->getProjectManager()->getProjectIdsByStatus(ProjectManager::TO_SEND_STATUS);
+        return $this->projectManager->getProjectIdsByStatus(ProjectManager::TO_SEND_STATUS);
     }
 
     /**
@@ -151,6 +198,6 @@ class CreateProjectCommand extends ContainerAwareCommand
     protected function saveProject(ProjectInterface $project): void
     {
         $project->setAkeneoStatus(ProjectManager::TO_FINALIZE_STATUS);
-        $this->getProjectManager()->saveProject($project);
+        $this->projectManager->saveProject($project);
     }
 }

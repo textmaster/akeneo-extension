@@ -1,0 +1,50 @@
+services:
+    Pim\Bundle\TextmasterBundle\Command\ProcessingCommand:
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:processing' }
+
+    Pim\Bundle\TextmasterBundle\Command\CreateProjectCommand:
+        arguments:
+            - '@pim_textmaster.manager.project'
+            - '@pim_textmaster.manager.document'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.builder.project'
+            - '@akeneo_storage_utils.doctrine.object_detacher'
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:create-project' }
+
+    Pim\Bundle\TextmasterBundle\Command\FinalizeProjectCommand:
+        arguments:
+            - '@pim_textmaster.manager.project'
+            - '@pim_textmaster.manager.document'
+            - '@pim_textmaster.repository.webapi'
+            - '@akeneo_storage_utils.doctrine.object_detacher'
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:finalize-project' }
+
+    Pim\Bundle\TextmasterBundle\Command\ListProjectsCommand:
+        arguments:
+            - '@pim_textmaster.repository.webapi'
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:list-projects' }
+
+    Pim\Bundle\TextmasterBundle\Command\UpdateProductsCommand:
+        arguments:
+            - '@pim_textmaster.manager.project'
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:update-products' }
+
+    Pim\Bundle\TextmasterBundle\Command\UpdateProductsSubCommand:
+        arguments:
+            - '@pim_textmaster.updater.document.product'
+            - '@pim_textmaster.updater.document.product_model'
+            - '@pim_catalog.saver.product'
+            - '@pim_catalog.saver.product_model'
+            - '@akeneo_storage_utils.doctrine.object_detacher'
+            - '@pim_textmaster.manager.project'
+            - '@pim_textmaster.manager.document'
+            - '@pim_textmaster.repository.webapi'
+            - '@pim_textmaster.provider.locale'
+            - '@pim_textmaster.builder.project'
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:update-products-sub' }

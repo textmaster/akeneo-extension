@@ -4,10 +4,8 @@ namespace Pim\Bundle\TextmasterBundle\Command;
 
 use Exception;
 use Pim\Bundle\TextmasterBundle\Manager\ProjectManager;
-use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LockableTrait;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -17,10 +15,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @package Pim\Bundle\TextmasterBundle\Command
  * @author  Jessy JURKOWSKI <jessy.jurkowski@cgi.com>
  */
-class UpdateProductsCommand extends ContainerAwareCommand
+class UpdateProductsCommand extends Command
 {
     use LockableTrait;
     use CommandTrait;
+
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
+
+    public function __construct(ProjectManager $projectManager)
+    {
+        parent::__construct();
+        $this->projectManager = $projectManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -80,6 +89,6 @@ class UpdateProductsCommand extends ContainerAwareCommand
      */
     protected function getProjectsForUpdate(): array
     {
-        return $this->getProjectManager()->getProjectIdsByStatus(ProjectManager::FINALIZE_STATUS);
+        return $this->projectManager->getProjectIdsByStatus(ProjectManager::FINALIZE_STATUS);
     }
 }
