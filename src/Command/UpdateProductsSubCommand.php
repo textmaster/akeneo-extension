@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
+use Akeneo\Pim\Enrichment\Component\Product\Manager\CompletenessManager;
 use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
@@ -88,6 +89,11 @@ class UpdateProductsSubCommand extends Command
     private $projectBuilder;
 
     /**
+     * @var CompletenessManager
+     */
+    protected $completenessManager;
+
+    /**
      * @var LocaleProvider
      */
     private $localeProvider;
@@ -117,7 +123,8 @@ class UpdateProductsSubCommand extends Command
         DocumentManager $documentManager,
         WebApiRepositoryInterface $webApiRepository,
         LocaleProvider $localeProvider,
-        ProjectBuilderInterface $projectBuilder
+        ProjectBuilderInterface $projectBuilder,
+        CompletenessManager $completenessManager
     ) {
         parent::__construct();
 
@@ -131,6 +138,7 @@ class UpdateProductsSubCommand extends Command
         $this->webApiRepository = $webApiRepository;
         $this->projectBuilder = $projectBuilder;
         $this->localeProvider = $localeProvider;
+        $this->completenessManager = $completenessManager;
     }
 
     /**
@@ -332,6 +340,16 @@ class UpdateProductsSubCommand extends Command
      */
     protected function saveProductModels(): void
     {
+        # Update completeness for each child product of product model
+        foreach ($this->productModels as $productModel) {
+            $childProducts = $productModel->getProducts();
+            if ($childProducts && count($childProducts) > 0) {
+                foreach ($childProducts as $product) {
+                    $this->completenessManager->generateMissingForProduct($product);
+                }
+            }
+        }
+
         $this->productModelSaver->saveAll($this->productModels);
         $this->objectDetacher->detachAll($this->productModels);
         $this->productModels = [];
