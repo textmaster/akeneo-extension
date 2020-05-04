@@ -39,13 +39,12 @@ services:
             - '@pim_textmaster.updater.document.product'
             - '@pim_textmaster.updater.document.product_model'
             - '@pim_catalog.saver.product'
-            - '@pim_catalog.saver.product_model'
+            - '@pim_catalog.saver.product_model_descendants'
             - '@akeneo_storage_utils.doctrine.object_detacher'
             - '@pim_textmaster.manager.project'
             - '@pim_textmaster.manager.document'
             - '@pim_textmaster.repository.webapi'
             - '@pim_textmaster.provider.locale'
             - '@pim_textmaster.builder.project'
-            - '@pim_catalog.manager.completeness'
         tags:
             - { name: 'console.command', command: 'pim:textmaster:update-products-sub' }
