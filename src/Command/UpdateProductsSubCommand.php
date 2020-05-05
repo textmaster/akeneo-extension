@@ -65,6 +65,11 @@ class UpdateProductsSubCommand extends Command
     protected $productModelSaver;
 
     /**
+     * @var BulkSaverInterface
+     */
+    protected $productModelBulkSaver;
+
+    /**
      * @var ObjectDetacherInterface
      */
     private $objectDetacher;
@@ -119,7 +124,8 @@ class UpdateProductsSubCommand extends Command
         DocumentManager $documentManager,
         WebApiRepositoryInterface $webApiRepository,
         LocaleProvider $localeProvider,
-        ProjectBuilderInterface $projectBuilder
+        ProjectBuilderInterface $projectBuilder,
+        BulkSaverInterface $productModelBulkSaver
     ) {
         parent::__construct();
 
@@ -133,6 +139,7 @@ class UpdateProductsSubCommand extends Command
         $this->webApiRepository = $webApiRepository;
         $this->projectBuilder = $projectBuilder;
         $this->localeProvider = $localeProvider;
+        $this->productModelBulkSaver = $productModelBulkSaver;
     }
 
     /**
@@ -338,6 +345,7 @@ class UpdateProductsSubCommand extends Command
             $this->productModelSaver->save($productModel);
         }
 
+        $this->productModelBulkSaver->saveAll($this->productModels);
         $this->objectDetacher->detachAll($this->productModels);
         $this->productModels = [];
     }
