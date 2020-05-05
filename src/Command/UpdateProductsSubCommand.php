@@ -7,6 +7,7 @@ use Akeneo\Pim\Enrichment\Component\Product\Model\EntityWithValuesInterface;
 use Akeneo\Pim\Enrichment\Component\Product\Model\ProductInterface;
 use Akeneo\Tool\Component\StorageUtils\Detacher\ObjectDetacherInterface;
 use Akeneo\Tool\Component\StorageUtils\Saver\BulkSaverInterface;
+use Akeneo\Tool\Component\StorageUtils\Saver\SaverInterface;
 use DateTimeZone;
 use LogicException;
 use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
@@ -59,7 +60,7 @@ class UpdateProductsSubCommand extends Command
     protected $productSaver;
 
     /**
-     * @var BulkSaverInterface
+     * @var SaverInterface
      */
     protected $productModelSaver;
 
@@ -89,11 +90,6 @@ class UpdateProductsSubCommand extends Command
     private $projectBuilder;
 
     /**
-     * @var CompletenessManager
-     */
-    protected $completenessManager;
-
-    /**
      * @var LocaleProvider
      */
     private $localeProvider;
@@ -117,14 +113,13 @@ class UpdateProductsSubCommand extends Command
         ProductUpdater $productUpdater,
         ProductModelUpdater $productModelUpdater,
         BulkSaverInterface $productSaver,
-        BulkSaverInterface $productModelSaver,
+        SaverInterface $productModelSaver,
         ObjectDetacherInterface $objectDetacher,
         ProjectManager $projectManager,
         DocumentManager $documentManager,
         WebApiRepositoryInterface $webApiRepository,
         LocaleProvider $localeProvider,
-        ProjectBuilderInterface $projectBuilder,
-        CompletenessManager $completenessManager
+        ProjectBuilderInterface $projectBuilder
     ) {
         parent::__construct();
 
@@ -138,7 +133,6 @@ class UpdateProductsSubCommand extends Command
         $this->webApiRepository = $webApiRepository;
         $this->projectBuilder = $projectBuilder;
         $this->localeProvider = $localeProvider;
-        $this->completenessManager = $completenessManager;
     }
 
     /**
@@ -340,17 +334,10 @@ class UpdateProductsSubCommand extends Command
      */
     protected function saveProductModels(): void
     {
-        # Update completeness for each child product of product model
         foreach ($this->productModels as $productModel) {
-            $childProducts = $productModel->getProducts();
-            if ($childProducts && count($childProducts) > 0) {
-                foreach ($childProducts as $product) {
-                    $this->completenessManager->generateMissingForProduct($product);
-                }
-            }
+            $this->productModelSaver->save($productModel);
         }
 
-        $this->productModelSaver->saveAll($this->productModels);
         $this->objectDetacher->detachAll($this->productModels);
         $this->productModels = [];
     }
