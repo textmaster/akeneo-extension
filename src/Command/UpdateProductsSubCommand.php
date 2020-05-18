@@ -341,11 +341,11 @@ class UpdateProductsSubCommand extends Command
      */
     protected function saveProductModels(): void
     {
+        $this->productModelBulkSaver->saveAll($this->productModels);
         foreach ($this->productModels as $productModel) {
             $this->productModelSaver->save($productModel);
         }
 
-        $this->productModelBulkSaver->saveAll($this->productModels);
         $this->objectDetacher->detachAll($this->productModels);
         $this->productModels = [];
     }
