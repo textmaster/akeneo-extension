@@ -62,7 +62,7 @@ You can check translation progress with the dashboard :
 
 ![dashboard screen](doc/img/dashboard-01.png)
 
-## Installation
+## Installation without Docker
 
 First step is to require the sources:
 ```
@@ -125,6 +125,22 @@ To see projects that are registered on TextMaster, run:
 ```
 bin/console pim:textmaster:list-projects
 ```
+
+## Installation with Docker
+1. Install the package: `docker-compose run --rm php php -d memory_limit=4G /usr/local/bin/composer require textmaster/akeneo-extension:~4.0`
+2. Create a file and folder in project root `config/routes/routes.yml`, add content:
+```
+textmaster:
+    resource: "@PimTextmasterBundle/Resources/config/routing.yml"
+```
+3. Add new line in config/bundles.php:
+```
+Pim\Bundle\TextmasterBundle\PimTextmasterBundle::class => ['all' => true],
+```
+4. Generate cache: `make cache`
+5. Generate assets: `make assets`
+6. Generate javascript assets `make javascript-dev` or `make javascript-prod`
+7. Check the admin interface to see the plugin is installed.
 
 ### Parameters
 
