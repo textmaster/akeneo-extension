@@ -32,6 +32,7 @@ Pim\Bundle\TextmasterBundle\Entity\Project:
         createdAt:
             type: datetime
             column: created_at
+            nullable: true
         updatedAt:
             type: datetime
             column: updated_at
