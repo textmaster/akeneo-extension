@@ -45,16 +45,19 @@ class ProcessingCommand extends Command
         }
 
         try {
-            $this->writeMessage('Start command pim:textmaster:create-project');
+            $this->writeMessage('CREATE PROJECT Start command pim:textmaster:create-project');
             $this->runCommand($input, 'pim:textmaster:create-project');
+            $this->writeMessage('CREATE PROJECT End command pim:textmaster:create-project');
 
             $this->writeMessage('---------------------------------------------');
-            $this->writeMessage('Start command pim:textmaster:finalize-project');
+            $this->writeMessage('FINALIZE PROJECT Start command pim:textmaster:finalize-project');
             $this->runCommand($input, 'pim:textmaster:finalize-project');
+            $this->writeMessage('FINALIZE PROJECT End command pim:textmaster:finalize-project');
 
             $this->writeMessage('---------------------------------------------');
-            $this->writeMessage('Start command pim:textmaster:update-products');
+            $this->writeMessage('UPDATE PRODUCTS Start command pim:textmaster:update-products');
             $this->runCommand($input, 'pim:textmaster:update-products');
+            $this->writeMessage('UPDATE PRODUCTS End command pim:textmaster:update-products');
         } catch (Exception $exception) {
             $this->writeMessage($exception->getMessage());
             exit(1);

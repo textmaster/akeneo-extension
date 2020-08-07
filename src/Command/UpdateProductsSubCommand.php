@@ -177,9 +177,11 @@ class UpdateProductsSubCommand extends Command
             $project = $this->projectManager->getProjectById($input->getArgument(self::PROJECT_ID_ARGUMENT));
             $this->writeMessage(
                 sprintf(
-                    'Update products for project %s with Textmaster id %s.',
+                    'Update products for project %s with Textmaster id %s, Akeneo Status: %s, TM status: %s',
                     $project->getId(),
-                    $project->getTextmasterProjectId()
+                    $project->getTextmasterProjectId(),
+                    $project->getAkeneoStatus(),
+                    $project->getTextmasterStatus()
                 )
             );
             $this->updateProducts($project);
@@ -213,47 +215,59 @@ class UpdateProductsSubCommand extends Command
      */
     protected function updateProducts(ProjectInterface $project): ProjectInterface
     {
-        $apiTemplate   = $this->getApiTemplateById($project->getApiTemplateId());
-        $pimLocaleCode = $this->localeProvider->getPimLocaleCode($apiTemplate['language_to']);
+        try {
+            $apiTemplate   = $this->getApiTemplateById($project->getApiTemplateId());
+            $pimLocaleCode = $this->localeProvider->getPimLocaleCode($apiTemplate['language_to']);
 
-        $apiDocuments = $this->getApiDocumentsByProject($project, $this->getDocumentsFilters($project));
+            $apiDocuments = $this->getApiDocumentsByProject($project, $this->getDocumentsFilters($project));
 
-        /** @var ApiDocumentInterface $apiDocument */
-        foreach ($apiDocuments as $apiDocument) {
-            $document = $this->documentManager->getDocumentByTextmasterId($apiDocument->getId());
+            /** @var ApiDocumentInterface $apiDocument */
+            foreach ($apiDocuments as $apiDocument) {
+                $document = $this->documentManager->getDocumentByTextmasterId($apiDocument->getId());
 
-            /** @var EntityWithValuesInterface $product */
-            $product = $this->getUpdater($apiDocument)->update($apiDocument, $pimLocaleCode);
+                /** @var EntityWithValuesInterface $product */
+                $product = $this->getUpdater($apiDocument)->update($apiDocument, $pimLocaleCode);
 
-            $this->writeMessage(
-                sprintf(
-                    'Updated document %s for locale %s',
-                    $apiDocument->getTitle(),
-                    $pimLocaleCode
-                )
-            );
+                $this->writeMessage(
+                    sprintf(
+                        'Updated document %s for locale %s',
+                        $apiDocument->getTitle(),
+                        $pimLocaleCode
+                    )
+                );
 
-            if ($product instanceof ProductInterface) {
-                $this->products[] = $product;
-            } else {
-                $this->productModels[] = $product;
+                if ($product instanceof ProductInterface) {
+                    $this->products[] = $product;
+                } else {
+                    $this->productModels[] = $product;
+                }
+
+                $document->setStatus($apiDocument->getStatus());
+                $this->documents[] = $document;
+
+                unset($apiDocument);
             }
 
-            $document->setStatus($apiDocument->getStatus());
-            $this->documents[] = $document;
+            $this->saveData(true);
 
-            unset($apiDocument);
+            /** @var \Pim\Bundle\TextmasterBundle\Project\Model\ProjectInterface $apiProject */
+            $apiProject = $this->webApiRepository->getProject($project->getTextmasterProjectId());
+
+            $project->setTextmasterStatus($apiProject->getStatus());
+            $this->projectManager->saveProject($project);
+            $this->objectDetacher->detach($project);
+            unset($apiProject);
+
+
+        } catch (\Exception $ex) {
+            $this->writeMessage(
+                sprintf(
+                    "An error has been occured: %s \n %s",
+                    $ex->getMessage(),
+                    $ex->getTraceAsString()
+                )
+            );
         }
-
-        $this->saveData(true);
-
-        /** @var \Pim\Bundle\TextmasterBundle\Project\Model\ProjectInterface $apiProject */
-        $apiProject = $this->webApiRepository->getProject($project->getTextmasterProjectId());
-
-        $project->setTextmasterStatus($apiProject->getStatus());
-        $this->projectManager->saveProject($project);
-        $this->objectDetacher->detach($project);
-        unset($apiProject);
 
         return $project;
     }
