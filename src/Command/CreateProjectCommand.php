@@ -98,7 +98,6 @@ class CreateProjectCommand extends Command
 
         $this->writeMessage('Remove project without documents.');
         $ids = $this->projectManager->deleteUselessProjects();
-        $this->writeMessage(sprintf('Remove projects: %s',  $ids ? implode(',', $ids) : "No"));
 
         foreach ($this->getProjectsToSend() as $projectId) {
             $documentIds = $this->documentManager->getDocumentIdsByProjectId($projectId);
