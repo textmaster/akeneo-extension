@@ -217,6 +217,12 @@ class UpdateProductsSubCommand extends Command
     {
         try {
             $apiTemplate   = $this->getApiTemplateById($project->getApiTemplateId());
+            $this->writeMessage(
+                sprintf(
+                    'Getting pim locale code, language to: %s',
+                    $apiTemplate['language_to']
+                )
+            );
             $pimLocaleCode = $this->localeProvider->getPimLocaleCode($apiTemplate['language_to']);
 
             $apiDocuments = $this->getApiDocumentsByProject($project, $this->getDocumentsFilters($project));
