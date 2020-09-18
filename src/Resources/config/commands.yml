@@ -54,5 +54,6 @@ services:
         arguments:
             - '@pim_textmaster.manager.project'
             - '@pim_textmaster.manager.document'
+            - '@pim_textmaster.repository.webapi'
         tags:
             - { name: 'console.command', command: 'pim:textmaster:remove-invalid-projects' }

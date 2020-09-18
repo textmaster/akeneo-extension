@@ -2,6 +2,7 @@
 
 namespace Pim\Bundle\TextmasterBundle\Command;
 
+use Pim\Bundle\TextmasterBundle\Api\WebApiRepositoryInterface;
 use Pim\Bundle\TextmasterBundle\Manager\DocumentManager;
 use Pim\Bundle\TextmasterBundle\Manager\ProjectManager;
 use Pim\Bundle\TextmasterBundle\Model\ProjectInterface;
@@ -27,16 +28,22 @@ class RemoveInvalidProjectsCommand extends ContainerAwareCommand
     private $documentManager;
 
     /**
+     * @var WebApiRepositoryInterface
+     */
+    private $webApiRepository;
+
+    /**
      * RemoveInvalidProjectsCommand constructor.
      * @param ProjectManager $projectManager
      * @param DocumentManager $documentManager
+     * @param WebApiRepositoryInterface $webApiRepository
      */
-    public function __construct(ProjectManager $projectManager, DocumentManager $documentManager)
+    public function __construct(ProjectManager $projectManager, DocumentManager $documentManager, WebApiRepositoryInterface $webApiRepository)
     {
         parent::__construct();
-
         $this->projectManager = $projectManager;
         $this->documentManager = $documentManager;
+        $this->webApiRepository = $webApiRepository;
     }
 
 
@@ -92,5 +99,21 @@ class RemoveInvalidProjectsCommand extends ContainerAwareCommand
                 );
             }
         }
+    }
+
+    /**
+     * Retrieve api template by id.
+     *
+     * @param string $apiTemplateId
+     *
+     * @return array|null
+     */
+    protected function getApiTemplateById(string $apiTemplateId): ?array
+    {
+        if (null === $this->apiTemplates) {
+            $this->apiTemplates = $this->webApiRepository->getApiTemplates();
+        }
+
+        return isset($this->apiTemplates[$apiTemplateId]) ? $this->apiTemplates[$apiTemplateId] : null;
     }
 }
