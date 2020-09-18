@@ -50,6 +50,11 @@ class ProcessingCommand extends Command
             $this->writeMessage('CREATE PROJECT End command pim:textmaster:create-project');
 
             $this->writeMessage('---------------------------------------------');
+            $this->writeMessage('REMOVE INVALID PROJECTS Start command pim:textmaster:remove-invalid-projects');
+            $this->runCommand($input, 'pim:textmaster:remove-invalid-projects');
+            $this->writeMessage('REMOVE INVALID PROJECTS End command pim:textmaster:remove-invalid-projects');
+
+            $this->writeMessage('---------------------------------------------');
             $this->writeMessage('FINALIZE PROJECT Start command pim:textmaster:finalize-project');
             $this->runCommand($input, 'pim:textmaster:finalize-project');
             $this->writeMessage('FINALIZE PROJECT End command pim:textmaster:finalize-project');
