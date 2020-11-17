@@ -1,7 +1,3 @@
-|:---------------------------:|:----------------------------:|
-# Need to be updated for the new version !!!
-|:---------------------------:|:----------------------------:|
-
 # Textmaster extension for Akeneo PIM
 
 [![Build Status](https://travis-ci.org/textmaster/akeneo-extension.svg?branch=master)](https://travis-ci.org/textmaster/akeneo-extension)
@@ -66,13 +62,25 @@ You can check translation progress with the dashboard :
 
 First step is to require the sources:
 ```
-composer require textmaster/akeneo-extension
+composer require textmaster/akeneo-extension:~4.0
 ```
 
 Register the bundle in `config/bundles.php`:
 
 ```
-Pim\Bundle\TextmasterBundle\PimTextmasterBundle::class => ['dev' => true, 'test' => true, 'prod' => true],
+Pim\Bundle\TextmasterBundle\PimTextmasterBundle::class => ['all' => true],
+```
+
+Clear cache:
+
+```
+rm -rf var/cache && bin/console cache:warmup
+```
+
+Lauch a daemon:
+
+```
+bin/console akeneo:batch:job-queue-consumer-daemon &
 ```
 
 Then we need to add a new mass edit batch job:
@@ -86,13 +94,13 @@ Make sure you have native Akeneo script `bin/console akeneo:batch:job-queue-cons
 You can also add `&` to the end of the command to make it run in the background: `bin/console akeneo:batch:job-queue-consumer-daemon &`
 
 Add the new routes used by the extension to the global router. Add the following route to your configuration:
-
+Create a file and folder in project root config/routes/routes.yml, add content:
 ```
 textmaster:
     resource: "@PimTextmasterBundle/Resources/config/routing.yml"
 ```
 
-Optional : Add parameters into app/config/parameters.yml to use textmaster sandbox :
+Optional : Add parameters into config/services/services.yml to use textmaster sandbox :
 
 ```
 parameters:
@@ -104,13 +112,12 @@ parameters:
 Update the database schema and regenerate your cache and assets:
 
 ```
-rm -rf var/cache/* web/bundles/* web/js/* web/css/*
 bin/console doctrine:schema:update --force --env=prod
-bin/console p:i:a --env=prod
-bin/console a:i --env=prod
+rm -rf var/cache && bin/console cache:warmup
+rm -rf public/bundles public/js
+bin/console pim:installer:assets --symlink --clean
+rm -rf public/dist
 node yarn run webpack
-find ./ -type d -exec chmod 755 {} \;
-find ./ -type f -exec chmod 644 {} \;
 ```
 
 Set a `cron` to synchronize projects & documents between Akeneo and Textmaster:
