@@ -167,4 +167,14 @@ class ProjectManager
 
         return empty($emptyProjectIds) ? 0 : $this->repository->deleteByIds($emptyProjectIds);
     }
+
+    /**
+     * Get all projects
+     *
+     * @return array|object[]
+     */
+    public function getAllProjects()
+    {
+        return $this->repository->findAll();
+    }
 }
