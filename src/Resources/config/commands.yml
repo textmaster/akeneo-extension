@@ -48,3 +48,11 @@ services:
             - '@pim_textmaster.builder.project'
         tags:
             - { name: 'console.command', command: 'pim:textmaster:update-products-sub' }
+
+    Pim\Bundle\TextmasterBundle\Command\RemoveInvalidProjectsCommand:
+        arguments:
+            - '@pim_textmaster.manager.project'
+            - '@pim_textmaster.manager.document'
+            - '@pim_textmaster.repository.webapi'
+        tags:
+            - { name: 'console.command', command: 'pim:textmaster:remove-invalid-projects' }

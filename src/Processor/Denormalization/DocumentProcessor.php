@@ -234,7 +234,34 @@ class DocumentProcessor implements StepExecutionAwareInterface, ItemProcessorInt
                     $availableAttributes,
                     $this->availableAttributes[$familyVariantCode]
                 );
+
+                $parentAttributes = [];
+                if ($product->getParent() && $product->getParent() instanceof ProductModelInterface) {
+                    $parentAttributes = $this->getAttributesToTranslate($product->getParent());
+                }
+
+                // Only get attributes that different with parent
+                $availableAttributes = array_diff(
+                    $availableAttributes,
+                    $parentAttributes
+                );
             }
+        } else {
+            $parent = $product->getParent();
+            $rootParent = $parent && $parent instanceof ProductModelInterface ? $parent->getParent() : null;
+            $parentAttributes = $this->getAttributesToTranslate($parent);
+            $rootParentAttributes = [];
+
+            if ($rootParent !== null && $rootParent instanceof ProductModelInterface) {
+                $rootParentAttributes = $this->getAttributesToTranslate($rootParent);
+            }
+
+            // Only get attributes that different with parent and root parent
+            $availableAttributes = array_diff(
+                $availableAttributes,
+                $parentAttributes,
+                $rootParentAttributes
+            );
         }
 
         return $availableAttributes;
